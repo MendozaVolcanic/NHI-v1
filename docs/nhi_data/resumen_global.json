@@ -1,0 +1,11 @@
+{
+  "Villarrica": {
+    "nivel": "amarillo",
+    "alertas_7d": 0,
+    "alertas_30d": 8,
+    "max_pixeles_calientes": 61228,
+    "ultima_fecha_analizada": "2026-03-28",
+    "total_observaciones": 9,
+    "zona": "Sur"
+  }
+}
