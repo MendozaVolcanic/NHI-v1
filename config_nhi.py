@@ -19,6 +19,7 @@ from math import cos, radians
 MAX_CLOUD_COVER = 50        # Mas estricto que descarga visual
 DIAS_ATRAS = 60             # Ventana de busqueda por defecto
 IMAGE_SIZE = 400            # Pixeles (no necesitamos resolucion visual alta)
+HOTSPOT_IMAGE_SIZE = 200    # Pixeles para mapas PNG de hotspots
 DIAS_RETENCION = 365        # Mantener datos NHI por 1 anio
 
 # STAC

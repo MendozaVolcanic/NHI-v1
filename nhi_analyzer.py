@@ -29,13 +29,15 @@ import rasterio
 from rasterio.crs import CRS
 from rasterio.warp import transform_bounds
 
+from PIL import Image as PILImage
+
 from config_nhi import (
     VOLCANES, STAC_URL, SENTINEL2_COLLECTION, LANDSAT_COLLECTION,
     SENTINEL2_BANDS, SENTINEL2_SCALE, SENTINEL2_OFFSET,
     LANDSAT_BANDS, LANDSAT_SCALE, LANDSAT_OFFSET,
     NHI_THRESHOLD, N_SIGMA, MIN_ABSOLUTE_NHI, MAX_HOT_FRACTION,
     SWIR_MIN_REFLECTANCE,
-    MAX_CLOUD_COVER, DIAS_ATRAS, IMAGE_SIZE,
+    MAX_CLOUD_COVER, DIAS_ATRAS, IMAGE_SIZE, HOTSPOT_IMAGE_SIZE,
     get_active_volcanoes, get_bbox, get_nhi_data_dir,
 )
 
@@ -191,6 +193,7 @@ def calcular_nhi(nir, swir1, swir2, scale, offset):
         "nhi_swir": nhi_swir,
         "nhi_swnir": nhi_swnir,
         "hot_mask": hot_mask,
+        "swir2_ref": swir2_ref,
         "stats": stats,
     }
 
@@ -208,6 +211,52 @@ def _empty_result(nhi_swir, nhi_swnir):
             "bg_median_swir": 0, "bg_std_swir": 0, "alerta": False,
         },
     }
+
+
+# ============================================
+# GENERACION DE IMAGEN HOTSPOT
+# ============================================
+def generar_mapa_hotspot(swir2_ref, hot_mask, nombre, fecha, sensor):
+    """Genera PNG con SWIR2 como fondo gris y pixeles calientes en rojo."""
+    try:
+        out_size = HOTSPOT_IMAGE_SIZE
+        src_size = swir2_ref.shape[0]
+
+        # Normalizar SWIR2 a 0-255 grayscale
+        vmin, vmax = 0.0, max(float(np.percentile(swir2_ref[swir2_ref > 0], 98)), 0.01) if (swir2_ref > 0).any() else (0.0, 1.0)
+        gray = np.clip((swir2_ref - vmin) / (vmax - vmin + 1e-10) * 255, 0, 255).astype(np.uint8)
+
+        # Crear imagen RGB
+        img = PILImage.fromarray(gray, mode='L').convert('RGB')
+        img = img.resize((out_size, out_size), PILImage.Resampling.NEAREST)
+
+        # Overlay hotspots en rojo
+        if hot_mask.any():
+            pixels = img.load()
+            scale = out_size / src_size
+            rows, cols = np.where(hot_mask)
+            for r, c in zip(rows, cols):
+                y = int(r * scale)
+                x = int(c * scale)
+                if 0 <= x < out_size and 0 <= y < out_size:
+                    pixels[x, y] = (255, 40, 40)
+                    # Make hotspots slightly larger (2x2)
+                    for dy in range(-1, 2):
+                        for dx in range(-1, 2):
+                            nx, ny = x + dx, y + dy
+                            if 0 <= nx < out_size and 0 <= ny < out_size:
+                                pixels[nx, ny] = (255, 40, 40)
+
+        # Guardar
+        data_dir = get_nhi_data_dir(nombre)
+        sensor_tag = "s2" if "Sentinel" in sensor else "ls"
+        filename = f"{fecha}_{sensor_tag}_hotspot.png"
+        ruta = os.path.join(data_dir, filename)
+        img.save(ruta, optimize=True)
+        return filename
+    except Exception as e:
+        log.warning(f"  Error generando mapa hotspot: {e}")
+        return None
 
 
 # ============================================
@@ -283,6 +332,12 @@ def procesar_volcan(catalog, nombre, datos, fecha_inicio, fecha_fin):
                 "Sentinel-2"
             )
             if res:
+                if res["stats"]["alerta"] and res.get("swir2_ref") is not None:
+                    img_file = generar_mapa_hotspot(
+                        res["swir2_ref"], res["hot_mask"], nombre, fecha, "Sentinel-2"
+                    )
+                    if img_file:
+                        res["stats"]["hotspot_image"] = img_file
                 resultados.append(res["stats"])
                 fechas_procesadas.add(fecha)
                 if res["stats"]["alerta"]:
@@ -313,6 +368,12 @@ def procesar_volcan(catalog, nombre, datos, fecha_inicio, fecha_fin):
                 "Landsat"
             )
             if res:
+                if res["stats"]["alerta"] and res.get("swir2_ref") is not None:
+                    img_file = generar_mapa_hotspot(
+                        res["swir2_ref"], res["hot_mask"], nombre, fecha, "Landsat"
+                    )
+                    if img_file:
+                        res["stats"]["hotspot_image"] = img_file
                 resultados.append(res["stats"])
                 fechas_procesadas.add(fecha)
                 if res["stats"]["alerta"]:
@@ -392,6 +453,8 @@ def generar_resumen_global(todos_los_resultados):
             "ultima_fecha_analizada": ultima_fecha,
             "total_observaciones": len(resultados),
             "zona": VOLCANES.get(nombre, {}).get("zona", ""),
+            "lat": VOLCANES.get(nombre, {}).get("lat", 0),
+            "lon": VOLCANES.get(nombre, {}).get("lon", 0),
         }
 
     ruta = os.path.join("docs", "nhi_data", "resumen_global.json")

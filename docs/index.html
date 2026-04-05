@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NHI Dashboard - Anomalias Termales Volcanicas</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -270,6 +272,7 @@
 
     <div class="nav-tabs">
         <div class="nav-tab active" onclick="showSection('resumen')">Resumen Global</div>
+        <div class="nav-tab" onclick="showSection('mapa')">Mapa</div>
         <div class="nav-tab" onclick="showSection('individual')">Vista Individual</div>
         <div class="nav-tab" onclick="showSection('guia')">Guia de Interpretacion</div>
     </div>
@@ -304,7 +307,7 @@
                         <th>Zona</th>
                         <th>Alertas 7d</th>
                         <th>Alertas 30d</th>
-                        <th>Max px calientes</th>
+                        <th>Max area</th>
                         <th>Ultima fecha</th>
                         <th>Obs.</th>
                     </tr>
@@ -313,6 +316,14 @@
                     <tr><td colspan="8" class="loading">Cargando datos...</td></tr>
                 </tbody>
             </table>
+        </div>
+
+        <!-- SECCION: MAPA -->
+        <div id="section-mapa" class="section">
+            <div style="margin-bottom:10px; color:#8b949e; font-size:0.85em;">
+                Click en un volcan para ver su detalle. Color = nivel de alerta NHI.
+            </div>
+            <div id="map" style="height:600px; border-radius:8px; border:1px solid #30363d;"></div>
         </div>
 
         <!-- SECCION 2: VISTA INDIVIDUAL -->
@@ -337,7 +348,7 @@
                 </div>
                 <div class="stat-card">
                     <div class="value" id="ind-max-px">-</div>
-                    <div class="label">Max pixeles calientes</div>
+                    <div class="label">Max area anomalia</div>
                 </div>
                 <div class="stat-card">
                     <div class="value" id="ind-max-nhiswir">-</div>
@@ -351,7 +362,7 @@
 
             <div class="charts-grid">
                 <div class="chart-card">
-                    <h3>Pixeles Calientes por Fecha</h3>
+                    <h3>Area de Anomalia por Fecha</h3>
                     <canvas id="chart-hotpixels"></canvas>
                 </div>
                 <div class="chart-card">
@@ -363,8 +374,21 @@
                     <canvas id="chart-nhiswnir"></canvas>
                 </div>
                 <div class="chart-card">
-                    <h3>Radiancia Total SWIR2 (pixeles calientes)</h3>
+                    <h3>Reflectancia Total SWIR2 (pixeles calientes)</h3>
                     <canvas id="chart-radiancia"></canvas>
+                </div>
+            </div>
+
+            <div id="hotspot-viewer" style="margin-top:20px;">
+                <div class="chart-card">
+                    <h3>Mapa de Hotspot</h3>
+                    <div style="display:flex; gap:12px; align-items:center; margin-bottom:12px; flex-wrap:wrap;">
+                        <select id="hotspot-date-select" style="padding:6px 10px; background:#0d1117; border:1px solid #30363d; color:#e6edf3; border-radius:4px; font-size:0.85em;"></select>
+                        <span id="hotspot-info" style="color:#8b949e; font-size:0.82em;"></span>
+                    </div>
+                    <div id="hotspot-img-container" style="text-align:center;">
+                        <div class="no-data" id="hotspot-no-data">Sin imagenes de hotspot disponibles</div>
+                    </div>
                 </div>
             </div>
 
@@ -378,6 +402,7 @@
                                 <th>Sensor</th>
                                 <th>Nubes%</th>
                                 <th>Px calientes</th>
+                                <th>Area (m2)</th>
                                 <th>NHISWIR max</th>
                                 <th>NHISWNIR max</th>
                                 <th>SWIR2 total</th>
@@ -638,6 +663,16 @@
         let resumenGlobal = {};
         let chartInstances = {};
 
+        function pixelsToArea(count, sensor) {
+            return count * (sensor === 'Sentinel-2' ? 400 : 900);
+        }
+
+        function formatArea(m2) {
+            if (m2 >= 1e6) return (m2 / 1e6).toFixed(2) + ' km2';
+            if (m2 >= 1000) return Math.round(m2).toLocaleString() + ' m2';
+            return m2 + ' m2';
+        }
+
         const VOLCANES_ZONAS = {
             'Norte': ['Taapaca','Parinacota','Guallatiri','Isluga','Irruputuncu','Ollague','San Pedro','Lascar'],
             'Centro': ['Tupungatito','San Jose','Tinguiririca','Planchon-Peteroa','Descabezado Grande','Tatara-San Pedro','Laguna del Maule','Nevado de Longavi','Nevados de Chillan'],
@@ -654,7 +689,7 @@
             document.getElementById('section-' + name).classList.add('active');
             // Activar el tab correcto
             const tabs = document.querySelectorAll('.nav-tab');
-            const tabMap = { resumen: 0, individual: 1, guia: 2 };
+            const tabMap = { resumen: 0, mapa: 1, individual: 2, guia: 3 };
             if (tabMap[name] !== undefined && tabs[tabMap[name]]) {
                 tabs[tabMap[name]].classList.add('active');
             }
@@ -670,7 +705,7 @@
                     document.getElementById('table-body').textContent = '';
                     const tr = document.createElement('tr');
                     const td = document.createElement('td');
-                    td.colSpan = 8;
+                    td.colSpan = 9;
                     td.className = 'no-data';
                     td.textContent = 'Sin datos NHI. Ejecuta el workflow nhi_analysis.yml para generar datos.';
                     tr.appendChild(td);
@@ -741,13 +776,13 @@
 
         function showSectionDirect(name) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.nav-tab').forEach(t => {
-                t.classList.remove('active');
-                if (t.textContent.toLowerCase().includes(name === 'resumen' ? 'resumen' : 'individual')) {
-                    t.classList.add('active');
-                }
-            });
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
             document.getElementById('section-' + name).classList.add('active');
+            const tabs = document.querySelectorAll('.nav-tab');
+            const tabMap2 = { resumen: 0, mapa: 1, individual: 2, guia: 3 };
+            if (tabMap2[name] !== undefined && tabs[tabMap2[name]]) {
+                tabs[tabMap2[name]].classList.add('active');
+            }
         }
 
         // ========================
@@ -805,7 +840,7 @@
             tbody.textContent = '';
             const tr = document.createElement('tr');
             const td = document.createElement('td');
-            td.colSpan = 8;
+            td.colSpan = 9;
             td.className = 'no-data';
             td.textContent = 'Sin datos NHI para este volcan.';
             tr.appendChild(td);
@@ -815,11 +850,11 @@
         function renderIndividual(data) {
             // Stats
             const alertas = data.filter(d => d.alerta).length;
-            const maxPx = Math.max(...data.map(d => d.pixeles_calientes), 0);
+            const maxArea = Math.max(...data.map(d => pixelsToArea(d.pixeles_calientes, d.sensor)), 0);
             const maxNHI = Math.max(...data.map(d => d.max_nhiswir || 0), 0);
 
             document.getElementById('ind-alertas').textContent = alertas;
-            document.getElementById('ind-max-px').textContent = maxPx;
+            document.getElementById('ind-max-px').textContent = formatArea(maxArea);
             document.getElementById('ind-max-nhiswir').textContent = maxNHI.toFixed(4);
             document.getElementById('ind-obs').textContent = data.length;
 
@@ -837,18 +872,21 @@
                 data: {
                     labels: fechas,
                     datasets: [{
-                        label: 'Pixeles calientes',
-                        data: sorted.map(d => d.pixeles_calientes),
-                        backgroundColor: sorted.map(d =>
-                            d.alerta ? 'rgba(218, 54, 51, 0.8)' : 'rgba(35, 134, 54, 0.5)'
-                        ),
-                        borderColor: sorted.map(d =>
-                            d.alerta ? '#da3633' : '#238636'
-                        ),
+                        label: 'Area anomalia (m2)',
+                        data: sorted.map(d => pixelsToArea(d.pixeles_calientes, d.sensor)),
+                        backgroundColor: sorted.map(d => {
+                            if (!d.alerta) return 'rgba(35, 134, 54, 0.3)';
+                            return d.sensor === 'Sentinel-2'
+                                ? 'rgba(88, 166, 255, 0.7)' : 'rgba(240, 136, 62, 0.7)';
+                        }),
+                        borderColor: sorted.map(d => {
+                            if (!d.alerta) return '#238636';
+                            return d.sensor === 'Sentinel-2' ? '#58a6ff' : '#f0883e';
+                        }),
                         borderWidth: 1,
                     }]
                 },
-                options: chartOptions('Pixeles')
+                options: chartOptions('Area (m2)')
             });
 
             chartInstances.nhiswir = new Chart(
@@ -917,18 +955,32 @@
                 options: chartOptions('Reflectancia')
             });
 
+            // Visor de hotspot
+            const volcanName = document.getElementById('volcan-select').value;
+            renderHotspotViewer(data, volcanName);
+
             // Tabla detalle
             const tbody = document.getElementById('detail-body');
             tbody.textContent = '';
             for (const d of data) {
                 const tr = document.createElement('tr');
-                if (d.alerta) tr.style.background = 'rgba(218, 54, 51, 0.1)';
+                if (d.alerta) {
+                    tr.style.background = 'rgba(218, 54, 51, 0.1)';
+                    if (d.hotspot_image) {
+                        tr.style.cursor = 'pointer';
+                        tr.title = 'Click para ver hotspot';
+                        const fecha = d.fecha;
+                        tr.addEventListener('click', () => selectHotspotDate(fecha));
+                    }
+                }
 
+                const areaM2 = pixelsToArea(d.pixeles_calientes, d.sensor);
                 const fields = [
                     d.fecha,
                     d.sensor || d.satelite || '-',
                     d.cloud_cover != null ? Math.round(d.cloud_cover) + '%' : '-',
                     d.pixeles_calientes,
+                    formatArea(areaM2),
                     (d.max_nhiswir || 0).toFixed(4),
                     (d.max_nhiswnir || 0).toFixed(4),
                     (d.swir2_total || 0).toFixed(2),
@@ -940,6 +992,74 @@
                     tr.appendChild(td);
                 }
                 tbody.appendChild(tr);
+            }
+        }
+
+        function renderHotspotViewer(data, volcanName) {
+            const sel = document.getElementById('hotspot-date-select');
+            const container = document.getElementById('hotspot-img-container');
+            const noData = document.getElementById('hotspot-no-data');
+            const infoSpan = document.getElementById('hotspot-info');
+            sel.textContent = '';
+            container.textContent = '';
+
+            const withImages = data.filter(d => d.hotspot_image);
+            if (withImages.length === 0) {
+                container.appendChild(noData);
+                noData.style.display = '';
+                infoSpan.textContent = '';
+                sel.style.display = 'none';
+                return;
+            }
+
+            sel.style.display = '';
+            // Sort by date desc
+            withImages.sort((a, b) => b.fecha.localeCompare(a.fecha));
+
+            for (const d of withImages) {
+                const opt = document.createElement('option');
+                opt.value = d.hotspot_image;
+                opt.textContent = d.fecha + ' (' + (d.sensor || '-') + ')';
+                opt.dataset.info = JSON.stringify(d);
+                sel.appendChild(opt);
+            }
+
+            const img = document.createElement('img');
+            img.id = 'hotspot-img';
+            img.style.cssText = 'max-width:400px; width:100%; border-radius:6px; border:1px solid #30363d; image-rendering:pixelated;';
+            img.alt = 'Mapa de hotspot';
+            container.appendChild(img);
+
+            function updateImage() {
+                const selected = sel.value;
+                if (!selected) return;
+                img.src = `${NHI_BASE}/nhi_data/${encodeURIComponent(volcanName)}/${selected}?t=${Date.now()}`;
+                const opt = sel.options[sel.selectedIndex];
+                try {
+                    const d = JSON.parse(opt.dataset.info);
+                    const area = formatArea(pixelsToArea(d.pixeles_calientes, d.sensor));
+                    infoSpan.textContent = d.pixeles_calientes + ' px | ' + area +
+                        ' | NHISWIR: ' + (d.max_nhiswir || 0).toFixed(3) +
+                        ' | Nubes: ' + (d.cloud_cover != null ? Math.round(d.cloud_cover) + '%' : '-');
+                } catch(e) {}
+            }
+
+            sel.addEventListener('change', updateImage);
+            updateImage();
+        }
+
+        function selectHotspotDate(fecha) {
+            const sel = document.getElementById('hotspot-date-select');
+            for (let i = 0; i < sel.options.length; i++) {
+                try {
+                    const d = JSON.parse(sel.options[i].dataset.info);
+                    if (d.fecha === fecha) {
+                        sel.selectedIndex = i;
+                        sel.dispatchEvent(new Event('change'));
+                        document.getElementById('hotspot-viewer').scrollIntoView({ behavior: 'smooth' });
+                        return;
+                    }
+                } catch(e) {}
             }
         }
 
@@ -968,6 +1088,89 @@
             }
             chartInstances = {};
         }
+
+        // ========================
+        // MAPA LEAFLET
+        // ========================
+        let leafletMap = null;
+
+        function initMap() {
+            if (leafletMap) return;
+            leafletMap = L.map('map').setView([-35, -71], 5);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: 'OSM',
+                maxZoom: 15,
+            }).addTo(leafletMap);
+
+            const colores = { rojo: '#da3633', amarillo: '#d29922', verde: '#238636' };
+
+            for (const [nombre, data] of Object.entries(resumenGlobal)) {
+                if (!data.lat || !data.lon) continue;
+                const color = colores[data.nivel] || '#8b949e';
+                const marker = L.circleMarker([data.lat, data.lon], {
+                    radius: 7,
+                    fillColor: color,
+                    color: '#e6edf3',
+                    weight: 1,
+                    fillOpacity: 0.85,
+                });
+
+                const popupDiv = document.createElement('div');
+                popupDiv.style.cssText = 'font-family:sans-serif;font-size:13px;min-width:180px;';
+
+                const title = document.createElement('strong');
+                title.textContent = nombre;
+                title.style.cssText = 'font-size:14px;display:block;margin-bottom:4px;';
+                popupDiv.appendChild(title);
+
+                const info = document.createElement('div');
+                info.style.color = '#333';
+                const lines = [
+                    'Nivel: ' + data.nivel.toUpperCase(),
+                    'Zona: ' + data.zona,
+                    'Alertas 30d: ' + data.alertas_30d,
+                    'Max px: ' + data.max_pixeles_calientes,
+                    'Ultima: ' + (data.ultima_fecha_analizada || '-'),
+                ];
+                info.textContent = lines.join(' | ');
+                info.style.cssText = 'font-size:11px;color:#555;margin-bottom:6px;line-height:1.4;';
+                // Use separate lines
+                info.textContent = '';
+                for (const line of lines) {
+                    const p = document.createElement('div');
+                    p.textContent = line;
+                    info.appendChild(p);
+                }
+                popupDiv.appendChild(info);
+
+                const btn = document.createElement('button');
+                btn.textContent = 'Ver detalle';
+                btn.style.cssText = 'background:#ff6b35;color:white;border:none;padding:4px 10px;border-radius:4px;cursor:pointer;font-size:12px;margin-top:4px;';
+                btn.addEventListener('click', () => {
+                    showSectionDirect('individual');
+                    document.getElementById('zona-select').value = data.zona;
+                    cambiarZonaNHI();
+                    document.getElementById('volcan-select').value = nombre;
+                    cargarVolcanNHI();
+                });
+                popupDiv.appendChild(btn);
+
+                marker.bindPopup(popupDiv);
+                marker.addTo(leafletMap);
+            }
+        }
+
+        // Lazy-init map when tab is shown
+        const origShowSection = showSection;
+        showSection = function(name) {
+            origShowSection(name);
+            if (name === 'mapa') {
+                setTimeout(() => {
+                    initMap();
+                    if (leafletMap) leafletMap.invalidateSize();
+                }, 100);
+            }
+        };
 
         // ========================
         // INIT
