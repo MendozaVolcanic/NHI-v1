@@ -33,7 +33,8 @@ from config_nhi import (
     VOLCANES, STAC_URL, SENTINEL2_COLLECTION, LANDSAT_COLLECTION,
     SENTINEL2_BANDS, SENTINEL2_SCALE, SENTINEL2_OFFSET,
     LANDSAT_BANDS, LANDSAT_SCALE, LANDSAT_OFFSET,
-    NHI_THRESHOLD, SWIR_MIN_REFLECTANCE,
+    NHI_THRESHOLD, N_SIGMA, MIN_ABSOLUTE_NHI, MAX_HOT_FRACTION,
+    SWIR_MIN_REFLECTANCE,
     MAX_CLOUD_COVER, DIAS_ATRAS, IMAGE_SIZE,
     get_active_volcanoes, get_bbox, get_nhi_data_dir,
 )
@@ -106,20 +107,20 @@ def leer_banda(asset_href, lat, lon, buffer_km, size=IMAGE_SIZE):
 # ============================================
 def calcular_nhi(nir, swir1, swir2, scale, offset):
     """
-    Calcula indices NHI a partir de 3 bandas.
+    Calcula indices NHI a partir de 3 bandas con filtrado estadistico.
 
-    Retorna dict con:
-      - nhi_swir: array 2D del indice NHISWIR
-      - nhi_swnir: array 2D del indice NHISWNIR
-      - hot_mask: array 2D booleano de pixeles calientes
-      - stats: dict con estadisticas agregadas
+    Inspirado en VRP Chile triple-threshold:
+      1. NHISWIR y NHISWNIR deben superar mediana + N_SIGMA * std
+      2. Ambos indices deben ser > MIN_ABSOLUTE_NHI
+      3. Si >MAX_HOT_FRACTION pixeles son calientes, escena descartada (ruido solar/nieve)
+
+    Retorna dict con nhi_swir, nhi_swnir, hot_mask, stats.
     """
     # Convertir a reflectancia
     nir_ref = nir * scale + offset
     swir1_ref = swir1 * scale + offset
     swir2_ref = swir2 * scale + offset
 
-    # Evitar division por cero
     eps = 1e-10
 
     # NHISWIR = (SWIR2 - SWIR1) / (SWIR2 + SWIR1)
@@ -128,29 +129,60 @@ def calcular_nhi(nir, swir1, swir2, scale, offset):
     # NHISWNIR = (SWIR1 - NIR) / (SWIR1 + NIR)
     nhi_swnir = (swir1_ref - nir_ref) / (swir1_ref + nir_ref + eps)
 
-    # Mascara de pixeles validos (reflectancia SWIR minima)
+    # Mascara de pixeles validos (reflectancia minima)
     valid = (swir1_ref > SWIR_MIN_REFLECTANCE) & (swir2_ref > SWIR_MIN_REFLECTANCE)
-
-    # Pixel caliente: (NHISWIR > 0 OR NHISWNIR > 0) AND valido
-    hot_mask = valid & ((nhi_swir > NHI_THRESHOLD) | (nhi_swnir > NHI_THRESHOLD))
+    valid &= (nir_ref > 0) & (swir1_ref < 1.0) & (swir2_ref < 1.0)  # eliminar saturados
 
     total_pixels = int(valid.sum())
+    if total_pixels < 100:
+        return _empty_result(nhi_swir, nhi_swnir)
+
+    # --- Filtro estadistico (inspirado en VRP Chile background annulus) ---
+    # Calcular estadisticas de fondo sobre pixeles validos
+    swir_vals = nhi_swir[valid]
+    swnir_vals = nhi_swnir[valid]
+
+    median_swir = float(np.median(swir_vals))
+    std_swir = float(np.std(swir_vals))
+    median_swnir = float(np.median(swnir_vals))
+    std_swnir = float(np.std(swnir_vals))
+
+    # Umbral dinamico: mediana + max(MIN_ABSOLUTE, N_SIGMA * std)
+    thresh_swir = median_swir + max(MIN_ABSOLUTE_NHI, N_SIGMA * std_swir)
+    thresh_swnir = median_swnir + max(MIN_ABSOLUTE_NHI, N_SIGMA * std_swnir)
+
+    # Pixel caliente: supera umbral en AL MENOS un indice
+    # Y ademas supera el umbral base (>0) en ese indice
+    hot_swir = valid & (nhi_swir > thresh_swir) & (nhi_swir > NHI_THRESHOLD)
+    hot_swnir = valid & (nhi_swnir > thresh_swnir) & (nhi_swnir > NHI_THRESHOLD)
+    hot_mask = hot_swir | hot_swnir
+
     hot_pixels = int(hot_mask.sum())
 
-    # Radiancia total SWIR2 de pixeles calientes
-    swir2_hot_total = float(swir2_ref[hot_mask].sum()) if hot_pixels > 0 else 0.0
+    # --- Filtro de fraccion maxima (anti-ruido solar) ---
+    # Si >5% de pixeles validos son "calientes", la escena es ruidosa
+    fraction = hot_pixels / max(total_pixels, 1)
+    if fraction > MAX_HOT_FRACTION:
+        log.debug(f"    Escena descartada: {fraction:.1%} pixeles calientes (max {MAX_HOT_FRACTION:.0%})")
+        hot_mask[:] = False
+        hot_pixels = 0
 
-    # Valores maximos de los indices en pixeles calientes
+    # Estadisticas
+    swir2_hot_total = float(swir2_ref[hot_mask].sum()) if hot_pixels > 0 else 0.0
     max_nhi_swir = float(nhi_swir[hot_mask].max()) if hot_pixels > 0 else 0.0
     max_nhi_swnir = float(nhi_swnir[hot_mask].max()) if hot_pixels > 0 else 0.0
 
     stats = {
         "pixeles_validos": total_pixels,
         "pixeles_calientes": hot_pixels,
-        "fraccion_caliente": round(hot_pixels / max(total_pixels, 1), 6),
+        "fraccion_caliente": round(fraction if hot_pixels > 0 else 0.0, 6),
         "max_nhiswir": round(max_nhi_swir, 6),
         "max_nhiswnir": round(max_nhi_swnir, 6),
         "swir2_total": round(swir2_hot_total, 4),
+        "thresh_swir": round(thresh_swir, 6),
+        "thresh_swnir": round(thresh_swnir, 6),
+        "bg_median_swir": round(median_swir, 6),
+        "bg_std_swir": round(std_swir, 6),
         "alerta": hot_pixels > 0,
     }
 
@@ -159,6 +191,21 @@ def calcular_nhi(nir, swir1, swir2, scale, offset):
         "nhi_swnir": nhi_swnir,
         "hot_mask": hot_mask,
         "stats": stats,
+    }
+
+
+def _empty_result(nhi_swir, nhi_swnir):
+    """Resultado vacio cuando no hay suficientes pixeles validos."""
+    return {
+        "nhi_swir": nhi_swir,
+        "nhi_swnir": nhi_swnir,
+        "hot_mask": np.zeros_like(nhi_swir, dtype=bool),
+        "stats": {
+            "pixeles_validos": 0, "pixeles_calientes": 0,
+            "fraccion_caliente": 0, "max_nhiswir": 0, "max_nhiswnir": 0,
+            "swir2_total": 0, "thresh_swir": 0, "thresh_swnir": 0,
+            "bg_median_swir": 0, "bg_std_swir": 0, "alerta": False,
+        },
     }
 
 

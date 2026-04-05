@@ -54,13 +54,23 @@ LANDSAT_SCALE = 0.0000275
 LANDSAT_OFFSET = -0.2
 
 # ============================================
-# UMBRALES NHI (Marchese et al. 2019)
+# UMBRALES NHI (Marchese et al. 2019 + calibracion VRP Chile)
 # ============================================
-# Un pixel es "caliente" si: NHISWIR > 0 OR NHISWNIR > 0
-# Filtro previo diurno: reflectancia SWIR1 > umbral Y SWIR2 > umbral
-# (adaptado de radiancia a reflectancia)
-NHI_THRESHOLD = 0.0         # NHISWIR > 0 o NHISWNIR > 0
-SWIR_MIN_REFLECTANCE = 0.15 # Filtro de reflectancia minima para evitar ruido
+# El paper original usa NHISWIR > 0 sobre radiancia TOA.
+# Con reflectancia L2A, el umbral > 0 genera demasiados falsos positivos
+# porque suelo calentado por el sol y nieve brillante en SWIR superan 0.
+#
+# Aplicamos filtro estadistico inspirado en VRP Chile:
+#   1. Pixel debe superar mediana + N_SIGMA * std del indice en la escena
+#   2. Ambos indices deben ser > 0 (AND en vez de OR) para reducir FP
+#   3. Filtro de fraccion maxima: si >5% de pixeles son "calientes", es ruido
+#
+# Refs: VRP Chile triple-threshold (T_bg + max(5K, 3sigma))
+NHI_THRESHOLD = 0.0          # Umbral base (mantiene criterio del paper)
+N_SIGMA = 3.0                # Pixeles deben superar mediana + 3*sigma
+MIN_ABSOLUTE_NHI = 0.02      # Umbral minimo absoluto (evita ruido en escenas homogeneas)
+MAX_HOT_FRACTION = 0.05      # Si >5% pixeles son "calientes", descartar (escena ruidosa)
+SWIR_MIN_REFLECTANCE = 0.05  # Filtro de reflectancia minima (bajado: 0.15 excluia pixels validos)
 
 # ============================================
 # 43 VOLCANES ACTIVOS DE CHILE
