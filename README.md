@@ -1,148 +1,149 @@
-# NHI Tool - Normalized Hotspot Indices para Monitoreo Volcanico
+# NHI-v1 - Monitoreo de Anomalias Termales Volcanicas
 
-## Que es NHI
+Dashboard automatizado para deteccion de anomalias termales en **43 volcanes activos de Chile**, usando indices NHI (Normalized Hotspot Indices) sobre imagenes satelitales Sentinel-2 y Landsat 8/9.
 
-Sistema automatizado de deteccion de anomalias termales volcanicas desarrollado por
-Marchese, Genzano et al. (CNR Italia / Politecnico di Milano). Corre sobre Google Earth Engine
-y analiza datos Sentinel-2 MSI y Landsat 8/9 OLI para detectar pixeles calientes en condiciones
-diurnas.
+**Dashboard:** https://mendozavolcanic.github.io/NHI-v1/
 
-**App interactiva:** https://nicogenzano.users.earthengine.app/view/nhi-tool
-**Sitio oficial:** https://sites.google.com/view/nhi-tool
+## Que hace este proyecto
 
-## Algoritmo
+1. Descarga bandas NIR/SWIR de Sentinel-2 L2A y Landsat C2 L2 via [Microsoft Planetary Computer](https://planetarycomputer.microsoft.com/)
+2. Calcula los indices NHISWIR y NHISWNIR para cada escena
+3. Aplica filtrado estadistico para separar anomalias reales de ruido (nieve, suelo, nubes)
+4. Genera un dashboard web con tabla semaforo y graficos temporales por volcan
 
-NHI usa dos indices normalizados que analizan radiancia Top-of-Atmosphere (TOA) en bandas
-SWIR y NIR para identificar pixeles con anomalias termales:
+## Algoritmo NHI
 
-### Formulas
+Basado en Marchese et al. 2019, adaptado para reflectancia L2A (el original usa radiancia TOA):
 
 ```
-NHISWIR  = (L_SWIR2 - L_SWIR1) / (L_SWIR2 + L_SWIR1)
-NHISWNIR = (L_SWIR1 - L_NIR)   / (L_SWIR1 + L_NIR)
+NHISWIR  = (SWIR2 - SWIR1) / (SWIR2 + SWIR1)
+NHISWNIR = (SWIR1 - NIR)   / (SWIR1 + NIR)
 ```
 
-Donde L = radiancia TOA en W m-2 sr-1 um-1
+### Bandas
 
-### Bandas utilizadas
+| Sensor      | NIR (~0.86um) | SWIR1 (~1.61um) | SWIR2 (~2.19um) | Resolucion |
+|-------------|---------------|-----------------|-----------------|------------|
+| Sentinel-2  | B8A           | B11             | B12             | 20m        |
+| Landsat 8/9 | B5            | B6              | B7              | 30m        |
 
-| Sensor      | NIR (~0.8um) | SWIR1 (~1.6um) | SWIR2 (~2.2um) |
-|-------------|-------------|----------------|----------------|
-| Sentinel-2  | B8A         | B11            | B12            |
-| Landsat 8/9 | B5          | B6             | B7             |
-| ASTER       | B3N         | B4             | B5             |
+### Deteccion de pixeles calientes
 
-### Criterio de deteccion
+Un pixel se marca como anomalia termal cuando cumple **todas** las condiciones:
 
-Un pixel se marca como "caliente" cuando:
+1. Reflectancia SWIR1 y SWIR2 > 0.05 (filtro de pixeles validos)
+2. NHISWIR > mediana + max(0.02, 3*sigma) — supera fondo estadistico
+3. NHISWIR > 0 — criterio base del paper
+4. NHISWNIR > 0 — confirma anomalia en segundo indice (AND)
+5. Fraccion de pixeles calientes < 0.5% del total (anti-ruido solar/nieve)
+
+El filtro estadistico se aplica solo a NHISWIR (detector primario) porque el fondo de NHISWNIR es variable en terrenos con vegetacion/roca donde SWIR1 > NIR naturalmente.
+
+El filtrado estadistico (pasos 2-3) esta inspirado en la metodologia VRP Chile (triple-threshold sobre background annulus).
+
+### Clasificacion semaforo
+
+| Nivel     | Criterio                            |
+|-----------|-------------------------------------|
+| Rojo      | Anomalias detectadas en ultimos 7 dias  |
+| Amarillo  | Anomalias detectadas en ultimos 30 dias |
+| Verde     | Sin anomalias en 30 dias            |
+
+## Estructura del proyecto
 
 ```
-NHISWIR > 0  OR  NHISWNIR > 0
+NHI-Tool/
+  nhi_analyzer.py        # Analizador principal (busqueda STAC + calculo NHI)
+  config_nhi.py           # Configuracion: 43 volcanes, bandas, umbrales
+  requirements.txt        # Dependencias Python
+  docs/
+    index.html            # Dashboard web (Chart.js)
+    nhi_data/
+      resumen_global.json # Tabla semaforo de todos los volcanes
+      {Volcan}/
+        nhi_timeseries.json  # Serie temporal de cada volcan
+  .github/workflows/
+    nhi_analysis.yml      # Cron diario (12:00 UTC) + workflow_dispatch
+    deploy.yml            # Deploy a GitHub Pages
 ```
 
-Condiciones previas de filtro:
-- Diurno: L_SWIR1 > 3.0 AND L_SWIR2 > 3.0
-- Nocturno: L_SWIR1 > 5.0 OR NHISWNIR > 0
+## Uso local
 
-### Base fisica
+```bash
+# Instalar dependencias
+pip install -r requirements.txt
 
-A temperaturas normales (~300K), la radiancia emitida es dominante en TIR (8-12um).
-Cuando hay actividad volcanica (>500K), la emision se desplaza hacia SWIR (1.6-2.2um),
-haciendola detectable incluso de dia sobre la radiancia solar reflejada. Los indices
-normalizados minimizan el efecto de la reflectancia solar.
+# Analizar todos los volcanes (ultimos 60 dias)
+python nhi_analyzer.py
 
-## Salidas del sistema
+# Analizar un volcan especifico
+python nhi_analyzer.py --volcan Villarrica --dias 30
 
-- Conteo de pixeles calientes por fecha
-- Radiancia total SWIR (W m-2 sr-1 um-1)
-- Area total del hotspot (m2)
-- Series temporales de todos los parametros
+# Test rapido (3 volcanes)
+python nhi_analyzer.py --test
+```
 
-## Capacidades
+## Automatizacion
 
-- Monitorea >1400 volcanes activos globalmente
-- Procesamiento en tiempo casi-real via GEE
-- Datos desde 2013 (Landsat 8) y 2015 (Sentinel-2)
-- Notificaciones automaticas cada 48 horas
-- ~15% tasa de falsos positivos (incluye incendios forestales)
+El workflow `nhi_analysis.yml` corre diariamente a las 12:00 UTC y analiza los 43 volcanes.
+Despues, `deploy.yml` publica los resultados en GitHub Pages automaticamente.
 
-## Contactos del equipo NHI
+Para ejecutar manualmente: Actions > NHI Analysis > Run workflow.
 
-- francesco.marchese@cnr.it
-- nicola.genzano@polimi.it
-- carolina.filizzola@cnr.it
-- giuseppe-mazzeo@cnr.it
+## Volcanes monitoreados (43)
 
-## Licencia de uso
+| Zona    | Volcanes |
+|---------|----------|
+| Norte   | Taapaca, Parinacota, Guallatiri, Isluga, Irruputuncu, Ollague, San Pedro, Lascar |
+| Centro  | Tupungatito, San Jose, Tinguiririca, Planchon-Peteroa, Descabezado Grande, Tatara-San Pedro, Laguna del Maule, Nevado de Longavi, Nevados de Chillan |
+| Sur     | Antuco, Copahue, Callaqui, Lonquimay, Llaima, Sollipulli, Villarrica, Quetrupillan, Lanin, Mocho-Choshuenco, Carran - Los Venados, Puyehue - Cordon Caulle, Antillanca - Casablanca |
+| Austral | Osorno, Calbuco, Yate, Hornopiren, Huequi, Michinmahuida, Chaiten, Corcovado, Melimoyu, Mentolat, Cay, Maca, Hudson |
 
-Productos NHI son para "uso experimental/no-comercial" sin garantias de precision
-o disponibilidad.
+## Diferencias con el NHI Tool original
 
----
+| Aspecto | NHI Tool (Genzano) | Esta implementacion |
+|---------|--------------------|--------------------|
+| Plataforma | Google Earth Engine | Python + Planetary Computer |
+| Datos | Radiancia TOA (L1C) | Reflectancia superficie (L2A) |
+| Criterio | NHISWIR > 0 OR NHISWNIR > 0 | NHISWIR(stats) AND NHISWNIR > 0 + fraccion max |
+| Cobertura | >1400 volcanes global | 43 volcanes Chile |
+| Salida | Mapa interactivo GEE | Dashboard estatico GitHub Pages |
+| Automatizacion | GEE + notificaciones | GitHub Actions (cron diario) |
 
-## Papers fundamentales del NHI
+## Fuentes de datos
 
-### Open Access (descargables)
+- **Sentinel-2 L2A:** via [Planetary Computer STAC](https://planetarycomputer.microsoft.com/dataset/sentinel-2-l2a)
+- **Landsat C2 L2:** via [Planetary Computer STAC](https://planetarycomputer.microsoft.com/dataset/landsat-c2-l2)
 
-1. **Marchese et al. 2019** - Paper original del algoritmo NHI
-   "A Multi-Channel Algorithm for Mapping Volcanic Thermal Anomalies by Means of Sentinel-2 MSI and Landsat-8 OLI Data"
-   *Remote Sensing*, 11(23), 2876
-   https://www.mdpi.com/2072-4292/11/23/2876
+## Referencias
+
+### Papers fundamentales
+
+1. **Marchese et al. 2019** - Algoritmo NHI original
+   *Remote Sensing*, 11(23), 2876 — [Open Access](https://www.mdpi.com/2072-4292/11/23/2876)
 
 2. **Genzano et al. 2020** - NHI Tool en Google Earth Engine
-   "A Google Earth Engine Tool to Investigate, Map and Monitor Volcanic Thermal Anomalies at Global Scale"
-   *Remote Sensing*, 12(19), 3232
-   https://www.mdpi.com/2072-4292/12/19/3232
+   *Remote Sensing*, 12(19), 3232 — [Open Access](https://www.mdpi.com/2072-4292/12/19/3232)
 
-3. **Marchese et al. 2021** - NHI aplicado a ASTER
-   "Implementation of the NHI Algorithm on Infrared ASTER Data: Results and Future Perspectives"
-   *Sensors*, 21(4), 1538
-   https://pmc.ncbi.nlm.nih.gov/articles/PMC7926431/
+3. **Marchese et al. 2021** - NHI sobre ASTER
+   *Sensors*, 21(4), 1538 — [Open Access](https://pmc.ncbi.nlm.nih.gov/articles/PMC7926431/)
 
-### Requiere acceso (buscar manualmente)
+4. **Marchese et al. 2023** - NHI global operacional
+   *J. Geological Society*, 180(1) — DOI: 10.1144/jgs2022-014 (acceso pagado)
 
-4. **Marchese et al. 2023** - Sistema NHI global operacional
-   "Global volcano monitoring through the Normalized Hotspot Indices (NHI) system"
-   *Journal of the Geological Society*, 180(1), jgs2022-014
-   DOI: 10.1144/jgs2022-014
-   > PAYWALLED - Geological Society of London
+### Papers complementarios
 
----
+5. Massimetti et al. 2020 — Sentinel-2 hot-spot vs MIROVA ([link](https://www.mdpi.com/2072-4292/12/5/820))
+6. Coppola et al. 2020 — Sistema MIROVA ([link](https://www.frontiersin.org/articles/10.3389/feart.2019.00362/full))
+7. Valade et al. 2019 — MOUNTS multi-sensor ([link](https://www.mdpi.com/2072-4292/11/13/1528))
+8. Galindo et al. 2020 — VOLCANOMS, probado en Villarrica y Lascar ([link](https://www.mdpi.com/2072-4292/12/10/1589))
 
-## Papers complementarios relevantes
+### NHI Tool original
 
-### Deteccion termal (Open Access)
+- App: https://nicogenzano.users.earthengine.app/view/nhi-tool
+- Sitio: https://sites.google.com/view/nhi-tool
 
-5. **Massimetti et al. 2020** - Sentinel-2 hot-spot vs MIROVA
-   https://www.mdpi.com/2072-4292/12/5/820
+## Proyectos relacionados
 
-6. **Coppola et al. 2020** - Sistema MIROVA (MODIS)
-   https://www.frontiersin.org/articles/10.3389/feart.2019.00362/full
-
-7. **Valade et al. 2019** - MOUNTS (multi-sensor + IA)
-   https://www.mdpi.com/2072-4292/11/13/1528
-
-8. **Galindo et al. 2020** - VOLCANOMS (Landsat, probado en Villarrica y Lascar)
-   https://www.mdpi.com/2072-4292/12/10/1589
-
-### Contexto latinoamericano (Open Access)
-
-9. **Pritchard et al. 2018** - InSAR volcanes latinoamericanos (incluye SERNAGEOMIN)
-   https://doi.org/10.1186/s13617-018-0074-0
-
-10. **Reath et al. 2019** - Series temporales 47 volcanes latinoamericanos
-    https://agupubs.onlinelibrary.wiley.com/doi/pdfdirect/10.1029/2018JB016199
-
-### Preprocesamiento (Open Access)
-
-11. **Skakun et al. 2022** - Comparacion algoritmos cloud masking (CMIX)
-    https://www.sciencedirect.com/science/article/pii/S0034425722001043
-
-12. **Parker et al. 2015** - Incertidumbre atmosferica en InSAR
-    https://www.sciencedirect.com/science/article/pii/S0034425715301267
-
-### Requiere acceso
-
-13. **Zhu & Woodcock 2019** - Fmask 4.0 (cloud/snow detection)
-    DOI: 10.1016/j.rse.2019.05.024
-    > PAYWALLED - Elsevier
+- [Copernicus-v1](https://github.com/MendozaVolcanic/Copernicus-v1) — Dashboard Sentinel-2 RGB/SWIR/Thermal
+- [Landsat-v1](https://github.com/MendozaVolcanic/Landsat-v1) — Dashboard Landsat 8/9 RGB/SWIR/Thermal

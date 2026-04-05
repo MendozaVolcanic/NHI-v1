@@ -151,11 +151,12 @@ def calcular_nhi(nir, swir1, swir2, scale, offset):
     thresh_swir = median_swir + max(MIN_ABSOLUTE_NHI, N_SIGMA * std_swir)
     thresh_swnir = median_swnir + max(MIN_ABSOLUTE_NHI, N_SIGMA * std_swnir)
 
-    # Pixel caliente: supera umbral en AL MENOS un indice
-    # Y ademas supera el umbral base (>0) en ese indice
+    # Pixel caliente: NHISWIR supera filtro estadistico Y NHISWNIR > 0 (confirma)
+    # NHISWIR es el detector primario; NHISWNIR confirma sin filtro estadistico
+    # porque su fondo es variable (vegetacion/roca tienen SWIR1 > NIR naturalmente)
     hot_swir = valid & (nhi_swir > thresh_swir) & (nhi_swir > NHI_THRESHOLD)
-    hot_swnir = valid & (nhi_swnir > thresh_swnir) & (nhi_swnir > NHI_THRESHOLD)
-    hot_mask = hot_swir | hot_swnir
+    hot_swnir = valid & (nhi_swnir > NHI_THRESHOLD)
+    hot_mask = hot_swir & hot_swnir
 
     hot_pixels = int(hot_mask.sum())
 

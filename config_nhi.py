@@ -69,7 +69,7 @@ LANDSAT_OFFSET = -0.2
 NHI_THRESHOLD = 0.0          # Umbral base (mantiene criterio del paper)
 N_SIGMA = 3.0                # Pixeles deben superar mediana + 3*sigma
 MIN_ABSOLUTE_NHI = 0.02      # Umbral minimo absoluto (evita ruido en escenas homogeneas)
-MAX_HOT_FRACTION = 0.05      # Si >5% pixeles son "calientes", descartar (escena ruidosa)
+MAX_HOT_FRACTION = 0.005     # Si >0.5% pixeles son "calientes", descartar (escena ruidosa)
 SWIR_MIN_REFLECTANCE = 0.05  # Filtro de reflectancia minima (bajado: 0.15 excluia pixels validos)
 
 # ============================================
