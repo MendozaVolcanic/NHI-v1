@@ -183,6 +183,80 @@
             border-top: 1px solid #21262d;
             margin-top: 40px;
         }
+
+        /* Guia de interpretacion */
+        .guia-section { max-width: 900px; margin: 0 auto; }
+        .guia-card {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .guia-card h2 {
+            color: #ff6b35;
+            font-size: 1.1em;
+            margin-bottom: 12px;
+            border-bottom: 1px solid #30363d;
+            padding-bottom: 8px;
+        }
+        .guia-card h3 {
+            color: #58a6ff;
+            font-size: 0.95em;
+            margin: 14px 0 6px 0;
+        }
+        .guia-card p, .guia-card li {
+            color: #c9d1d9;
+            font-size: 0.88em;
+            line-height: 1.6;
+        }
+        .guia-card ul { padding-left: 20px; margin: 6px 0; }
+        .guia-card li { margin-bottom: 4px; }
+        .guia-card code {
+            background: #0d1117;
+            padding: 1px 5px;
+            border-radius: 3px;
+            font-size: 0.9em;
+            color: #f0883e;
+        }
+        .guia-formula {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 12px 16px;
+            font-family: monospace;
+            color: #e6edf3;
+            margin: 10px 0;
+            font-size: 0.9em;
+        }
+        .guia-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+            font-size: 0.85em;
+        }
+        .guia-table th {
+            background: #0d1117;
+            padding: 8px 10px;
+            text-align: left;
+            color: #8b949e;
+            border-bottom: 1px solid #30363d;
+        }
+        .guia-table td {
+            padding: 8px 10px;
+            border-bottom: 1px solid #21262d;
+            color: #c9d1d9;
+        }
+        .guia-note {
+            background: rgba(210, 153, 34, 0.1);
+            border-left: 3px solid #d29922;
+            padding: 10px 14px;
+            border-radius: 0 6px 6px 0;
+            margin: 12px 0;
+            font-size: 0.85em;
+            color: #c9d1d9;
+        }
+        .guia-note strong { color: #d29922; }
     </style>
 </head>
 <body>
@@ -197,6 +271,7 @@
     <div class="nav-tabs">
         <div class="nav-tab active" onclick="showSection('resumen')">Resumen Global</div>
         <div class="nav-tab" onclick="showSection('individual')">Vista Individual</div>
+        <div class="nav-tab" onclick="showSection('guia')">Guia de Interpretacion</div>
     </div>
 
     <div class="container">
@@ -314,6 +389,243 @@
                 </div>
             </div>
         </div>
+
+        <!-- SECCION 3: GUIA DE INTERPRETACION -->
+        <div id="section-guia" class="section">
+            <div class="guia-section">
+
+                <div class="guia-card">
+                    <h2>Que mide este dashboard</h2>
+                    <p>Este sistema detecta <strong>anomalias termales</strong> en volcanes usando imagenes satelitales
+                    en el infrarrojo de onda corta (SWIR). A diferencia del infrarrojo termico (TIR, 8-12 um) que mide
+                    la temperatura superficial general, las bandas SWIR (1.6 y 2.2 um) son sensibles a fuentes de calor
+                    intenso (&gt;500 K) como:</p>
+                    <ul>
+                        <li>Lagos de lava y lava activa expuesta</li>
+                        <li>Domos en crecimiento con fracturas incandescentes</li>
+                        <li>Fumarolas de alta temperatura (&gt;300 C)</li>
+                        <li>Flujos piroclasticos recientes aun calientes</li>
+                        <li>Coladas de lava en enfriamiento</li>
+                    </ul>
+                    <p>No detecta actividad de baja temperatura como desgasificacion fria, deformacion o sismicidad.</p>
+                </div>
+
+                <div class="guia-card">
+                    <h2>Bandas SWIR: por que funcionan para volcanes</h2>
+                    <p>La radiancia emitida por un cuerpo sigue la ley de Planck. A temperatura ambiente (~300 K),
+                    la emision se concentra en el TIR (pico ~10 um). Pero cuando hay una fuente volcanica caliente:</p>
+                    <ul>
+                        <li>A <strong>~500 K</strong>: la emision SWIR2 (2.2 um) comienza a ser detectable sobre el fondo solar reflejado</li>
+                        <li>A <strong>~600-800 K</strong>: SWIR1 (1.6 um) tambien muestra anomalia clara</li>
+                        <li>A <strong>&gt;1000 K</strong> (lava fresca): ambas bandas SWIR muestran seniales muy fuertes</li>
+                    </ul>
+                    <p>La ventaja del SWIR sobre el TIR es la <strong>resolucion espacial</strong>: Sentinel-2 tiene 20 m/pixel en SWIR
+                    vs 1 km/pixel en TIR (MODIS/VIIRS). Esto permite detectar fuentes pequenias.</p>
+
+                    <h3>Bandas utilizadas</h3>
+                    <table class="guia-table">
+                        <tr><th>Banda</th><th>Longitud de onda</th><th>Sentinel-2</th><th>Landsat 8/9</th><th>Detecta</th></tr>
+                        <tr><td>NIR</td><td>~0.86 um</td><td>B8A (20m)</td><td>B5 (30m)</td><td>Referencia (vegetacion, nieve)</td></tr>
+                        <tr><td>SWIR1</td><td>~1.61 um</td><td>B11 (20m)</td><td>B6 (30m)</td><td>Fuentes &gt;600 K</td></tr>
+                        <tr><td>SWIR2</td><td>~2.19 um</td><td>B12 (20m)</td><td>B7 (30m)</td><td>Fuentes &gt;500 K (mas sensible)</td></tr>
+                    </table>
+                </div>
+
+                <div class="guia-card">
+                    <h2>Indices NHI: como se calculan</h2>
+                    <div class="guia-formula">
+                        NHISWIR  = (SWIR2 - SWIR1) / (SWIR2 + SWIR1)<br>
+                        NHISWNIR = (SWIR1 - NIR) / (SWIR1 + NIR)
+                    </div>
+                    <h3>NHISWIR (detector primario)</h3>
+                    <p>Compara las dos bandas SWIR. En condiciones normales, la reflectancia solar decrece con la longitud
+                    de onda en el SWIR, asi que SWIR2 &lt; SWIR1 y el indice es <strong>negativo</strong>.
+                    Cuando hay una fuente caliente, la emision termica en 2.2 um supera la de 1.6 um (ley de Planck),
+                    invirtiendo la relacion: SWIR2 &gt; SWIR1 y el indice se vuelve <strong>positivo</strong>.</p>
+                    <ul>
+                        <li><code>NHISWIR &lt; 0</code> : Normal (reflectancia solar dominante)</li>
+                        <li><code>NHISWIR ~ 0</code> : Ambiguo (posible calentamiento leve o suelo oscuro)</li>
+                        <li><code>NHISWIR &gt; 0</code> : Anomalia termal (emision domina sobre reflectancia)</li>
+                        <li><code>NHISWIR &gt; 0.3</code> : Anomalia fuerte (lava activa, incandescencia)</li>
+                    </ul>
+
+                    <h3>NHISWNIR (confirmacion)</h3>
+                    <p>Compara SWIR1 con NIR. En terreno sin anomalia, SWIR1 y NIR tienen valores similares
+                    (el indice oscila cerca de 0). Cuando SWIR1 sube por emision termal, el indice se vuelve positivo.
+                    Se usa como <strong>confirmacion</strong>: un pixel debe ser positivo en ambos indices para
+                    considerarse anomalia.</p>
+                    <div class="guia-note">
+                        <strong>Nota:</strong> Este indice tiene un fondo mas variable que NHISWIR. Suelo sin vegetacion
+                        y roca oscura pueden tener SWIR1 &gt; NIR naturalmente, dando falsos positivos si se usa solo.
+                        Por eso se usa como criterio de confirmacion, no como detector principal.
+                    </div>
+                </div>
+
+                <div class="guia-card">
+                    <h2>Como interpretar los graficos</h2>
+
+                    <h3>Pixeles calientes por fecha</h3>
+                    <p>Cada barra muestra cuantos pixeles de 20x20 m (Sentinel-2) o 30x30 m (Landsat) superaron
+                    los umbrales NHI en esa fecha. Sirve como proxy del <strong>area</strong> de la anomalia:</p>
+                    <ul>
+                        <li><strong>1-10 px</strong>: Anomalia puntual (fumarola, fractura en domo, pixel sub-resolucion)</li>
+                        <li><strong>10-100 px</strong>: Anomalia moderada (lago de lava pequenio, flujo activo incipiente)</li>
+                        <li><strong>100-1000 px</strong>: Anomalia extensa (flujo de lava activo, domo en crecimiento rapido)</li>
+                        <li><strong>&gt;1000 px</strong>: Evento mayor o posible falso positivo — verificar con otras fuentes</li>
+                    </ul>
+                    <p>Barras <span style="color:#da3633;">rojas</span> = alerta activa.
+                    Barras <span style="color:#238636;">verdes</span> = sin anomalia detectada en esa fecha.</p>
+
+                    <h3>NHISWIR maximo</h3>
+                    <p>Valor maximo del indice entre los pixeles calientes. Indica la <strong>intensidad</strong>
+                    de la fuente mas caliente en la escena:</p>
+                    <ul>
+                        <li><code>0.01 - 0.05</code> : Anomalia debil (puede ser calentamiento solar residual)</li>
+                        <li><code>0.05 - 0.20</code> : Anomalia moderada (fumarola intensa, domo caliente)</li>
+                        <li><code>0.20 - 0.50</code> : Anomalia fuerte (lago de lava, flujo activo)</li>
+                        <li><code>&gt; 0.50</code> : Anomalia muy intensa (lava incandescente expuesta)</li>
+                    </ul>
+
+                    <h3>NHISWNIR maximo</h3>
+                    <p>Confirmacion del indice secundario. Valores positivos altos refuerzan la interpretacion
+                    de anomalia real. Valores cercanos a 0 con NHISWIR alto pueden indicar un pixel borderline.</p>
+
+                    <h3>Radiancia total SWIR2</h3>
+                    <p>Suma de la reflectancia SWIR2 de todos los pixeles calientes. Es un proxy de la
+                    <strong>potencia radiante total</strong> (VRP) de la anomalia. Util para comparar la intensidad
+                    relativa entre fechas: un valor alto con pocos pixeles indica una fuente concentrada e intensa;
+                    un valor alto con muchos pixeles indica una fuente extensa.</p>
+                </div>
+
+                <div class="guia-card">
+                    <h2>Sistema de semaforo</h2>
+                    <table class="guia-table">
+                        <tr><th>Color</th><th>Criterio</th><th>Interpretacion</th></tr>
+                        <tr>
+                            <td><span class="badge badge-rojo">ROJO</span></td>
+                            <td>Anomalia detectada en los ultimos 7 dias</td>
+                            <td>Actividad termal reciente confirmada por satelite. Verificar con sismicidad,
+                            deformacion y observacion directa. No implica necesariamente erupcion.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-amarillo">AMARILLO</span></td>
+                            <td>Anomalia detectada en los ultimos 30 dias, pero no en los ultimos 7</td>
+                            <td>Hubo actividad termal reciente, pero no se ha confirmado en la ultima semana.
+                            Puede indicar enfriamiento, cobertura nubosa persistente, o intermitencia.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-verde">VERDE</span></td>
+                            <td>Sin anomalias en los ultimos 30 dias</td>
+                            <td>No se han detectado anomalias SWIR. No descarta actividad: nubes, nieve
+                            sobre crater, y fuentes muy pequenias (&lt;20 m) pueden no ser detectadas.</td>
+                        </tr>
+                    </table>
+                    <div class="guia-note">
+                        <strong>Importante:</strong> El semaforo NHI NO reemplaza el sistema de alerta volcanica de
+                        SERNAGEOMIN. Es una herramienta complementaria. Un volcan puede estar en alerta tecnica
+                        alta sin mostrar anomalia SWIR (actividad sismica, deformacion, desgasificacion) y viceversa.
+                    </div>
+                </div>
+
+                <div class="guia-card">
+                    <h2>Fuentes de error y falsos positivos</h2>
+                    <h3>Causas comunes de falsos positivos</h3>
+                    <ul>
+                        <li><strong>Bordes de nubes:</strong> La transicion nube/suelo puede crear artefactos SWIR</li>
+                        <li><strong>Nieve brillante:</strong> Reflectancia alta en SWIR puede generar indices anomalos en
+                        zonas de transicion nieve/roca</li>
+                        <li><strong>Suelo calentado por el sol:</strong> Superficies oscuras (lava reciente, ceniza)
+                        en dias calidos pueden elevar la emision SWIR</li>
+                        <li><strong>Incendios forestales:</strong> Indistinguibles de anomalias volcanicas por SWIR;
+                        se requiere contexto geografico para descartar</li>
+                        <li><strong>Instalaciones industriales:</strong> Raro en volcanes chilenos, pero posible
+                        en zonas mineras del norte</li>
+                    </ul>
+
+                    <h3>Causas de falsos negativos (anomalia real no detectada)</h3>
+                    <ul>
+                        <li><strong>Nubes:</strong> El SWIR no penetra nubes densas. Cobertura &gt;50% descarta la escena</li>
+                        <li><strong>Nieve sobre crater:</strong> Cubre la fuente termal; solo fuentes muy intensas
+                        derriten suficiente nieve para ser visibles</li>
+                        <li><strong>Fuente sub-pixel:</strong> Una fumarola de 5 m en un pixel de 20 m se diluye;
+                        la anomalia puede no superar el umbral estadistico</li>
+                        <li><strong>Hora de paso:</strong> Sentinel-2 y Landsat son satelites diurnos (~10:30 AM local).
+                        No detectan eventos nocturnos ni efimeros</li>
+                        <li><strong>Frecuencia temporal:</strong> Sentinel-2 revisita cada 5 dias, Landsat cada 8-16.
+                        Eventos entre pasadas no se registran</li>
+                    </ul>
+                </div>
+
+                <div class="guia-card">
+                    <h2>Que buscar como geologo</h2>
+                    <h3>Patrones que sugieren actividad real</h3>
+                    <ul>
+                        <li><strong>Persistencia temporal:</strong> Anomalias en multiples fechas consecutivas en el mismo
+                        volcan son la senial mas confiable. Un unico pixel en una sola fecha es sospechoso</li>
+                        <li><strong>NHISWIR &gt; 0.2:</strong> Valores altos del indice son dificiles de producir por
+                        reflectancia solar; casi siempre indican emision termal real</li>
+                        <li><strong>Incremento gradual de pixeles:</strong> Si el conteo de pixeles calientes crece entre
+                        fechas, sugiere expansion de la fuente (ej: flujo de lava avanzando)</li>
+                        <li><strong>Correlacion con sismicidad:</strong> Anomalia SWIR precedida por enjambre sismico
+                        refuerza la interpretacion de ascenso magmatico</li>
+                    </ul>
+
+                    <h3>Patrones que sugieren ruido</h3>
+                    <ul>
+                        <li><strong>Anomalia en un solo sensor/fecha:</strong> Si aparece en Sentinel-2 pero no en Landsat
+                        (o viceversa) del mismo periodo, puede ser artefacto</li>
+                        <li><strong>Muchos volcanes en la misma fecha:</strong> Si 10+ volcanes de la misma zona muestran
+                        anomalia el mismo dia, es probable ruido atmosferico o solar</li>
+                        <li><strong>NHISWIR muy bajo (0.01-0.03) con muchos pixeles:</strong> Fuente debil pero extensa
+                        es mas consistente con calentamiento solar que con actividad volcanica</li>
+                    </ul>
+
+                    <h3>Volcanes de referencia en Chile</h3>
+                    <table class="guia-table">
+                        <tr><th>Volcan</th><th>Tipo de actividad</th><th>Senial SWIR esperada</th></tr>
+                        <tr><td>Villarrica</td><td>Lago de lava permanente</td><td>Anomalias frecuentes,
+                        NHISWIR alto (&gt;0.3), pixeles concentrados en crater</td></tr>
+                        <tr><td>Nevados de Chillan</td><td>Domo en crecimiento (post-2018)</td><td>Anomalias intermitentes,
+                        pixeles en zona del domo, intensidad variable</td></tr>
+                        <tr><td>Copahue</td><td>Lago acido caliente + fumarolas</td><td>Anomalias debiles a moderadas,
+                        pocas veces supera NHISWIR 0.2 sin erupcion</td></tr>
+                        <tr><td>Lascar</td><td>Fumarolas intensas + erupciones esporadicas</td><td>Anomalias puntuales
+                        (&lt;10 px), NHISWIR moderado; se confunde con suelo calentado</td></tr>
+                        <tr><td>Llaima</td><td>Intermitente (ultima erupcion 2008-09)</td><td>Sin anomalia esperable
+                        en reposo; cualquier deteccion merece atencion</td></tr>
+                    </table>
+                </div>
+
+                <div class="guia-card">
+                    <h2>Limitaciones del sistema</h2>
+                    <ul>
+                        <li>Usa <strong>reflectancia de superficie (L2A)</strong>, no radiancia TOA como el paper original.
+                        Los valores absolutos de NHI difieren del NHI Tool oficial de Genzano et al.</li>
+                        <li>Resolucion temporal limitada: un evento de horas puede no coincidir con pasada satelital</li>
+                        <li>Solo detecta anomalias <strong>diurnas</strong> (pasada ~10:30 AM). MIROVA (MODIS nocturno)
+                        complementa para eventos nocturnos</li>
+                        <li>Los umbrales estadisticos estan calibrados para Chile pero no validados sistematicamente;
+                        pueden requerir ajuste para volcanes con contextos geologicos particulares</li>
+                        <li>No reemplaza el monitoreo multiparametrico (sismicidad, deformacion, gases, visual)</li>
+                    </ul>
+                </div>
+
+                <div class="guia-card">
+                    <h2>Referencias</h2>
+                    <ul>
+                        <li>Marchese et al. 2019 — Algoritmo NHI original
+                        (<a href="https://www.mdpi.com/2072-4292/11/23/2876" target="_blank" style="color:#58a6ff;">doi:10.3390/rs11232876</a>)</li>
+                        <li>Genzano et al. 2020 — NHI Tool en Google Earth Engine
+                        (<a href="https://www.mdpi.com/2072-4292/12/19/3232" target="_blank" style="color:#58a6ff;">doi:10.3390/rs12193232</a>)</li>
+                        <li>Coppola et al. 2020 — MIROVA: monitoreo termal con MODIS
+                        (<a href="https://www.frontiersin.org/articles/10.3389/feart.2019.00362/full" target="_blank" style="color:#58a6ff;">doi:10.3389/feart.2019.00362</a>)</li>
+                        <li>Massimetti et al. 2020 — Sentinel-2 hot-spot vs MIROVA
+                        (<a href="https://www.mdpi.com/2072-4292/12/5/820" target="_blank" style="color:#58a6ff;">doi:10.3390/rs12050820</a>)</li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
     </div>
 
     <div class="footer">
@@ -340,7 +652,12 @@
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
             document.getElementById('section-' + name).classList.add('active');
-            event.target.classList.add('active');
+            // Activar el tab correcto
+            const tabs = document.querySelectorAll('.nav-tab');
+            const tabMap = { resumen: 0, individual: 1, guia: 2 };
+            if (tabMap[name] !== undefined && tabs[tabMap[name]]) {
+                tabs[tabMap[name]].classList.add('active');
+            }
         }
 
         // ========================
