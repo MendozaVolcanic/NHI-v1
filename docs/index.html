@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NHI Dashboard - Anomalias Termales Volcanicas</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0d1117;
+            color: #e6edf3;
+            min-height: 100vh;
+        }
+        .header {
+            background: linear-gradient(135deg, #161b22 0%, #1a0a0a 100%);
+            border-bottom: 1px solid #30363d;
+            padding: 20px;
+            text-align: center;
+        }
+        .header h1 { color: #ff6b35; font-size: 1.8em; }
+        .header p { color: #8b949e; margin-top: 5px; font-size: 0.9em; }
+
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 15px;
+            background: #161b22;
+            border-bottom: 1px solid #30363d;
+        }
+        .nav-tab {
+            padding: 8px 20px;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            background: #0d1117;
+            color: #8b949e;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        .nav-tab.active {
+            background: #ff6b35;
+            color: white;
+            border-color: #ff6b35;
+        }
+        .nav-tab:hover { border-color: #ff6b35; }
+
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+
+        .section { display: none; }
+        .section.active { display: block; }
+
+        /* Tabla resumen */
+        .volcano-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        .volcano-table th {
+            background: #161b22;
+            padding: 10px 12px;
+            text-align: left;
+            border-bottom: 2px solid #30363d;
+            font-size: 0.85em;
+            color: #8b949e;
+        }
+        .volcano-table td {
+            padding: 8px 12px;
+            border-bottom: 1px solid #21262d;
+            font-size: 0.9em;
+        }
+        .volcano-table tr:hover { background: #161b22; }
+        .volcano-table tr { cursor: pointer; }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+        .badge-rojo { background: #da3633; color: white; }
+        .badge-amarillo { background: #d29922; color: #0d1117; }
+        .badge-verde { background: #238636; color: white; }
+
+        /* Vista individual */
+        .controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .controls select {
+            padding: 8px 12px;
+            background: #161b22;
+            border: 1px solid #30363d;
+            color: #e6edf3;
+            border-radius: 6px;
+            font-size: 0.9em;
+        }
+        .volcano-name {
+            font-size: 1.4em;
+            color: #ff6b35;
+            font-weight: bold;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        @media (max-width: 900px) { .charts-grid { grid-template-columns: 1fr; } }
+
+        .chart-card {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        .chart-card h3 {
+            color: #58a6ff;
+            margin-bottom: 10px;
+            font-size: 0.95em;
+        }
+        .chart-card canvas { max-height: 300px; }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        @media (max-width: 768px) { .stats-row { grid-template-columns: repeat(2, 1fr); } }
+
+        .stat-card {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+        .stat-card .value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #ff6b35;
+        }
+        .stat-card .label {
+            color: #8b949e;
+            font-size: 0.8em;
+            margin-top: 5px;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #8b949e;
+            font-style: italic;
+        }
+
+        .loading { text-align: center; padding: 40px; color: #8b949e; }
+
+        .link-externo {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 6px 14px;
+            background: #21262d;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            color: #58a6ff;
+            text-decoration: none;
+            font-size: 0.85em;
+        }
+        .link-externo:hover { border-color: #58a6ff; }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #484f58;
+            font-size: 0.8em;
+            border-top: 1px solid #21262d;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>NHI Dashboard</h1>
+        <p>Normalized Hotspot Indices — Anomalias Termales en 43 Volcanes de Chile</p>
+        <p style="margin-top:3px; font-size:0.8em; color:#484f58;">
+            Algoritmo: Marchese et al. 2019 | Datos: Sentinel-2 + Landsat 8/9 via Planetary Computer
+        </p>
+    </div>
+
+    <div class="nav-tabs">
+        <div class="nav-tab active" onclick="showSection('resumen')">Resumen Global</div>
+        <div class="nav-tab" onclick="showSection('individual')">Vista Individual</div>
+    </div>
+
+    <div class="container">
+        <!-- SECCION 1: RESUMEN GLOBAL -->
+        <div id="section-resumen" class="section active">
+            <div class="stats-row" id="global-stats">
+                <div class="stat-card">
+                    <div class="value" id="stat-rojos">-</div>
+                    <div class="label">Alerta (7 dias)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="value" id="stat-amarillos" style="color:#d29922;">-</div>
+                    <div class="label">Precaucion (30 dias)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="value" id="stat-verdes" style="color:#238636;">-</div>
+                    <div class="label">Sin anomalias</div>
+                </div>
+                <div class="stat-card">
+                    <div class="value" id="stat-total" style="color:#58a6ff;">-</div>
+                    <div class="label">Volcanes monitoreados</div>
+                </div>
+            </div>
+
+            <table class="volcano-table" id="volcano-table">
+                <thead>
+                    <tr>
+                        <th>Estado</th>
+                        <th>Volcan</th>
+                        <th>Zona</th>
+                        <th>Alertas 7d</th>
+                        <th>Alertas 30d</th>
+                        <th>Max px calientes</th>
+                        <th>Ultima fecha</th>
+                        <th>Obs.</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body">
+                    <tr><td colspan="8" class="loading">Cargando datos...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- SECCION 2: VISTA INDIVIDUAL -->
+        <div id="section-individual" class="section">
+            <div class="controls">
+                <select id="zona-select" onchange="cambiarZonaNHI()">
+                    <option value="Norte">Zona Norte</option>
+                    <option value="Centro">Zona Centro</option>
+                    <option value="Sur" selected>Zona Sur</option>
+                    <option value="Austral">Zona Austral</option>
+                </select>
+                <select id="volcan-select" onchange="cargarVolcanNHI()"></select>
+                <span class="volcano-name" id="volcan-titulo">Villarrica</span>
+                <a class="link-externo" id="link-mirova" href="#" target="_blank">Ver en MIROVA</a>
+                <a class="link-externo" id="link-copernicus" href="#" target="_blank">Ver en Copernicus Dashboard</a>
+            </div>
+
+            <div class="stats-row" id="individual-stats">
+                <div class="stat-card">
+                    <div class="value" id="ind-alertas">-</div>
+                    <div class="label">Alertas (60 dias)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="value" id="ind-max-px">-</div>
+                    <div class="label">Max pixeles calientes</div>
+                </div>
+                <div class="stat-card">
+                    <div class="value" id="ind-max-nhiswir">-</div>
+                    <div class="label">Max NHISWIR</div>
+                </div>
+                <div class="stat-card">
+                    <div class="value" id="ind-obs">-</div>
+                    <div class="label">Observaciones</div>
+                </div>
+            </div>
+
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <h3>Pixeles Calientes por Fecha</h3>
+                    <canvas id="chart-hotpixels"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h3>NHISWIR Maximo</h3>
+                    <canvas id="chart-nhiswir"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h3>NHISWNIR Maximo</h3>
+                    <canvas id="chart-nhiswnir"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h3>Radiancia Total SWIR2 (pixeles calientes)</h3>
+                    <canvas id="chart-radiancia"></canvas>
+                </div>
+            </div>
+
+            <div id="data-table-container" style="margin-top:20px;">
+                <div class="chart-card">
+                    <h3>Detalle de Observaciones</h3>
+                    <table class="volcano-table" id="detail-table">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Sensor</th>
+                                <th>Nubes%</th>
+                                <th>Px calientes</th>
+                                <th>NHISWIR max</th>
+                                <th>NHISWNIR max</th>
+                                <th>SWIR2 total</th>
+                                <th>Alerta</th>
+                            </tr>
+                        </thead>
+                        <tbody id="detail-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        NHI Dashboard — MendozaVolcanic | Algoritmo: Marchese et al. 2019 (doi:10.3390/rs11232876)
+        <br>Datos: Microsoft Planetary Computer (Sentinel-2 L2A + Landsat C2 L2) | Uso experimental
+    </div>
+
+    <script>
+        const NHI_BASE = '.';
+        let resumenGlobal = {};
+        let chartInstances = {};
+
+        const VOLCANES_ZONAS = {
+            'Norte': ['Taapaca','Parinacota','Guallatiri','Isluga','Irruputuncu','Ollague','San Pedro','Lascar'],
+            'Centro': ['Tupungatito','San Jose','Tinguiririca','Planchon-Peteroa','Descabezado Grande','Tatara-San Pedro','Laguna del Maule','Nevado de Longavi','Nevados de Chillan'],
+            'Sur': ['Antuco','Copahue','Callaqui','Lonquimay','Llaima','Sollipulli','Villarrica','Quetrupillan','Lanin','Mocho-Choshuenco','Carran - Los Venados','Puyehue - Cordon Caulle','Antillanca - Casablanca'],
+            'Austral': ['Osorno','Calbuco','Yate','Hornopiren','Huequi','Michinmahuida','Chaiten','Corcovado','Melimoyu','Mentolat','Cay','Maca','Hudson']
+        };
+
+        // ========================
+        // NAVEGACION
+        // ========================
+        function showSection(name) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            document.getElementById('section-' + name).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // ========================
+        // RESUMEN GLOBAL
+        // ========================
+        async function cargarResumen() {
+            try {
+                const resp = await fetch(`${NHI_BASE}/nhi_data/resumen_global.json?t=${Date.now()}`);
+                if (!resp.ok) {
+                    document.getElementById('table-body').textContent = '';
+                    const tr = document.createElement('tr');
+                    const td = document.createElement('td');
+                    td.colSpan = 8;
+                    td.className = 'no-data';
+                    td.textContent = 'Sin datos NHI. Ejecuta el workflow nhi_analysis.yml para generar datos.';
+                    tr.appendChild(td);
+                    document.getElementById('table-body').appendChild(tr);
+                    return;
+                }
+                resumenGlobal = await resp.json();
+                renderResumen();
+            } catch (e) {
+                console.error('Error cargando resumen:', e);
+            }
+        }
+
+        function renderResumen() {
+            const entries = Object.entries(resumenGlobal);
+            // Ordenar: rojo primero, luego amarillo, luego verde
+            const orden = { rojo: 0, amarillo: 1, verde: 2 };
+            entries.sort((a, b) => (orden[a[1].nivel] || 3) - (orden[b[1].nivel] || 3));
+
+            let rojos = 0, amarillos = 0, verdes = 0;
+            const tbody = document.getElementById('table-body');
+            tbody.textContent = '';
+
+            for (const [nombre, data] of entries) {
+                if (data.nivel === 'rojo') rojos++;
+                else if (data.nivel === 'amarillo') amarillos++;
+                else verdes++;
+
+                const tr = document.createElement('tr');
+                tr.addEventListener('click', () => {
+                    showSectionDirect('individual');
+                    const zonaSel = document.getElementById('zona-select');
+                    zonaSel.value = data.zona;
+                    cambiarZonaNHI();
+                    document.getElementById('volcan-select').value = nombre;
+                    cargarVolcanNHI();
+                });
+
+                const tdBadge = document.createElement('td');
+                const badge = document.createElement('span');
+                badge.className = `badge badge-${data.nivel}`;
+                badge.textContent = data.nivel.toUpperCase();
+                tdBadge.appendChild(badge);
+                tr.appendChild(tdBadge);
+
+                const fields = [
+                    nombre,
+                    data.zona,
+                    data.alertas_7d,
+                    data.alertas_30d,
+                    data.max_pixeles_calientes,
+                    data.ultima_fecha_analizada || '-',
+                    data.total_observaciones
+                ];
+                for (const val of fields) {
+                    const td = document.createElement('td');
+                    td.textContent = val;
+                    tr.appendChild(td);
+                }
+                tbody.appendChild(tr);
+            }
+
+            document.getElementById('stat-rojos').textContent = rojos;
+            document.getElementById('stat-amarillos').textContent = amarillos;
+            document.getElementById('stat-verdes').textContent = verdes;
+            document.getElementById('stat-total').textContent = entries.length;
+        }
+
+        function showSectionDirect(name) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(t => {
+                t.classList.remove('active');
+                if (t.textContent.toLowerCase().includes(name === 'resumen' ? 'resumen' : 'individual')) {
+                    t.classList.add('active');
+                }
+            });
+            document.getElementById('section-' + name).classList.add('active');
+        }
+
+        // ========================
+        // VISTA INDIVIDUAL
+        // ========================
+        function cambiarZonaNHI() {
+            const zona = document.getElementById('zona-select').value;
+            const sel = document.getElementById('volcan-select');
+            sel.textContent = '';
+            const volcanes = VOLCANES_ZONAS[zona] || [];
+            for (const v of volcanes) {
+                const opt = document.createElement('option');
+                opt.value = v;
+                opt.textContent = v;
+                sel.appendChild(opt);
+            }
+            if (volcanes.length > 0) cargarVolcanNHI();
+        }
+
+        async function cargarVolcanNHI() {
+            const nombre = document.getElementById('volcan-select').value;
+            if (!nombre) return;
+
+            document.getElementById('volcan-titulo').textContent = nombre;
+
+            // Links externos
+            const nombreUrl = encodeURIComponent(nombre);
+            document.getElementById('link-mirova').href =
+                `https://www.mirovaweb.it/?action=volcanology&volcano=${nombreUrl}`;
+            document.getElementById('link-copernicus').href =
+                `https://mendozavolcanic.github.io/Copernicus-v1/`;
+
+            try {
+                const resp = await fetch(
+                    `${NHI_BASE}/nhi_data/${encodeURIComponent(nombre)}/nhi_timeseries.json?t=${Date.now()}`
+                );
+                if (!resp.ok) {
+                    mostrarSinDatos();
+                    return;
+                }
+                const data = await resp.json();
+                renderIndividual(data);
+            } catch (e) {
+                mostrarSinDatos();
+            }
+        }
+
+        function mostrarSinDatos() {
+            document.getElementById('ind-alertas').textContent = '-';
+            document.getElementById('ind-max-px').textContent = '-';
+            document.getElementById('ind-max-nhiswir').textContent = '-';
+            document.getElementById('ind-obs').textContent = '0';
+            destroyCharts();
+            const tbody = document.getElementById('detail-body');
+            tbody.textContent = '';
+            const tr = document.createElement('tr');
+            const td = document.createElement('td');
+            td.colSpan = 8;
+            td.className = 'no-data';
+            td.textContent = 'Sin datos NHI para este volcan.';
+            tr.appendChild(td);
+            tbody.appendChild(tr);
+        }
+
+        function renderIndividual(data) {
+            // Stats
+            const alertas = data.filter(d => d.alerta).length;
+            const maxPx = Math.max(...data.map(d => d.pixeles_calientes), 0);
+            const maxNHI = Math.max(...data.map(d => d.max_nhiswir || 0), 0);
+
+            document.getElementById('ind-alertas').textContent = alertas;
+            document.getElementById('ind-max-px').textContent = maxPx;
+            document.getElementById('ind-max-nhiswir').textContent = maxNHI.toFixed(4);
+            document.getElementById('ind-obs').textContent = data.length;
+
+            // Ordenar cronologicamente para graficos
+            const sorted = [...data].sort((a, b) => a.fecha.localeCompare(b.fecha));
+            const fechas = sorted.map(d => d.fecha);
+            const sensores = sorted.map(d => d.sensor === 'Sentinel-2' ? '#58a6ff' : '#f0883e');
+
+            // Graficos
+            destroyCharts();
+
+            chartInstances.hotpixels = new Chart(
+                document.getElementById('chart-hotpixels'), {
+                type: 'bar',
+                data: {
+                    labels: fechas,
+                    datasets: [{
+                        label: 'Pixeles calientes',
+                        data: sorted.map(d => d.pixeles_calientes),
+                        backgroundColor: sorted.map(d =>
+                            d.alerta ? 'rgba(218, 54, 51, 0.8)' : 'rgba(35, 134, 54, 0.5)'
+                        ),
+                        borderColor: sorted.map(d =>
+                            d.alerta ? '#da3633' : '#238636'
+                        ),
+                        borderWidth: 1,
+                    }]
+                },
+                options: chartOptions('Pixeles')
+            });
+
+            chartInstances.nhiswir = new Chart(
+                document.getElementById('chart-nhiswir'), {
+                type: 'line',
+                data: {
+                    labels: fechas,
+                    datasets: [{
+                        label: 'NHISWIR max',
+                        data: sorted.map(d => d.max_nhiswir || 0),
+                        borderColor: '#ff6b35',
+                        backgroundColor: 'rgba(255, 107, 53, 0.1)',
+                        fill: true,
+                        tension: 0.3,
+                        pointRadius: 3,
+                    }, {
+                        label: 'Umbral (0)',
+                        data: fechas.map(() => 0),
+                        borderColor: 'rgba(218, 54, 51, 0.5)',
+                        borderDash: [5, 5],
+                        pointRadius: 0,
+                        fill: false,
+                    }]
+                },
+                options: chartOptions('Indice')
+            });
+
+            chartInstances.nhiswnir = new Chart(
+                document.getElementById('chart-nhiswnir'), {
+                type: 'line',
+                data: {
+                    labels: fechas,
+                    datasets: [{
+                        label: 'NHISWNIR max',
+                        data: sorted.map(d => d.max_nhiswnir || 0),
+                        borderColor: '#3fb950',
+                        backgroundColor: 'rgba(63, 185, 80, 0.1)',
+                        fill: true,
+                        tension: 0.3,
+                        pointRadius: 3,
+                    }, {
+                        label: 'Umbral (0)',
+                        data: fechas.map(() => 0),
+                        borderColor: 'rgba(218, 54, 51, 0.5)',
+                        borderDash: [5, 5],
+                        pointRadius: 0,
+                        fill: false,
+                    }]
+                },
+                options: chartOptions('Indice')
+            });
+
+            chartInstances.radiancia = new Chart(
+                document.getElementById('chart-radiancia'), {
+                type: 'bar',
+                data: {
+                    labels: fechas,
+                    datasets: [{
+                        label: 'SWIR2 total',
+                        data: sorted.map(d => d.swir2_total || 0),
+                        backgroundColor: 'rgba(210, 153, 34, 0.7)',
+                        borderColor: '#d29922',
+                        borderWidth: 1,
+                    }]
+                },
+                options: chartOptions('Reflectancia')
+            });
+
+            // Tabla detalle
+            const tbody = document.getElementById('detail-body');
+            tbody.textContent = '';
+            for (const d of data) {
+                const tr = document.createElement('tr');
+                if (d.alerta) tr.style.background = 'rgba(218, 54, 51, 0.1)';
+
+                const fields = [
+                    d.fecha,
+                    d.sensor || d.satelite || '-',
+                    d.cloud_cover != null ? Math.round(d.cloud_cover) + '%' : '-',
+                    d.pixeles_calientes,
+                    (d.max_nhiswir || 0).toFixed(4),
+                    (d.max_nhiswnir || 0).toFixed(4),
+                    (d.swir2_total || 0).toFixed(2),
+                    d.alerta ? 'SI' : '-'
+                ];
+                for (const val of fields) {
+                    const td = document.createElement('td');
+                    td.textContent = val;
+                    tr.appendChild(td);
+                }
+                tbody.appendChild(tr);
+            }
+        }
+
+        function chartOptions(yLabel) {
+            return {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: { legend: { labels: { color: '#8b949e' } } },
+                scales: {
+                    x: {
+                        ticks: { color: '#484f58', maxRotation: 45, font: { size: 10 } },
+                        grid: { color: '#21262d' }
+                    },
+                    y: {
+                        ticks: { color: '#8b949e' },
+                        grid: { color: '#21262d' },
+                        title: { display: true, text: yLabel, color: '#8b949e' }
+                    }
+                }
+            };
+        }
+
+        function destroyCharts() {
+            for (const key of Object.keys(chartInstances)) {
+                if (chartInstances[key]) chartInstances[key].destroy();
+            }
+            chartInstances = {};
+        }
+
+        // ========================
+        // INIT
+        // ========================
+        cargarResumen();
+        cambiarZonaNHI();
+    </script>
+</body>
+</html>

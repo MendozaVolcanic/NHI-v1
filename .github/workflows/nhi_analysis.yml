@@ -1,0 +1,65 @@
+name: NHI Analysis
+
+on:
+  schedule:
+    - cron: "0 12 * * *"   # Diario 12:00 UTC
+  workflow_dispatch:
+    inputs:
+      dias:
+        description: "Dias atras a analizar (default: 7)"
+        required: false
+        default: "7"
+      volcan:
+        description: "Nombre de un volcan especifico (opcional)"
+        required: false
+        default: ""
+
+jobs:
+  analizar:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repositorio
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Instalar dependencias
+        run: pip install -r requirements.txt
+
+      - name: Ejecutar analisis NHI
+        run: |
+          DIAS="${{ github.event.inputs.dias || '7' }}"
+          VOLCAN="${{ github.event.inputs.volcan }}"
+
+          if [ -n "$VOLCAN" ]; then
+            python nhi_analyzer.py --dias "$DIAS" --volcan "$VOLCAN"
+          else
+            python nhi_analyzer.py --dias "$DIAS"
+          fi
+
+      - name: Commit y push resultados
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add docs/
+          git diff --cached --quiet && echo "Sin cambios nuevos" && exit 0
+
+          FECHA=$(date -u +"%Y-%m-%d %H:%M UTC")
+          git commit -m "nhi: analisis actualizado ($FECHA)"
+
+          # Push con retry
+          for i in 1 2 3; do
+            git pull --rebase origin main && git push origin main && exit 0
+            sleep $((i * 3))
+          done
+          echo "Push fallo despues de 3 intentos" && exit 1
