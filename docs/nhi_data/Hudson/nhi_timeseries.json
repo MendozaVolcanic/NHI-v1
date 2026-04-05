@@ -1,0 +1,93 @@
+[
+  {
+    "pixeles_validos": 22675,
+    "pixeles_calientes": 3,
+    "fraccion_caliente": 0.000132,
+    "max_nhiswir": 0.016058,
+    "max_nhiswnir": -0.525299,
+    "swir2_total": 0.4928,
+    "alerta": true,
+    "fecha": "2026-03-25",
+    "satelite": "landsat-9",
+    "cloud_cover": 42.89,
+    "sensor": "Landsat"
+  },
+  {
+    "pixeles_validos": 125194,
+    "pixeles_calientes": 65321,
+    "fraccion_caliente": 0.521758,
+    "max_nhiswir": 0.102019,
+    "max_nhiswnir": 0.137452,
+    "swir2_total": 14875.9902,
+    "alerta": true,
+    "fecha": "2026-03-22",
+    "satelite": "Sentinel-2A",
+    "cloud_cover": 21.290252,
+    "sensor": "Sentinel-2"
+  },
+  {
+    "pixeles_validos": 80365,
+    "pixeles_calientes": 15595,
+    "fraccion_caliente": 0.194052,
+    "max_nhiswir": 0.064893,
+    "max_nhiswnir": 0.206643,
+    "swir2_total": 2969.3008,
+    "alerta": true,
+    "fecha": "2026-03-05",
+    "satelite": "Sentinel-2B",
+    "cloud_cover": 1.699308,
+    "sensor": "Sentinel-2"
+  },
+  {
+    "pixeles_validos": 3505,
+    "pixeles_calientes": 1537,
+    "fraccion_caliente": 0.438516,
+    "max_nhiswir": 0.032431,
+    "max_nhiswnir": 0.204126,
+    "swir2_total": 323.8365,
+    "alerta": true,
+    "fecha": "2026-02-21",
+    "satelite": "landsat-9",
+    "cloud_cover": 2.43,
+    "sensor": "Landsat"
+  },
+  {
+    "pixeles_validos": 92932,
+    "pixeles_calientes": 6159,
+    "fraccion_caliente": 0.066274,
+    "max_nhiswir": 0.08974,
+    "max_nhiswnir": 0.370038,
+    "swir2_total": 1181.7316,
+    "alerta": true,
+    "fecha": "2026-02-20",
+    "satelite": "landsat-8",
+    "cloud_cover": 47.02,
+    "sensor": "Landsat"
+  },
+  {
+    "pixeles_validos": 76255,
+    "pixeles_calientes": 19533,
+    "fraccion_caliente": 0.256154,
+    "max_nhiswir": 0.079663,
+    "max_nhiswnir": 0.230092,
+    "swir2_total": 6038.7188,
+    "alerta": true,
+    "fecha": "2026-02-13",
+    "satelite": "Sentinel-2B",
+    "cloud_cover": 18.001692,
+    "sensor": "Sentinel-2"
+  },
+  {
+    "pixeles_validos": 38067,
+    "pixeles_calientes": 7392,
+    "fraccion_caliente": 0.194184,
+    "max_nhiswir": 0.053873,
+    "max_nhiswnir": -0.409162,
+    "swir2_total": 2347.1792,
+    "alerta": true,
+    "fecha": "2026-02-05",
+    "satelite": "landsat-9",
+    "cloud_cover": 34.98,
+    "sensor": "Landsat"
+  }
+]

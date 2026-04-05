@@ -1,11 +1,389 @@
 {
+  "Taapaca": {
+    "nivel": "amarillo",
+    "alertas_7d": 0,
+    "alertas_30d": 7,
+    "max_pixeles_calientes": 160000,
+    "ultima_fecha_analizada": "2026-03-26",
+    "total_observaciones": 14,
+    "zona": "Norte"
+  },
+  "Parinacota": {
+    "nivel": "amarillo",
+    "alertas_7d": 0,
+    "alertas_30d": 9,
+    "max_pixeles_calientes": 94367,
+    "ultima_fecha_analizada": "2026-03-26",
+    "total_observaciones": 17,
+    "zona": "Norte"
+  },
+  "Guallatiri": {
+    "nivel": "amarillo",
+    "alertas_7d": 0,
+    "alertas_30d": 9,
+    "max_pixeles_calientes": 127533,
+    "ultima_fecha_analizada": "2026-03-26",
+    "total_observaciones": 16,
+    "zona": "Norte"
+  },
+  "Isluga": {
+    "nivel": "amarillo",
+    "alertas_7d": 0,
+    "alertas_30d": 11,
+    "max_pixeles_calientes": 40203,
+    "ultima_fecha_analizada": "2026-03-28",
+    "total_observaciones": 22,
+    "zona": "Norte"
+  },
+  "Irruputuncu": {
+    "nivel": "amarillo",
+    "alertas_7d": 0,
+    "alertas_30d": 8,
+    "max_pixeles_calientes": 74765,
+    "ultima_fecha_analizada": "2026-03-28",
+    "total_observaciones": 15,
+    "zona": "Norte"
+  },
+  "Ollague": {
+    "nivel": "amarillo",
+    "alertas_7d": 0,
+    "alertas_30d": 7,
+    "max_pixeles_calientes": 83121,
+    "ultima_fecha_analizada": "2026-03-28",
+    "total_observaciones": 15,
+    "zona": "Norte"
+  },
+  "San Pedro": {
+    "nivel": "amarillo",
+    "alertas_7d": 0,
+    "alertas_30d": 8,
+    "max_pixeles_calientes": 57229,
+    "ultima_fecha_analizada": "2026-03-28",
+    "total_observaciones": 16,
+    "zona": "Norte"
+  },
+  "Lascar": {
+    "nivel": "amarillo",
+    "alertas_7d": 0,
+    "alertas_30d": 7,
+    "max_pixeles_calientes": 116044,
+    "ultima_fecha_analizada": "2026-03-28",
+    "total_observaciones": 15,
+    "zona": "Norte"
+  },
+  "Tupungatito": {
+    "nivel": "amarillo",
+    "alertas_7d": 0,
+    "alertas_30d": 12,
+    "max_pixeles_calientes": 96507,
+    "ultima_fecha_analizada": "2026-03-28",
+    "total_observaciones": 28,
+    "zona": "Centro"
+  },
+  "San Jose": {
+    "nivel": "amarillo",
+    "alertas_7d": 0,
+    "alertas_30d": 10,
+    "max_pixeles_calientes": 108533,
+    "ultima_fecha_analizada": "2026-03-28",
+    "total_observaciones": 26,
+    "zona": "Centro"
+  },
+  "Tinguiririca": {
+    "nivel": "amarillo",
+    "alertas_7d": 0,
+    "alertas_30d": 10,
+    "max_pixeles_calientes": 143794,
+    "ultima_fecha_analizada": "2026-03-28",
+    "total_observaciones": 26,
+    "zona": "Centro"
+  },
+  "Planchon-Peteroa": {
+    "nivel": "amarillo",
+    "alertas_7d": 0,
+    "alertas_30d": 11,
+    "max_pixeles_calientes": 148557,
+    "ultima_fecha_analizada": "2026-03-28",
+    "total_observaciones": 28,
+    "zona": "Centro"
+  },
+  "Descabezado Grande": {
+    "nivel": "amarillo",
+    "alertas_7d": 0,
+    "alertas_30d": 10,
+    "max_pixeles_calientes": 133600,
+    "ultima_fecha_analizada": "2026-03-28",
+    "total_observaciones": 27,
+    "zona": "Centro"
+  },
+  "Tatara-San Pedro": {
+    "nivel": "amarillo",
+    "alertas_7d": 0,
+    "alertas_30d": 10,
+    "max_pixeles_calientes": 83103,
+    "ultima_fecha_analizada": "2026-03-28",
+    "total_observaciones": 25,
+    "zona": "Centro"
+  },
+  "Laguna del Maule": {
+    "nivel": "amarillo",
+    "alertas_7d": 0,
+    "alertas_30d": 11,
+    "max_pixeles_calientes": 115042,
+    "ultima_fecha_analizada": "2026-03-28",
+    "total_observaciones": 27,
+    "zona": "Centro"
+  },
+  "Nevado de Longavi": {
+    "nivel": "amarillo",
+    "alertas_7d": 0,
+    "alertas_30d": 9,
+    "max_pixeles_calientes": 66194,
+    "ultima_fecha_analizada": "2026-03-28",
+    "total_observaciones": 23,
+    "zona": "Centro"
+  },
+  "Nevados de Chillan": {
+    "nivel": "amarillo",
+    "alertas_7d": 0,
+    "alertas_30d": 11,
+    "max_pixeles_calientes": 90684,
+    "ultima_fecha_analizada": "2026-03-28",
+    "total_observaciones": 27,
+    "zona": "Centro"
+  },
+  "Antuco": {
+    "nivel": "amarillo",
+    "alertas_7d": 0,
+    "alertas_30d": 11,
+    "max_pixeles_calientes": 76892,
+    "ultima_fecha_analizada": "2026-03-28",
+    "total_observaciones": 27,
+    "zona": "Sur"
+  },
+  "Copahue": {
+    "nivel": "amarillo",
+    "alertas_7d": 0,
+    "alertas_30d": 10,
+    "max_pixeles_calientes": 46467,
+    "ultima_fecha_analizada": "2026-03-28",
+    "total_observaciones": 27,
+    "zona": "Sur"
+  },
+  "Callaqui": {
+    "nivel": "amarillo",
+    "alertas_7d": 0,
+    "alertas_30d": 10,
+    "max_pixeles_calientes": 40018,
+    "ultima_fecha_analizada": "2026-03-28",
+    "total_observaciones": 27,
+    "zona": "Sur"
+  },
+  "Lonquimay": {
+    "nivel": "amarillo",
+    "alertas_7d": 0,
+    "alertas_30d": 9,
+    "max_pixeles_calientes": 95210,
+    "ultima_fecha_analizada": "2026-03-28",
+    "total_observaciones": 24,
+    "zona": "Sur"
+  },
+  "Llaima": {
+    "nivel": "amarillo",
+    "alertas_7d": 0,
+    "alertas_30d": 8,
+    "max_pixeles_calientes": 105651,
+    "ultima_fecha_analizada": "2026-03-28",
+    "total_observaciones": 21,
+    "zona": "Sur"
+  },
+  "Sollipulli": {
+    "nivel": "amarillo",
+    "alertas_7d": 0,
+    "alertas_30d": 8,
+    "max_pixeles_calientes": 39415,
+    "ultima_fecha_analizada": "2026-03-28",
+    "total_observaciones": 21,
+    "zona": "Sur"
+  },
   "Villarrica": {
     "nivel": "amarillo",
     "alertas_7d": 0,
     "alertas_30d": 8,
     "max_pixeles_calientes": 61228,
     "ultima_fecha_analizada": "2026-03-28",
-    "total_observaciones": 9,
+    "total_observaciones": 22,
     "zona": "Sur"
+  },
+  "Quetrupillan": {
+    "nivel": "amarillo",
+    "alertas_7d": 0,
+    "alertas_30d": 9,
+    "max_pixeles_calientes": 77163,
+    "ultima_fecha_analizada": "2026-03-28",
+    "total_observaciones": 22,
+    "zona": "Sur"
+  },
+  "Lanin": {
+    "nivel": "amarillo",
+    "alertas_7d": 0,
+    "alertas_30d": 9,
+    "max_pixeles_calientes": 60145,
+    "ultima_fecha_analizada": "2026-03-28",
+    "total_observaciones": 22,
+    "zona": "Sur"
+  },
+  "Mocho-Choshuenco": {
+    "nivel": "amarillo",
+    "alertas_7d": 0,
+    "alertas_30d": 7,
+    "max_pixeles_calientes": 47302,
+    "ultima_fecha_analizada": "2026-03-28",
+    "total_observaciones": 17,
+    "zona": "Sur"
+  },
+  "Carran - Los Venados": {
+    "nivel": "amarillo",
+    "alertas_7d": 0,
+    "alertas_30d": 7,
+    "max_pixeles_calientes": 5012,
+    "ultima_fecha_analizada": "2026-03-28",
+    "total_observaciones": 17,
+    "zona": "Sur"
+  },
+  "Puyehue - Cordon Caulle": {
+    "nivel": "amarillo",
+    "alertas_7d": 0,
+    "alertas_30d": 7,
+    "max_pixeles_calientes": 67620,
+    "ultima_fecha_analizada": "2026-03-28",
+    "total_observaciones": 17,
+    "zona": "Sur"
+  },
+  "Antillanca - Casablanca": {
+    "nivel": "amarillo",
+    "alertas_7d": 0,
+    "alertas_30d": 5,
+    "max_pixeles_calientes": 30842,
+    "ultima_fecha_analizada": "2026-03-28",
+    "total_observaciones": 14,
+    "zona": "Sur"
+  },
+  "Osorno": {
+    "nivel": "amarillo",
+    "alertas_7d": 0,
+    "alertas_30d": 4,
+    "max_pixeles_calientes": 54415,
+    "ultima_fecha_analizada": "2026-03-28",
+    "total_observaciones": 13,
+    "zona": "Austral"
+  },
+  "Calbuco": {
+    "nivel": "amarillo",
+    "alertas_7d": 0,
+    "alertas_30d": 4,
+    "max_pixeles_calientes": 16685,
+    "ultima_fecha_analizada": "2026-03-28",
+    "total_observaciones": 13,
+    "zona": "Austral"
+  },
+  "Yate": {
+    "nivel": "amarillo",
+    "alertas_7d": 0,
+    "alertas_30d": 4,
+    "max_pixeles_calientes": 32820,
+    "ultima_fecha_analizada": "2026-03-28",
+    "total_observaciones": 11,
+    "zona": "Austral"
+  },
+  "Hornopiren": {
+    "nivel": "amarillo",
+    "alertas_7d": 0,
+    "alertas_30d": 4,
+    "max_pixeles_calientes": 4299,
+    "ultima_fecha_analizada": "2026-03-28",
+    "total_observaciones": 11,
+    "zona": "Austral"
+  },
+  "Huequi": {
+    "nivel": "amarillo",
+    "alertas_7d": 0,
+    "alertas_30d": 4,
+    "max_pixeles_calientes": 32320,
+    "ultima_fecha_analizada": "2026-03-28",
+    "total_observaciones": 11,
+    "zona": "Austral"
+  },
+  "Michinmahuida": {
+    "nivel": "amarillo",
+    "alertas_7d": 0,
+    "alertas_30d": 6,
+    "max_pixeles_calientes": 64083,
+    "ultima_fecha_analizada": "2026-03-28",
+    "total_observaciones": 13,
+    "zona": "Austral"
+  },
+  "Chaiten": {
+    "nivel": "amarillo",
+    "alertas_7d": 0,
+    "alertas_30d": 3,
+    "max_pixeles_calientes": 160000,
+    "ultima_fecha_analizada": "2026-03-23",
+    "total_observaciones": 7,
+    "zona": "Austral"
+  },
+  "Corcovado": {
+    "nivel": "amarillo",
+    "alertas_7d": 0,
+    "alertas_30d": 3,
+    "max_pixeles_calientes": 87992,
+    "ultima_fecha_analizada": "2026-03-23",
+    "total_observaciones": 7,
+    "zona": "Austral"
+  },
+  "Melimoyu": {
+    "nivel": "amarillo",
+    "alertas_7d": 0,
+    "alertas_30d": 5,
+    "max_pixeles_calientes": 11947,
+    "ultima_fecha_analizada": "2026-03-23",
+    "total_observaciones": 9,
+    "zona": "Austral"
+  },
+  "Mentolat": {
+    "nivel": "amarillo",
+    "alertas_7d": 0,
+    "alertas_30d": 4,
+    "max_pixeles_calientes": 82227,
+    "ultima_fecha_analizada": "2026-03-22",
+    "total_observaciones": 8,
+    "zona": "Austral"
+  },
+  "Cay": {
+    "nivel": "amarillo",
+    "alertas_7d": 0,
+    "alertas_30d": 3,
+    "max_pixeles_calientes": 54512,
+    "ultima_fecha_analizada": "2026-03-22",
+    "total_observaciones": 6,
+    "zona": "Austral"
+  },
+  "Maca": {
+    "nivel": "amarillo",
+    "alertas_7d": 0,
+    "alertas_30d": 4,
+    "max_pixeles_calientes": 45836,
+    "ultima_fecha_analizada": "2026-03-22",
+    "total_observaciones": 8,
+    "zona": "Austral"
+  },
+  "Hudson": {
+    "nivel": "amarillo",
+    "alertas_7d": 0,
+    "alertas_30d": 2,
+    "max_pixeles_calientes": 65321,
+    "ultima_fecha_analizada": "2026-03-25",
+    "total_observaciones": 7,
+    "zona": "Austral"
   }
 }

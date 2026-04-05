@@ -1,0 +1,93 @@
+[
+  {
+    "pixeles_validos": 160000,
+    "pixeles_calientes": 160000,
+    "fraccion_caliente": 1.0,
+    "max_nhiswir": 0.107289,
+    "max_nhiswnir": -0.466945,
+    "swir2_total": 47648.8555,
+    "alerta": true,
+    "fecha": "2026-03-23",
+    "satelite": "landsat-9",
+    "cloud_cover": 34.65,
+    "sensor": "Landsat"
+  },
+  {
+    "pixeles_validos": 159640,
+    "pixeles_calientes": 412,
+    "fraccion_caliente": 0.002581,
+    "max_nhiswir": 0.029247,
+    "max_nhiswnir": 0.024355,
+    "swir2_total": 148.3287,
+    "alerta": true,
+    "fecha": "2026-03-12",
+    "satelite": "Sentinel-2A",
+    "cloud_cover": 29.586509,
+    "sensor": "Sentinel-2"
+  },
+  {
+    "pixeles_validos": 70977,
+    "pixeles_calientes": 5700,
+    "fraccion_caliente": 0.080308,
+    "max_nhiswir": 0.041943,
+    "max_nhiswnir": 0.114494,
+    "swir2_total": 1174.4541,
+    "alerta": true,
+    "fecha": "2026-03-08",
+    "satelite": "landsat-8",
+    "cloud_cover": 38.55,
+    "sensor": "Landsat"
+  },
+  {
+    "pixeles_validos": 122872,
+    "pixeles_calientes": 2709,
+    "fraccion_caliente": 0.022047,
+    "max_nhiswir": 0.000658,
+    "max_nhiswnir": 0.119606,
+    "swir2_total": 684.0594,
+    "alerta": true,
+    "fecha": "2026-03-05",
+    "satelite": "Sentinel-2B",
+    "cloud_cover": 29.837689,
+    "sensor": "Sentinel-2"
+  },
+  {
+    "pixeles_validos": 135072,
+    "pixeles_calientes": 16675,
+    "fraccion_caliente": 0.123453,
+    "max_nhiswir": 0.028523,
+    "max_nhiswnir": 0.232565,
+    "swir2_total": 4546.3994,
+    "alerta": true,
+    "fecha": "2026-02-21",
+    "satelite": "Sentinel-2C",
+    "cloud_cover": 7.959738,
+    "sensor": "Sentinel-2"
+  },
+  {
+    "pixeles_validos": 15654,
+    "pixeles_calientes": 2371,
+    "fraccion_caliente": 0.151463,
+    "max_nhiswir": 0.022602,
+    "max_nhiswnir": 0.266224,
+    "swir2_total": 446.3165,
+    "alerta": true,
+    "fecha": "2026-02-20",
+    "satelite": "landsat-8",
+    "cloud_cover": 19.12,
+    "sensor": "Landsat"
+  },
+  {
+    "pixeles_validos": 154599,
+    "pixeles_calientes": 11759,
+    "fraccion_caliente": 0.076061,
+    "max_nhiswir": 0.027249,
+    "max_nhiswnir": 0.23503,
+    "swir2_total": 3478.6328,
+    "alerta": true,
+    "fecha": "2026-02-13",
+    "satelite": "Sentinel-2B",
+    "cloud_cover": 39.167243,
+    "sensor": "Sentinel-2"
+  }
+]

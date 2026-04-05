@@ -1,0 +1,80 @@
+[
+  {
+    "pixeles_validos": 83859,
+    "pixeles_calientes": 10100,
+    "fraccion_caliente": 0.12044,
+    "max_nhiswir": 0.072642,
+    "max_nhiswnir": 0.063763,
+    "swir2_total": 2444.7139,
+    "alerta": true,
+    "fecha": "2026-03-22",
+    "satelite": "Sentinel-2A",
+    "cloud_cover": 16.518837,
+    "sensor": "Sentinel-2"
+  },
+  {
+    "pixeles_validos": 116765,
+    "pixeles_calientes": 8334,
+    "fraccion_caliente": 0.071374,
+    "max_nhiswir": 0.124853,
+    "max_nhiswnir": 0.112259,
+    "swir2_total": 2437.0518,
+    "alerta": true,
+    "fecha": "2026-03-12",
+    "satelite": "Sentinel-2A",
+    "cloud_cover": 38.684869,
+    "sensor": "Sentinel-2"
+  },
+  {
+    "pixeles_validos": 79252,
+    "pixeles_calientes": 54512,
+    "fraccion_caliente": 0.687831,
+    "max_nhiswir": 0.08896,
+    "max_nhiswnir": 0.100619,
+    "swir2_total": 12406.4277,
+    "alerta": true,
+    "fecha": "2026-03-08",
+    "satelite": "landsat-8",
+    "cloud_cover": 44.71,
+    "sensor": "Landsat"
+  },
+  {
+    "pixeles_validos": 40046,
+    "pixeles_calientes": 12324,
+    "fraccion_caliente": 0.307746,
+    "max_nhiswir": 0.02508,
+    "max_nhiswnir": 0.198222,
+    "swir2_total": 2061.9197,
+    "alerta": true,
+    "fecha": "2026-03-05",
+    "satelite": "Sentinel-2B",
+    "cloud_cover": 0.159741,
+    "sensor": "Sentinel-2"
+  },
+  {
+    "pixeles_validos": 10444,
+    "pixeles_calientes": 2955,
+    "fraccion_caliente": 0.282938,
+    "max_nhiswir": 0.057614,
+    "max_nhiswnir": 0.413874,
+    "swir2_total": 629.5848,
+    "alerta": true,
+    "fecha": "2026-02-20",
+    "satelite": "landsat-8",
+    "cloud_cover": 25.92,
+    "sensor": "Landsat"
+  },
+  {
+    "pixeles_validos": 52830,
+    "pixeles_calientes": 20434,
+    "fraccion_caliente": 0.386788,
+    "max_nhiswir": 0.066432,
+    "max_nhiswnir": 0.14575,
+    "swir2_total": 4731.3306,
+    "alerta": true,
+    "fecha": "2026-02-13",
+    "satelite": "Sentinel-2B",
+    "cloud_cover": 5.052814,
+    "sensor": "Sentinel-2"
+  }
+]
