@@ -6,9 +6,9 @@ on:
   workflow_dispatch:
     inputs:
       dias:
-        description: "Dias atras a analizar (default: 7)"
+        description: "Dias atras a analizar (default: 14)"
         required: false
-        default: "7"
+        default: "14"
       volcan:
         description: "Nombre de un volcan especifico (opcional)"
         required: false
@@ -37,7 +37,7 @@ jobs:
 
       - name: Ejecutar analisis NHI
         run: |
-          DIAS="${{ github.event.inputs.dias || '7' }}"
+          DIAS="${{ github.event.inputs.dias || '14' }}"
           VOLCAN="${{ github.event.inputs.volcan }}"
 
           if [ -n "$VOLCAN" ]; then
@@ -57,9 +57,11 @@ jobs:
           FECHA=$(date -u +"%Y-%m-%d %H:%M UTC")
           git commit -m "nhi: analisis actualizado ($FECHA)"
 
-          # Push con retry
+          # Push con retry (fetch+merge, no rebase)
           for i in 1 2 3; do
-            git pull --rebase origin main && git push origin main && exit 0
+            git fetch origin main
+            git merge origin/main --no-edit -X ours || true
+            git push origin main && exit 0
             sleep $((i * 3))
           done
           echo "Push fallo despues de 3 intentos" && exit 1
