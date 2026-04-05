@@ -31,7 +31,8 @@
     "fecha": "2026-03-12",
     "satelite": "Sentinel-2A",
     "cloud_cover": 38.684869,
-    "sensor": "Sentinel-2"
+    "sensor": "Sentinel-2",
+    "hotspot_image": "2026-03-12_s2_hotspot.png"
   },
   {
     "pixeles_validos": 155406,

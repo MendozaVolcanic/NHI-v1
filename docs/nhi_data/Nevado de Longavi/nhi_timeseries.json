@@ -99,7 +99,8 @@
     "fecha": "2026-03-12",
     "satelite": "Sentinel-2A",
     "cloud_cover": 0.001001,
-    "sensor": "Sentinel-2"
+    "sensor": "Sentinel-2",
+    "hotspot_image": "2026-03-12_s2_hotspot.png"
   },
   {
     "pixeles_validos": 145548,
@@ -116,7 +117,8 @@
     "fecha": "2026-03-10",
     "satelite": "Sentinel-2C",
     "cloud_cover": 0.008802,
-    "sensor": "Sentinel-2"
+    "sensor": "Sentinel-2",
+    "hotspot_image": "2026-03-10_s2_hotspot.png"
   },
   {
     "pixeles_validos": 160000,
@@ -167,7 +169,8 @@
     "fecha": "2026-03-05",
     "satelite": "Sentinel-2B",
     "cloud_cover": 0.008855,
-    "sensor": "Sentinel-2"
+    "sensor": "Sentinel-2",
+    "hotspot_image": "2026-03-05_s2_hotspot.png"
   },
   {
     "pixeles_validos": 160000,
@@ -235,7 +238,8 @@
     "fecha": "2026-02-23",
     "satelite": "Sentinel-2A",
     "cloud_cover": 1.535762,
-    "sensor": "Sentinel-2"
+    "sensor": "Sentinel-2",
+    "hotspot_image": "2026-02-23_s2_hotspot.png"
   },
   {
     "pixeles_validos": 160000,
@@ -303,7 +307,8 @@
     "fecha": "2026-02-18",
     "satelite": "Sentinel-2C",
     "cloud_cover": 6.544095,
-    "sensor": "Sentinel-2"
+    "sensor": "Sentinel-2",
+    "hotspot_image": "2026-02-18_s2_hotspot.png"
   },
   {
     "pixeles_validos": 160000,
@@ -371,7 +376,8 @@
     "fecha": "2026-02-08",
     "satelite": "Sentinel-2C",
     "cloud_cover": 0.007176,
-    "sensor": "Sentinel-2"
+    "sensor": "Sentinel-2",
+    "hotspot_image": "2026-02-08_s2_hotspot.png"
   },
   {
     "pixeles_validos": 160000,

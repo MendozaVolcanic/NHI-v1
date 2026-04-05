@@ -133,7 +133,8 @@
     "fecha": "2026-03-13",
     "satelite": "Sentinel-2C",
     "cloud_cover": 3.030778,
-    "sensor": "Sentinel-2"
+    "sensor": "Sentinel-2",
+    "hotspot_image": "2026-03-13_s2_hotspot.png"
   },
   {
     "pixeles_validos": 160000,
@@ -150,7 +151,8 @@
     "fecha": "2026-03-11",
     "satelite": "Sentinel-2B",
     "cloud_cover": 1.37319,
-    "sensor": "Sentinel-2"
+    "sensor": "Sentinel-2",
+    "hotspot_image": "2026-03-11_s2_hotspot.png"
   },
   {
     "pixeles_validos": 160000,
@@ -184,7 +186,8 @@
     "fecha": "2026-03-06",
     "satelite": "Sentinel-2C",
     "cloud_cover": 5.512641,
-    "sensor": "Sentinel-2"
+    "sensor": "Sentinel-2",
+    "hotspot_image": "2026-03-06_s2_hotspot.png"
   },
   {
     "pixeles_validos": 160000,
@@ -286,7 +289,8 @@
     "fecha": "2026-02-18",
     "satelite": "landsat-8",
     "cloud_cover": 33.75,
-    "sensor": "Landsat"
+    "sensor": "Landsat",
+    "hotspot_image": "2026-02-18_ls_hotspot.png"
   },
   {
     "pixeles_validos": 159993,
@@ -303,7 +307,8 @@
     "fecha": "2026-02-11",
     "satelite": "Sentinel-2C",
     "cloud_cover": 15.499771,
-    "sensor": "Sentinel-2"
+    "sensor": "Sentinel-2",
+    "hotspot_image": "2026-02-11_s2_hotspot.png"
   },
   {
     "pixeles_validos": 147582,
@@ -337,7 +342,8 @@
     "fecha": "2026-02-09",
     "satelite": "Sentinel-2B",
     "cloud_cover": 33.33877,
-    "sensor": "Sentinel-2"
+    "sensor": "Sentinel-2",
+    "hotspot_image": "2026-02-09_s2_hotspot.png"
   },
   {
     "pixeles_validos": 159971,

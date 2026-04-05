@@ -65,7 +65,8 @@
     "fecha": "2026-03-23",
     "satelite": "landsat-9",
     "cloud_cover": 2.63,
-    "sensor": "Landsat"
+    "sensor": "Landsat",
+    "hotspot_image": "2026-03-23_ls_hotspot.png"
   },
   {
     "pixeles_validos": 160000,
@@ -99,7 +100,8 @@
     "fecha": "2026-03-16",
     "satelite": "landsat-9",
     "cloud_cover": 14.69,
-    "sensor": "Landsat"
+    "sensor": "Landsat",
+    "hotspot_image": "2026-03-16_ls_hotspot.png"
   },
   {
     "pixeles_validos": 160000,

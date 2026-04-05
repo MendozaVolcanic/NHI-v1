@@ -201,7 +201,8 @@
     "fecha": "2026-02-12",
     "satelite": "landsat-9",
     "cloud_cover": 42.47,
-    "sensor": "Landsat"
+    "sensor": "Landsat",
+    "hotspot_image": "2026-02-12_ls_hotspot.png"
   },
   {
     "pixeles_validos": 159875,
