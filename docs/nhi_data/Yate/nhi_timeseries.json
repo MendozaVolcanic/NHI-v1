@@ -1,5 +1,22 @@
 [
   {
+    "pixeles_validos": 160000,
+    "pixeles_calientes": 0,
+    "fraccion_caliente": 0.0,
+    "max_nhiswir": 0.0,
+    "max_nhiswnir": 0.0,
+    "swir2_total": 0.0,
+    "thresh_swir": 0.134826,
+    "thresh_swnir": 0.437489,
+    "bg_median_swir": -0.068978,
+    "bg_std_swir": 0.067935,
+    "alerta": false,
+    "fecha": "2026-04-04",
+    "satelite": "Sentinel-2B",
+    "cloud_cover": 0.024326,
+    "sensor": "Sentinel-2"
+  },
+  {
     "pixeles_validos": 159748,
     "pixeles_calientes": 0,
     "fraccion_caliente": 0.0,
@@ -15,6 +32,24 @@
     "satelite": "landsat-9",
     "cloud_cover": 43.14,
     "sensor": "Landsat"
+  },
+  {
+    "pixeles_validos": 126879,
+    "pixeles_calientes": 5,
+    "fraccion_caliente": 3.9e-05,
+    "max_nhiswir": 0.114771,
+    "max_nhiswnir": 0.871221,
+    "swir2_total": 0.4279,
+    "thresh_swir": 0.099802,
+    "thresh_swnir": 0.234015,
+    "bg_median_swir": -0.127381,
+    "bg_std_swir": 0.075728,
+    "alerta": true,
+    "fecha": "2026-03-31",
+    "satelite": "landsat-8",
+    "cloud_cover": 43.4,
+    "sensor": "Landsat",
+    "hotspot_image": "2026-03-31_ls_hotspot.png"
   },
   {
     "pixeles_validos": 160000,
