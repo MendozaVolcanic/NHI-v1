@@ -1,5 +1,22 @@
 [
   {
+    "pixeles_validos": 97960,
+    "pixeles_calientes": 0,
+    "fraccion_caliente": 0.0,
+    "max_nhiswir": 0.0,
+    "max_nhiswnir": 0.0,
+    "swir2_total": 0.0,
+    "thresh_swir": 0.198365,
+    "thresh_swnir": 0.256059,
+    "bg_median_swir": -0.180377,
+    "bg_std_swir": 0.126247,
+    "alerta": false,
+    "fecha": "2026-04-08",
+    "satelite": "landsat-9",
+    "cloud_cover": 14.96,
+    "sensor": "Landsat"
+  },
+  {
     "pixeles_validos": 160000,
     "pixeles_calientes": 1,
     "fraccion_caliente": 6e-06,
