@@ -1,19 +1,19 @@
 [
   {
-    "pixeles_validos": 159994,
+    "pixeles_validos": 160000,
     "pixeles_calientes": 0,
     "fraccion_caliente": 0.0,
     "max_nhiswir": 0.0,
     "max_nhiswnir": 0.0,
     "swir2_total": 0.0,
-    "thresh_swir": 0.064543,
-    "thresh_swnir": 0.13211,
-    "bg_median_swir": -0.000576,
-    "bg_std_swir": 0.021706,
+    "thresh_swir": 0.068944,
+    "thresh_swnir": 0.092546,
+    "bg_median_swir": -0.002145,
+    "bg_std_swir": 0.023696,
     "alerta": false,
     "fecha": "2026-04-14",
-    "satelite": "Sentinel-2B",
-    "cloud_cover": 0.255614,
+    "satelite": "Sentinel-2A",
+    "cloud_cover": 0.831965,
     "sensor": "Sentinel-2"
   },
   {
