@@ -12,7 +12,7 @@
   },
   "Parinacota": {
     "nivel": "rojo",
-    "alertas_7d": 2,
+    "alertas_7d": 1,
     "alertas_30d": 3,
     "max_pixeles_calientes": 614,
     "ultima_fecha_analizada": "2026-04-15",
@@ -57,7 +57,7 @@
   "Ollague": {
     "nivel": "amarillo",
     "alertas_7d": 0,
-    "alertas_30d": 4,
+    "alertas_30d": 3,
     "max_pixeles_calientes": 9,
     "ultima_fecha_analizada": "2026-04-14",
     "total_observaciones": 21,
@@ -79,7 +79,7 @@
   "Lascar": {
     "nivel": "rojo",
     "alertas_7d": 1,
-    "alertas_30d": 8,
+    "alertas_30d": 7,
     "max_pixeles_calientes": 134,
     "ultima_fecha_analizada": "2026-04-14",
     "total_observaciones": 21,
@@ -88,9 +88,9 @@
     "lon": -67.73611
   },
   "Tupungatito": {
-    "nivel": "amarillo",
+    "nivel": "verde",
     "alertas_7d": 0,
-    "alertas_30d": 1,
+    "alertas_30d": 0,
     "max_pixeles_calientes": 245,
     "ultima_fecha_analizada": "2026-04-14",
     "total_observaciones": 39,
@@ -101,7 +101,7 @@
   "San Jose": {
     "nivel": "amarillo",
     "alertas_7d": 0,
-    "alertas_30d": 6,
+    "alertas_30d": 5,
     "max_pixeles_calientes": 88,
     "ultima_fecha_analizada": "2026-04-14",
     "total_observaciones": 37,
