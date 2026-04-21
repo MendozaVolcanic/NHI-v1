@@ -13,7 +13,7 @@
   "Parinacota": {
     "nivel": "rojo",
     "alertas_7d": 1,
-    "alertas_30d": 3,
+    "alertas_30d": 2,
     "max_pixeles_calientes": 614,
     "ultima_fecha_analizada": "2026-04-15",
     "total_observaciones": 22,
