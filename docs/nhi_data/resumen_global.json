@@ -154,8 +154,8 @@
     "lon": -70.84533
   },
   "Laguna del Maule": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 4,
     "max_pixeles_calientes": 107,
     "ultima_fecha_analizada": "2026-04-14",
