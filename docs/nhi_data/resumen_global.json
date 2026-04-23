@@ -11,8 +11,8 @@
     "lon": -69.50584
   },
   "Parinacota": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 2,
     "max_pixeles_calientes": 614,
     "ultima_fecha_analizada": "2026-04-15",
@@ -79,7 +79,7 @@
   "Lascar": {
     "nivel": "amarillo",
     "alertas_7d": 0,
-    "alertas_30d": 7,
+    "alertas_30d": 6,
     "max_pixeles_calientes": 134,
     "ultima_fecha_analizada": "2026-04-14",
     "total_observaciones": 21,
@@ -176,9 +176,9 @@
     "lon": -71.1701
   },
   "Nevados de Chillan": {
-    "nivel": "amarillo",
+    "nivel": "verde",
     "alertas_7d": 0,
-    "alertas_30d": 1,
+    "alertas_30d": 0,
     "max_pixeles_calientes": 6,
     "ultima_fecha_analizada": "2026-04-11",
     "total_observaciones": 35,
@@ -187,9 +187,9 @@
     "lon": -71.35231
   },
   "Antuco": {
-    "nivel": "amarillo",
+    "nivel": "verde",
     "alertas_7d": 0,
-    "alertas_30d": 1,
+    "alertas_30d": 0,
     "max_pixeles_calientes": 20,
     "ultima_fecha_analizada": "2026-04-11",
     "total_observaciones": 35,
