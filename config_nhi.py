@@ -107,7 +107,7 @@ VOLCANES = {
         "zona": "Norte", "activo": True
     },
     "Lascar": {
-        "lat": -23.36726, "lon": -67.73611, "buffer_km": 2.8,
+        "lat": -23.36726, "lon": -67.73611, "buffer_km": 3.0,
         "zona": "Norte", "activo": True
     },
 
