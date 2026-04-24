@@ -276,6 +276,7 @@
         <div class="nav-tab" onclick="showSection('mapa')">Mapa</div>
         <div class="nav-tab" onclick="showSection('individual')">Vista Individual</div>
         <div class="nav-tab" onclick="showSection('guia')">Guia de Interpretacion</div>
+        <div class="nav-tab" onclick="showSection('toa')" style="background:#6e4e0a;" title="En desarrollo">NHI Tool (TOA) <span style="font-size:0.7em; color:#f0c97a;">BETA</span></div>
     </div>
 
     <div class="container">
@@ -652,6 +653,69 @@
 
             </div>
         </div>
+
+        <!-- SECCION: TOA (EN DESARROLLO) -->
+        <div id="section-toa" class="section">
+            <div class="guia-section">
+                <div class="guia-card" style="border-left:4px solid #d29922;">
+                    <h2 style="color:#d29922;">NHI Tool (TOA) — En desarrollo</h2>
+                    <p>Esta pestania es un <strong>espacio de desarrollo</strong> para migrar la fuente
+                    de datos a radiancia <strong>Top-of-Atmosphere (TOA)</strong>, que es la que utiliza
+                    el <a href="https://nicogenzano.users.earthengine.app/view/nhi-tool" target="_blank" style="color:#58a6ff;">NHI Tool original de Google Earth Engine</a> (Genzano et al. 2020).</p>
+                    <p>Objetivo: lograr <strong>comparabilidad numerica directa</strong> con NHI Tool para
+                    poder contrastar series historicas.</p>
+                </div>
+
+                <div class="guia-card">
+                    <h2>Estado actual</h2>
+                    <p>El dashboard principal usa <strong>Sentinel-2 L2A + Landsat C2 L2</strong>
+                    (reflectancia de superficie) via Microsoft Planetary Computer, con filtros estadisticos
+                    inspirados en VRP Chile para compensar el ruido de L2A.</p>
+                    <p>Resultado: el <strong>patron temporal</strong> de picos coincide con NHI Tool, pero las
+                    <strong>magnitudes absolutas</strong> divergen (valores sistematicamente mas bajos/altos
+                    segun el volcan).</p>
+                </div>
+
+                <div class="guia-card">
+                    <h2>Plan de migracion</h2>
+                    <p>Planetary Computer <strong>no sirve Sentinel-2 L1C ni Landsat 8/9 TOA</strong>.
+                    La ruta tecnica requiere cambiar de fuente de datos:</p>
+                    <ul>
+                        <li><strong>Sentinel-2 L1C (TOA):</strong> AWS Open Data bucket
+                        <code>sentinel-s2-l1c</code> (acceso gratuito via boto3 + STAC).</li>
+                        <li><strong>Landsat 8/9 Level-1 (TOA):</strong> AWS <code>usgs-landsat</code>
+                        bucket. Requiere parsear metadata MTL para escalar DN a TOA reflectance
+                        (REFLECTANCE_MULT_BAND / REFLECTANCE_ADD_BAND).</li>
+                        <li>Reescribir <code>buscar_escenas</code> y <code>leer_banda</code> en
+                        <code>nhi_analyzer.py</code> para soportar ambas fuentes.</li>
+                        <li>Validar en una rama separada (<code>toa-migration</code>) antes de mergear.</li>
+                    </ul>
+                </div>
+
+                <div class="guia-card">
+                    <h2>Progreso</h2>
+                    <ul>
+                        <li>[x] Investigacion de disponibilidad en Planetary Computer</li>
+                        <li>[x] Confirmado: PC no sirve TOA para OLI/MSI modernos</li>
+                        <li>[ ] Setup de acceso AWS Open Data (boto3)</li>
+                        <li>[ ] Migracion de Landsat 8/9 a L1 TOA</li>
+                        <li>[ ] Migracion de Sentinel-2 a L1C TOA</li>
+                        <li>[ ] Validacion cruzada vs NHI Tool en Lascar</li>
+                        <li>[ ] Merge a main + regeneracion historica</li>
+                    </ul>
+                </div>
+
+                <div class="guia-card">
+                    <h2>Comparacion prevista</h2>
+                    <p>Cuando la migracion este lista, esta pestania mostrara el <strong>grafico de area
+                    de hotspots TOA</strong> lado a lado con la version L2A actual, para validar la
+                    correspondencia con el NHI Tool.</p>
+                    <div style="background:#0d1117; border:1px dashed #30363d; border-radius:6px; padding:40px; text-align:center; color:#8b949e; margin-top:12px;">
+                        Grafico comparativo aqui (pendiente)
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="footer">
@@ -690,7 +754,7 @@
             document.getElementById('section-' + name).classList.add('active');
             // Activar el tab correcto
             const tabs = document.querySelectorAll('.nav-tab');
-            const tabMap = { resumen: 0, mapa: 1, individual: 2, guia: 3 };
+            const tabMap = { resumen: 0, mapa: 1, individual: 2, guia: 3, toa: 4 };
             if (tabMap[name] !== undefined && tabs[tabMap[name]]) {
                 tabs[tabMap[name]].classList.add('active');
             }
