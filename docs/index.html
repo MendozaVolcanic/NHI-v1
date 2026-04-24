@@ -266,9 +266,13 @@
     <div class="header">
         <h1>NHI Dashboard</h1>
         <p>Normalized Hotspot Indices — Anomalias Termales en 43 Volcanes de Chile</p>
-        <p style="margin-top:3px; font-size:0.8em; color:#484f58;">
+        <p style="margin-top:3px; font-size:0.8em; color:#484f58;" id="header-subtitle">
             Algoritmo: Marchese et al. 2019 | Datos: Sentinel-2 + Landsat 8/9 via Planetary Computer
         </p>
+        <div style="margin-top:10px; display:inline-flex; gap:6px; background:#0d1117; border:1px solid #30363d; border-radius:6px; padding:4px;">
+            <button id="pipeline-l2a" class="pipeline-btn active" onclick="setPipeline('l2a')" style="padding:6px 14px; border:none; background:#ff6b35; color:white; border-radius:4px; cursor:pointer; font-size:0.85em;">L2A + VRP (actual)</button>
+            <button id="pipeline-toa" class="pipeline-btn" onclick="setPipeline('toa')" style="padding:6px 14px; border:none; background:transparent; color:#8b949e; border-radius:4px; cursor:pointer; font-size:0.85em;">TOA (replica NHI Tool)</button>
+        </div>
     </div>
 
     <div class="nav-tabs">
@@ -774,6 +778,35 @@
         let resumenGlobal = {};
         let chartInstances = {};
 
+        // Pipeline activo: 'l2a' (default) o 'toa' (replica NHI Tool en radiancia)
+        let CURRENT_PIPELINE = 'l2a';
+        function dataDir() { return CURRENT_PIPELINE === 'toa' ? 'nhi_data_toa' : 'nhi_data'; }
+
+        function setPipeline(which) {
+            if (CURRENT_PIPELINE === which) return;
+            CURRENT_PIPELINE = which;
+            document.getElementById('pipeline-l2a').classList.toggle('active', which === 'l2a');
+            document.getElementById('pipeline-toa').classList.toggle('active', which === 'toa');
+            const btnL = document.getElementById('pipeline-l2a');
+            const btnT = document.getElementById('pipeline-toa');
+            btnL.style.background = which === 'l2a' ? '#ff6b35' : 'transparent';
+            btnL.style.color = which === 'l2a' ? 'white' : '#8b949e';
+            btnT.style.background = which === 'toa' ? '#ff6b35' : 'transparent';
+            btnT.style.color = which === 'toa' ? 'white' : '#8b949e';
+            const sub = document.getElementById('header-subtitle');
+            if (sub) {
+                sub.textContent = which === 'toa'
+                    ? 'Pipeline TOA (replica NHI Tool) — Sentinel-2 L1C via Element84 | Algoritmo: Genzano 2020 / Marchese 2019'
+                    : 'Algoritmo: Marchese et al. 2019 | Datos: Sentinel-2 + Landsat 8/9 via Planetary Computer';
+            }
+            // Recargar datos y refrescar la vista activa
+            resumenGlobal = {};
+            cargarResumen().then(() => {
+                if (leafletMap && currentVolcanoMarkers) { refreshMapMarkers && refreshMapMarkers(); }
+                cambiarZonaNHI();
+            });
+        }
+
         function pixelsToArea(count, sensor) {
             return count * (sensor === 'Sentinel-2' ? 400 : 900);
         }
@@ -811,7 +844,7 @@
         // ========================
         async function cargarResumen() {
             try {
-                const resp = await fetch(`${NHI_BASE}/nhi_data/resumen_global.json?t=${Date.now()}`);
+                const resp = await fetch(`${NHI_BASE}/${dataDir()}/resumen_global.json?t=${Date.now()}`);
                 if (!resp.ok) {
                     document.getElementById('table-body').textContent = '';
                     const tr = document.createElement('tr');
@@ -862,13 +895,18 @@
                 tdBadge.appendChild(badge);
                 tr.appendChild(tdBadge);
 
+                // max_pixeles_calientes existe solo en L2A; TOA usa max_area_m2.
+                // Normalizamos a una columna "Max" uniforme.
+                const maxCol = data.max_pixeles_calientes !== undefined
+                    ? data.max_pixeles_calientes
+                    : (data.max_area_m2 !== undefined ? Math.round(data.max_area_m2) + ' m2' : '-');
                 const fields = [
                     nombre,
                     data.zona,
                     data.alertas_7d,
                     data.alertas_30d,
-                    data.max_pixeles_calientes,
-                    data.ultima_fecha_analizada || '-',
+                    maxCol,
+                    (data.ultima_fecha_analizada || data.ultima_fecha || '-'),
                     data.total_observaciones
                 ];
                 for (const val of fields) {
@@ -928,7 +966,7 @@
 
             try {
                 const resp = await fetch(
-                    `${NHI_BASE}/nhi_data/${encodeURIComponent(nombre)}/nhi_timeseries.json?t=${Date.now()}`
+                    `${NHI_BASE}/${dataDir()}/${encodeURIComponent(nombre)}/nhi_timeseries.json?t=${Date.now()}`
                 );
                 if (!resp.ok) {
                     mostrarSinDatos();
@@ -1144,7 +1182,7 @@
             function updateImage() {
                 const selected = sel.value;
                 if (!selected) return;
-                img.src = `${NHI_BASE}/nhi_data/${encodeURIComponent(volcanName)}/${selected}?t=${Date.now()}`;
+                img.src = `${NHI_BASE}/${dataDir()}/${encodeURIComponent(volcanName)}/${selected}?t=${Date.now()}`;
                 const opt = sel.options[sel.selectedIndex];
                 try {
                     const d = JSON.parse(opt.dataset.info);
@@ -1260,12 +1298,15 @@
 
                 const info = document.createElement('div');
                 info.style.color = '#333';
+                const maxLabel = data.max_pixeles_calientes !== undefined
+                    ? 'Max px: ' + data.max_pixeles_calientes
+                    : (data.max_area_m2 !== undefined ? 'Max area: ' + Math.round(data.max_area_m2) + ' m2' : 'Max: -');
                 const lines = [
                     'Nivel: ' + data.nivel.toUpperCase(),
                     'Zona: ' + data.zona,
                     'Alertas 30d: ' + data.alertas_30d,
-                    'Max px: ' + data.max_pixeles_calientes,
-                    'Ultima: ' + (data.ultima_fecha_analizada || '-'),
+                    maxLabel,
+                    'Ultima: ' + (data.ultima_fecha_analizada || data.ultima_fecha || '-'),
                 ];
                 info.textContent = lines.join(' | ');
                 info.style.cssText = 'font-size:11px;color:#555;margin-bottom:6px;line-height:1.4;';
