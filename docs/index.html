@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NHI Dashboard - Anomalias Termales Volcanicas</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
@@ -362,7 +363,7 @@
 
             <div class="charts-grid">
                 <div class="chart-card">
-                    <h3>Area de Anomalia por Fecha</h3>
+                    <h3>Total hotspot area (OLI + MSI)</h3>
                     <canvas id="chart-hotpixels"></canvas>
                 </div>
                 <div class="chart-card">
@@ -868,25 +869,25 @@
 
             chartInstances.hotpixels = new Chart(
                 document.getElementById('chart-hotpixels'), {
-                type: 'bar',
+                type: 'line',
                 data: {
-                    labels: fechas,
                     datasets: [{
-                        label: 'Area anomalia (m2)',
-                        data: sorted.map(d => pixelsToArea(d.pixeles_calientes, d.sensor)),
-                        backgroundColor: sorted.map(d => {
-                            if (!d.alerta) return 'rgba(35, 134, 54, 0.3)';
-                            return d.sensor === 'Sentinel-2'
-                                ? 'rgba(88, 166, 255, 0.7)' : 'rgba(240, 136, 62, 0.7)';
-                        }),
-                        borderColor: sorted.map(d => {
-                            if (!d.alerta) return '#238636';
-                            return d.sensor === 'Sentinel-2' ? '#58a6ff' : '#f0883e';
-                        }),
-                        borderWidth: 1,
+                        label: 'Total hotspot area (m2)',
+                        data: sorted.map(d => ({
+                            x: d.fecha,
+                            y: pixelsToArea(d.pixeles_calientes, d.sensor)
+                        })),
+                        borderColor: '#2e7d32',
+                        backgroundColor: 'rgba(76, 175, 80, 0.35)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.2,
+                        pointRadius: 2.5,
+                        pointHoverRadius: 5,
+                        pointBackgroundColor: '#2e7d32',
                     }]
                 },
-                options: chartOptions('Area (m2)')
+                options: chartOptions('Total hotspot area (m2)', { timeAxis: true })
             });
 
             chartInstances.nhiswir = new Chart(
@@ -1063,23 +1064,40 @@
             }
         }
 
-        function chartOptions(yLabel) {
+        function chartOptions(yLabel, opts = {}) {
+            const xScale = opts.timeAxis ? {
+                type: 'time',
+                time: {
+                    unit: 'day',
+                    displayFormats: { day: 'MMM d', week: 'MMM d', month: 'MMM yyyy' },
+                    tooltipFormat: 'yyyy-MM-dd'
+                },
+                ticks: {
+                    color: '#c9d1d9',
+                    font: { size: 12, weight: '500' },
+                    maxRotation: 0,
+                    autoSkip: true,
+                    autoSkipPadding: 12,
+                    source: 'auto'
+                },
+                grid: { color: '#21262d' }
+            } : {
+                ticks: {
+                    color: '#c9d1d9',
+                    maxRotation: 50,
+                    minRotation: 45,
+                    font: { size: 12, weight: '500' },
+                    autoSkip: true,
+                    autoSkipPadding: 8
+                },
+                grid: { color: '#21262d' }
+            };
             return {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: { legend: { labels: { color: '#c9d1d9', font: { size: 12 } } } },
                 scales: {
-                    x: {
-                        ticks: {
-                            color: '#c9d1d9',
-                            maxRotation: 50,
-                            minRotation: 45,
-                            font: { size: 12, weight: '500' },
-                            autoSkip: true,
-                            autoSkipPadding: 8
-                        },
-                        grid: { color: '#21262d' }
-                    },
+                    x: xScale,
                     y: {
                         ticks: { color: '#c9d1d9', font: { size: 12 } },
                         grid: { color: '#21262d' },
