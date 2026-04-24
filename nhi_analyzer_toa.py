@@ -73,22 +73,48 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(me
 log = logging.getLogger(__name__)
 
 
-def leer_banda(href, lat, lon, buffer_km, size=IMAGE_SIZE):
-    """Lee un window de la banda dado bbox WGS84 y tamano final cuadrado."""
+def leer_banda_nativa(href, lat, lon, buffer_km):
+    """
+    Lee un window de la banda a RESOLUCION NATIVA (sin resampling).
+
+    GEE procesa los pixeles a 20m nativo; el resampling bilinear que haciamos
+    antes (a 400x400) promediaba hot pixels con vecinos frios, perdiendo signal.
+
+    Retorna: (data, window_transform) — el transform se usa para calcular
+    mascara circular en espacio geografico.
+    """
     bbox_wgs84 = get_bbox(lat, lon, buffer_km)
     with rasterio.open(href) as src:
         bbox_crs = transform_bounds(CRS.from_epsg(4326), src.crs, *bbox_wgs84)
         window = src.window(*bbox_crs)
-        data = src.read(1, window=window, out_shape=(size, size),
-                        resampling=rasterio.enums.Resampling.bilinear)
-    return data.astype(np.float32)
+        data = src.read(1, window=window)
+        # transform del window en el CRS del raster (para calcular distancias)
+        win_transform = src.window_transform(window)
+        src_crs = src.crs
+    return data.astype(np.float32), win_transform, src_crs
 
 
-def _circular_mask(size):
-    """Mascara circular inscrita en raster cuadrado."""
-    yy, xx = np.ogrid[:size, :size]
-    cy, cx = (size - 1) / 2.0, (size - 1) / 2.0
-    return ((yy - cy) ** 2 + (xx - cx) ** 2) <= (size / 2.0) ** 2
+def _circular_mask_geo(shape, transform, crs, lat, lon, buffer_km):
+    """
+    Mascara circular en espacio geografico: True si la distancia del centro
+    del pixel al volcan es <= buffer_km.
+    """
+    rows, cols = shape
+    # Centro de cada pixel en coordenadas del raster (CRS UTM local)
+    xs = np.arange(cols) + 0.5
+    ys = np.arange(rows) + 0.5
+    xx = transform[0] * xs + transform[2]  # easting
+    yy = transform[4] * ys + transform[5]  # northing (transform[4] es negativo)
+    XX, YY = np.meshgrid(xx, yy)
+
+    # Proyectar el volcano (lat,lon) al CRS del raster
+    from rasterio.warp import transform as warp_transform
+    xs_c, ys_c = warp_transform(CRS.from_epsg(4326), crs, [lon], [lat])
+    cx, cy = xs_c[0], ys_c[0]
+
+    # Distancia en metros (CRS es UTM, unidades metros)
+    dist2 = (XX - cx) ** 2 + (YY - cy) ** 2
+    return dist2 <= (buffer_km * 1000.0) ** 2
 
 
 def to_radiance(dn, esun_band, cos_sza, sun_earth_dist_factor):
@@ -107,7 +133,7 @@ def to_radiance(dn, esun_band, cos_sza, sun_earth_dist_factor):
     return dn_harmonized * esun_band * cos_sza / sun_earth_dist_factor
 
 
-def calcular_nhi_toa(b703, b800, b1600, b2200, sun_elevation_deg, refl_conv_factor, circular):
+def calcular_nhi_toa(b703, b800, b1600, b2200, sun_elevation_deg, refl_conv_factor, circular_mask):
     """
     Aplica el algoritmo EXACTO del NHI Tool sobre radiancias.
 
@@ -129,7 +155,7 @@ def calcular_nhi_toa(b703, b800, b1600, b2200, sun_elevation_deg, refl_conv_fact
     test_miss_reg = (b2200_r - b800_r) / (b2200_r + b800_r + eps)
 
     # Validez basica + mascara circular
-    valid = (b800_r > 0) & (b1600_r > 0) & (b2200_r > 0) & circular
+    valid = (b800_r > 0) & (b1600_r > 0) & (b2200_r > 0) & circular_mask
 
     total = int(valid.sum())
     if total < 100:
@@ -195,7 +221,6 @@ def procesar_volcan_toa(catalog, nombre, datos, fi, ff):
     lat, lon = datos["lat"], datos["lon"]
     buffer_km = datos.get("buffer_km", 3.0)
     bbox = get_bbox(lat, lon, buffer_km)
-    circular = _circular_mask(IMAGE_SIZE)
 
     search = catalog.search(
         collections=[S2_L1C_COLLECTION], bbox=bbox,
@@ -220,25 +245,37 @@ def procesar_volcan_toa(catalog, nombre, datos, fi, ff):
             continue
 
         try:
-            b703  = leer_banda(item.assets[S2_ASSETS["b703"]].href,  lat, lon, buffer_km)
-            b800  = leer_banda(item.assets[S2_ASSETS["b800"]].href,  lat, lon, buffer_km)
-            b1600 = leer_banda(item.assets[S2_ASSETS["b1600"]].href, lat, lon, buffer_km)
-            b2200 = leer_banda(item.assets[S2_ASSETS["b2200"]].href, lat, lon, buffer_km)
+            b703,  tr, src_crs = leer_banda_nativa(item.assets[S2_ASSETS["b703"]].href,  lat, lon, buffer_km)
+            b800,  _,  _       = leer_banda_nativa(item.assets[S2_ASSETS["b800"]].href,  lat, lon, buffer_km)
+            b1600, _,  _       = leer_banda_nativa(item.assets[S2_ASSETS["b1600"]].href, lat, lon, buffer_km)
+            b2200, _,  _       = leer_banda_nativa(item.assets[S2_ASSETS["b2200"]].href, lat, lon, buffer_km)
         except Exception as e:
             log.warning(f"  {fecha}: error leyendo bandas: {e}")
             continue
 
-        stats = calcular_nhi_toa(b703, b800, b1600, b2200, sun_elev, refl_conv, circular)
+        # Las 4 bandas S2 (B5, B8A, B11, B12) son nativas a 20m -> mismo shape
+        if not (b703.shape == b800.shape == b1600.shape == b2200.shape):
+            log.warning(f"  {fecha}: shapes distintos (bilinear podria forzar)")
+            continue
+
+        circular_mask = _circular_mask_geo(b703.shape, tr, src_crs, lat, lon, buffer_km)
+        stats = calcular_nhi_toa(b703, b800, b1600, b2200, sun_elev, refl_conv, circular_mask)
         stats["fecha"] = fecha
         stats["sensor"] = "Sentinel-2"
         stats["fuente"] = "S2 L1C TOA radiance (Element84) — algoritmo NHI Tool exacto"
         stats["cloud_cover"] = item.properties.get("eo:cloud_cover")
         stats["sun_elevation"] = sun_elev
+        # Pixel area nativo (20m x 20m = 400 m2 para bandas SWIR de S2)
+        px_size_m = abs(tr[0])
+        px_area = px_size_m * px_size_m
+        stats["pixel_area_m2"] = px_area
+        stats["pixel_size_m"] = px_size_m
+
         resultados.append(stats)
         fechas_procesadas.add(fecha)
         if stats["alerta"]:
-            area = stats["pixeles_calientes"] * 400
-            log.info(f"    {fecha}: {stats['pixeles_calientes']} px ({stats['pixeles_cond_a']}A + {stats['pixeles_cond_b']}B + {stats['pixeles_extreme']}X) -> {area} m2")
+            area = stats["pixeles_calientes"] * px_area
+            log.info(f"    {fecha}: {stats['pixeles_calientes']} px ({stats['pixeles_cond_a']}A + {stats['pixeles_cond_b']}B + {stats['pixeles_extreme']}X) -> {area:.0f} m2 (pix={px_size_m:.0f}m)")
 
     resultados.sort(key=lambda x: x["fecha"], reverse=True)
     return resultados
