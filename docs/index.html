@@ -1029,7 +1029,7 @@
                         backgroundColor: 'rgba(76, 175, 80, 0.35)',
                         borderWidth: 2,
                         fill: true,
-                        tension: 0.2,
+                        tension: 0,
                         pointRadius: 2.5,
                         pointHoverRadius: 5,
                         pointBackgroundColor: '#2e7d32',
@@ -1049,7 +1049,7 @@
                         borderColor: '#ff6b35',
                         backgroundColor: 'rgba(255, 107, 53, 0.1)',
                         fill: true,
-                        tension: 0.3,
+                        tension: 0,
                         pointRadius: 3,
                     }, {
                         label: 'Umbral (0)',
@@ -1074,7 +1074,7 @@
                         borderColor: '#3fb950',
                         backgroundColor: 'rgba(63, 185, 80, 0.1)',
                         fill: true,
-                        tension: 0.3,
+                        tension: 0,
                         pointRadius: 3,
                     }, {
                         label: 'Umbral (0)',
@@ -1467,7 +1467,7 @@
                         data: nhiRef,
                         borderColor: '#da3633',
                         backgroundColor: 'rgba(218,54,51,0.15)',
-                        borderWidth: 2, fill: false, tension: 0.2,
+                        borderWidth: 2, fill: false, tension: 0,
                         pointRadius: 5, pointStyle: 'rectRot',
                     });
                 }
@@ -1476,14 +1476,14 @@
                     data: toaData,
                     borderColor: '#2e7d32',
                     backgroundColor: 'rgba(76,175,80,0.25)',
-                    borderWidth: 2, fill: true, tension: 0.2, pointRadius: 3,
+                    borderWidth: 2, fill: true, tension: 0, pointRadius: 3,
                 });
                 datasets.push({
                     label: 'L2A + VRP (dashboard principal)',
                     data: l2aData,
                     borderColor: '#58a6ff',
                     backgroundColor: 'rgba(88,166,255,0.10)',
-                    borderWidth: 2, borderDash: [5,5], fill: false, tension: 0.2, pointRadius: 3,
+                    borderWidth: 2, borderDash: [5,5], fill: false, tension: 0, pointRadius: 3,
                 });
 
                 toaChartInstance = new Chart(ctx, {
