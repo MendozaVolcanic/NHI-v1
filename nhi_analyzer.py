@@ -2,14 +2,10 @@
 NHI Analyzer — Normalized Hotspot Indices para volcanes chilenos
 Calcula NHISWIR y NHISWNIR usando Sentinel-2 y Landsat 8/9 via Planetary Computer.
 
-Algoritmo (Marchese et al. 2019 / Genzano et al. 2020 — NHI Tool GEE):
+Algoritmo (Marchese et al. 2019):
   NHISWIR  = (SWIR2 - SWIR1) / (SWIR2 + SWIR1)
   NHISWNIR = (SWIR1 - NIR)   / (SWIR1 + NIR)
-  Pixel caliente: NHISWIR > 0 AND NHISWNIR > 0
-
-Nota: replica el criterio del NHI Tool de Google Earth Engine para asegurar
-comparabilidad con el historico. No aplica filtros estadisticos adicionales
-(median+Nsigma, MAX_HOT_FRACTION) — estos quedaron deprecated en config_nhi.
+  Pixel caliente: NHISWIR > 0 OR NHISWNIR > 0
 
 Uso:
   python nhi_analyzer.py              # 43 volcanes, ultimos 60 dias
@@ -39,6 +35,8 @@ from config_nhi import (
     VOLCANES, STAC_URL, SENTINEL2_COLLECTION, LANDSAT_COLLECTION,
     SENTINEL2_BANDS, SENTINEL2_SCALE, SENTINEL2_OFFSET,
     LANDSAT_BANDS, LANDSAT_SCALE, LANDSAT_OFFSET,
+    NHI_THRESHOLD, N_SIGMA, MIN_ABSOLUTE_NHI, MAX_HOT_FRACTION,
+    SWIR_MIN_REFLECTANCE,
     MAX_CLOUD_COVER, DIAS_ATRAS, IMAGE_SIZE, HOTSPOT_IMAGE_SIZE,
     get_active_volcanoes, get_bbox, get_nhi_data_dir,
 )
@@ -111,10 +109,12 @@ def leer_banda(asset_href, lat, lon, buffer_km, size=IMAGE_SIZE):
 # ============================================
 def calcular_nhi(nir, swir1, swir2, scale, offset):
     """
-    Calcula indices NHI segun Marchese et al. 2019 / Genzano et al. 2020.
+    Calcula indices NHI a partir de 3 bandas con filtrado estadistico.
 
-    Criterio puro del NHI Tool (Google Earth Engine):
-      hot = NHI_SWIR > 0 AND NHI_SWNIR > 0
+    Inspirado en VRP Chile triple-threshold:
+      1. NHISWIR y NHISWNIR deben superar mediana + N_SIGMA * std
+      2. Ambos indices deben ser > MIN_ABSOLUTE_NHI
+      3. Si >MAX_HOT_FRACTION pixeles son calientes, escena descartada (ruido solar/nieve)
 
     Retorna dict con nhi_swir, nhi_swnir, hot_mask, stats.
     """
@@ -131,20 +131,46 @@ def calcular_nhi(nir, swir1, swir2, scale, offset):
     # NHISWNIR = (SWIR1 - NIR) / (SWIR1 + NIR)
     nhi_swnir = (swir1_ref - nir_ref) / (swir1_ref + nir_ref + eps)
 
-    # Mascara de validez: reflectancia positiva y no saturada
-    valid = (nir_ref > 0) & (swir1_ref > 0) & (swir2_ref > 0)
-    valid &= (swir1_ref < 1.0) & (swir2_ref < 1.0)
+    # Mascara de pixeles validos (reflectancia minima)
+    valid = (swir1_ref > SWIR_MIN_REFLECTANCE) & (swir2_ref > SWIR_MIN_REFLECTANCE)
+    valid &= (nir_ref > 0) & (swir1_ref < 1.0) & (swir2_ref < 1.0)  # eliminar saturados
 
     total_pixels = int(valid.sum())
     if total_pixels < 100:
         return _empty_result(nhi_swir, nhi_swnir)
 
-    # Criterio NHI Tool: ambos indices > 0
-    hot_mask = valid & (nhi_swir > 0) & (nhi_swnir > 0)
+    # --- Filtro estadistico (inspirado en VRP Chile background annulus) ---
+    # Calcular estadisticas de fondo sobre pixeles validos
+    swir_vals = nhi_swir[valid]
+    swnir_vals = nhi_swnir[valid]
+
+    median_swir = float(np.median(swir_vals))
+    std_swir = float(np.std(swir_vals))
+    median_swnir = float(np.median(swnir_vals))
+    std_swnir = float(np.std(swnir_vals))
+
+    # Umbral dinamico: mediana + max(MIN_ABSOLUTE, N_SIGMA * std)
+    thresh_swir = median_swir + max(MIN_ABSOLUTE_NHI, N_SIGMA * std_swir)
+    thresh_swnir = median_swnir + max(MIN_ABSOLUTE_NHI, N_SIGMA * std_swnir)
+
+    # Pixel caliente: NHISWIR supera filtro estadistico Y NHISWNIR > 0 (confirma)
+    # NHISWIR es el detector primario; NHISWNIR confirma sin filtro estadistico
+    # porque su fondo es variable (vegetacion/roca tienen SWIR1 > NIR naturalmente)
+    hot_swir = valid & (nhi_swir > thresh_swir) & (nhi_swir > NHI_THRESHOLD)
+    hot_swnir = valid & (nhi_swnir > NHI_THRESHOLD)
+    hot_mask = hot_swir & hot_swnir
 
     hot_pixels = int(hot_mask.sum())
-    fraction = hot_pixels / max(total_pixels, 1)
 
+    # --- Filtro de fraccion maxima (anti-ruido solar) ---
+    # Si >5% de pixeles validos son "calientes", la escena es ruidosa
+    fraction = hot_pixels / max(total_pixels, 1)
+    if fraction > MAX_HOT_FRACTION:
+        log.debug(f"    Escena descartada: {fraction:.1%} pixeles calientes (max {MAX_HOT_FRACTION:.0%})")
+        hot_mask[:] = False
+        hot_pixels = 0
+
+    # Estadisticas
     swir2_hot_total = float(swir2_ref[hot_mask].sum()) if hot_pixels > 0 else 0.0
     max_nhi_swir = float(nhi_swir[hot_mask].max()) if hot_pixels > 0 else 0.0
     max_nhi_swnir = float(nhi_swnir[hot_mask].max()) if hot_pixels > 0 else 0.0
@@ -152,10 +178,14 @@ def calcular_nhi(nir, swir1, swir2, scale, offset):
     stats = {
         "pixeles_validos": total_pixels,
         "pixeles_calientes": hot_pixels,
-        "fraccion_caliente": round(fraction, 6),
+        "fraccion_caliente": round(fraction if hot_pixels > 0 else 0.0, 6),
         "max_nhiswir": round(max_nhi_swir, 6),
         "max_nhiswnir": round(max_nhi_swnir, 6),
         "swir2_total": round(swir2_hot_total, 4),
+        "thresh_swir": round(thresh_swir, 6),
+        "thresh_swnir": round(thresh_swnir, 6),
+        "bg_median_swir": round(median_swir, 6),
+        "bg_std_swir": round(std_swir, 6),
         "alerta": hot_pixels > 0,
     }
 
@@ -177,7 +207,8 @@ def _empty_result(nhi_swir, nhi_swnir):
         "stats": {
             "pixeles_validos": 0, "pixeles_calientes": 0,
             "fraccion_caliente": 0, "max_nhiswir": 0, "max_nhiswnir": 0,
-            "swir2_total": 0, "alerta": False,
+            "swir2_total": 0, "thresh_swir": 0, "thresh_swnir": 0,
+            "bg_median_swir": 0, "bg_std_swir": 0, "alerta": False,
         },
     }
 

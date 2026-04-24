@@ -55,19 +55,23 @@ LANDSAT_SCALE = 0.0000275
 LANDSAT_OFFSET = -0.2
 
 # ============================================
-# UMBRALES NHI (Marchese et al. 2019 — NHI Tool GEE)
+# UMBRALES NHI (Marchese et al. 2019 + calibracion VRP Chile)
 # ============================================
-# Usamos el criterio puro del paper / NHI Tool:
-#   hot = NHI_SWIR > 0 AND NHI_SWNIR > 0
+# El paper original usa NHISWIR > 0 sobre radiancia TOA.
+# Con reflectancia L2A, el umbral > 0 genera demasiados falsos positivos
+# porque suelo calentado por el sol y nieve brillante en SWIR superan 0.
 #
-# Motivo: comparabilidad con el historico generado por el NHI Tool en
-# Google Earth Engine (https://nicogenzano.users.earthengine.app/view/nhi-tool).
-# Los filtros estadisticos previos (mediana+Nsigma, MAX_HOT_FRACTION) se
-# removieron porque producian escalas de area incompatibles con el historico.
+# Aplicamos filtro estadistico inspirado en VRP Chile:
+#   1. Pixel debe superar mediana + N_SIGMA * std del indice en la escena
+#   2. Ambos indices deben ser > 0 (AND en vez de OR) para reducir FP
+#   3. Filtro de fraccion maxima: si >5% de pixeles son "calientes", es ruido
 #
-# Nota: el paper usa radiancia TOA; nosotros usamos L2A (Planetary Computer
-# no sirve TOA). El signo del indice se conserva, la magnitud absoluta puede
-# diferir ligeramente pero el patron temporal debe coincidir.
+# Refs: VRP Chile triple-threshold (T_bg + max(5K, 3sigma))
+NHI_THRESHOLD = 0.0          # Umbral base (mantiene criterio del paper)
+N_SIGMA = 3.0                # Pixeles deben superar mediana + 3*sigma
+MIN_ABSOLUTE_NHI = 0.02      # Umbral minimo absoluto (evita ruido en escenas homogeneas)
+MAX_HOT_FRACTION = 0.005     # Si >0.5% pixeles son "calientes", descartar (escena ruidosa)
+SWIR_MIN_REFLECTANCE = 0.05  # Filtro de reflectancia minima (bajado: 0.15 excluia pixels validos)
 
 # ============================================
 # 43 VOLCANES ACTIVOS DE CHILE
