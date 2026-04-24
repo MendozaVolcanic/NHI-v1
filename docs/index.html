@@ -739,15 +739,24 @@
                 </div>
 
                 <div class="guia-card">
-                    <h2>Comparativa Lascar: L2A actual vs TOA calibrado vs NHI Tool</h2>
-                    <p style="font-size:0.85em;">Linea verde = TOA POC (esta pestania). Linea azul = L2A+VRP actual (dashboard principal).
-                    Marcas rojas = valores leidos del chart NHI Tool GEE para el mismo periodo.</p>
+                    <h2>Comparativa por volcan: L2A actual vs TOA replica</h2>
+                    <p style="font-size:0.85em;">Linea verde = TOA replica NHI Tool (S2 L1C, esta pestania).
+                    Linea azul dashed = L2A+VRP actual (dashboard principal).
+                    Marcas rojas = valores NHI Tool GEE (solo disponibles para Lascar Feb-Abr 2026).</p>
+                    <div class="controls" style="margin-top:12px;">
+                        <label style="color:#8b949e; font-size:0.85em;">Volcan:</label>
+                        <select id="toa-volcan-select" style="min-width:200px;"></select>
+                        <span id="toa-buffer-info" style="color:#8b949e; font-size:0.82em; margin-left:8px;"></span>
+                    </div>
                     <div class="chart-card" style="margin-top:10px;">
                         <canvas id="chart-toa-comparison"></canvas>
                     </div>
                     <p style="font-size:0.8em; color:#8b949e; margin-top:10px;">
-                        Datos: <code>docs/nhi_data_toa/Lascar/nhi_timeseries.json</code> (S2 L1C Element84) vs
-                        <code>docs/nhi_data/Lascar/nhi_timeseries.json</code> (S2 L2A + L8 L2 Planetary Computer).
+                        Buffer: <strong>Lascar 3 km</strong> (match del NHI Tool GEE) |
+                        <strong>resto 5 km</strong> (default para este POC, sin referencia GEE para comparar).
+                        Datos: <code>docs/nhi_data_toa/{volcan}/nhi_timeseries.json</code>
+                        (S2 L1C Element84) vs <code>docs/nhi_data/{volcan}/nhi_timeseries.json</code>
+                        (S2 L2A + L8 L2 Planetary Computer).
                     </p>
                 </div>
             </div>
@@ -1301,85 +1310,104 @@
         };
 
         // ========================
-        // TOA COMPARISON CHART (Lascar)
+        // TOA COMPARISON CHART (seleccionable por volcan)
         // ========================
         let toaChartInstance = null;
+        let toaInited = false;
+
+        // Valores leidos manualmente del chart NHI Tool GEE para Lascar Feb-Abr 2026.
+        // Solo tenemos referencia visual para Lascar (los otros volcanes no los leimos del GEE).
+        const NHI_TOOL_REF = {
+            'Lascar': [
+                {x:'2026-02-11', y:3600}, {x:'2026-02-21', y:1600},
+                {x:'2026-02-26', y:2700}, {x:'2026-03-03', y:2700},
+                {x:'2026-03-08', y:1800}, {x:'2026-03-13', y:3600},
+                {x:'2026-03-18', y:2400}, {x:'2026-03-23', y:2700},
+                {x:'2026-04-02', y:1600}, {x:'2026-04-07', y:3600},
+                {x:'2026-04-12', y:2800}, {x:'2026-04-17', y:1800}
+            ]
+        };
+        const TOA_BUFFER_KM = { 'Lascar': 3.0 };
+        const TOA_DEFAULT_BUFFER_KM = 5.0;
+
         async function renderTOAComparison() {
-            if (toaChartInstance) return;
+            if (toaInited) return;
+            toaInited = true;
+            const select = document.getElementById('toa-volcan-select');
+            if (!select) return;
+
+            // Poblar selector desde resumenGlobal (los 43 volcanes)
+            while (select.firstChild) select.removeChild(select.firstChild);
+            const nombres = Object.keys(resumenGlobal || {}).sort();
+            for (const n of nombres) {
+                const opt = document.createElement('option');
+                opt.value = n;
+                opt.textContent = n;
+                if (n === 'Lascar') opt.selected = true;
+                select.appendChild(opt);
+            }
+            select.addEventListener('change', () => refreshTOAChart(select.value));
+            refreshTOAChart(select.value || 'Lascar');
+        }
+
+        async function refreshTOAChart(volcan) {
+            const buffer = TOA_BUFFER_KM[volcan] || TOA_DEFAULT_BUFFER_KM;
+            const info = document.getElementById('toa-buffer-info');
+            if (info) info.textContent = `(buffer ${buffer} km)`;
+
             try {
                 const [l2aResp, toaResp] = await Promise.all([
-                    fetch(`${NHI_BASE}/nhi_data/Lascar/nhi_timeseries.json?t=${Date.now()}`),
-                    fetch(`${NHI_BASE}/nhi_data_toa/Lascar/nhi_timeseries.json?t=${Date.now()}`)
+                    fetch(`${NHI_BASE}/nhi_data/${encodeURIComponent(volcan)}/nhi_timeseries.json?t=${Date.now()}`),
+                    fetch(`${NHI_BASE}/nhi_data_toa/${encodeURIComponent(volcan)}/nhi_timeseries.json?t=${Date.now()}`)
                 ]);
-                if (!l2aResp.ok || !toaResp.ok) {
-                    console.warn('TOA: no se pudo cargar alguno de los JSON');
-                    return;
-                }
-                const l2a = await l2aResp.json();
-                const toa = await toaResp.json();
+                const l2a = l2aResp.ok ? await l2aResp.json() : [];
+                const toa = toaResp.ok ? await toaResp.json() : [];
 
-                // L2A area per date (S2=400, L8=900)
                 const l2aData = l2a
                     .filter(d => d.fecha >= '2026-02-01')
                     .map(d => ({
                         x: d.fecha,
                         y: d.pixeles_calientes * (d.sensor && d.sensor.includes('Sentinel') ? 400 : 900)
                     }));
-                // TOA area per date (solo S2 por ahora)
                 const toaData = toa
                     .filter(d => d.fecha >= '2026-02-01')
-                    .map(d => ({ x: d.fecha, y: d.pixeles_calientes * 400 }));
-                // NHI Tool reference (del chart GEE para Lascar Feb-Abr 2026)
-                const nhiRef = [
-                    {x:'2026-02-11', y:3600}, {x:'2026-02-21', y:1600},
-                    {x:'2026-02-26', y:2700}, {x:'2026-03-03', y:2700},
-                    {x:'2026-03-08', y:1800}, {x:'2026-03-13', y:3600},
-                    {x:'2026-03-18', y:2400}, {x:'2026-03-23', y:2700},
-                    {x:'2026-04-02', y:1600}, {x:'2026-04-07', y:3600},
-                    {x:'2026-04-12', y:2800}, {x:'2026-04-17', y:1800}
-                ];
+                    .map(d => ({ x: d.fecha, y: d.pixeles_calientes * (d.pixel_area_m2 || 400) }));
+                const nhiRef = NHI_TOOL_REF[volcan] || [];
 
+                if (toaChartInstance) toaChartInstance.destroy();
                 const ctx = document.getElementById('chart-toa-comparison');
                 if (!ctx) return;
+
+                const datasets = [];
+                if (nhiRef.length) {
+                    datasets.push({
+                        label: 'NHI Tool GEE (referencia manual)',
+                        data: nhiRef,
+                        borderColor: '#da3633',
+                        backgroundColor: 'rgba(218,54,51,0.15)',
+                        borderWidth: 2, fill: false, tension: 0.2,
+                        pointRadius: 5, pointStyle: 'rectRot',
+                    });
+                }
+                datasets.push({
+                    label: 'TOA replica NHI Tool (S2 L1C)',
+                    data: toaData,
+                    borderColor: '#2e7d32',
+                    backgroundColor: 'rgba(76,175,80,0.25)',
+                    borderWidth: 2, fill: true, tension: 0.2, pointRadius: 3,
+                });
+                datasets.push({
+                    label: 'L2A + VRP (dashboard principal)',
+                    data: l2aData,
+                    borderColor: '#58a6ff',
+                    backgroundColor: 'rgba(88,166,255,0.10)',
+                    borderWidth: 2, borderDash: [5,5], fill: false, tension: 0.2, pointRadius: 3,
+                });
+
                 toaChartInstance = new Chart(ctx, {
                     type: 'line',
-                    data: {
-                        datasets: [
-                            {
-                                label: 'NHI Tool GEE (referencia)',
-                                data: nhiRef,
-                                borderColor: '#da3633',
-                                backgroundColor: 'rgba(218,54,51,0.15)',
-                                borderWidth: 2,
-                                fill: false,
-                                tension: 0.2,
-                                pointRadius: 5,
-                                pointStyle: 'rectRot',
-                            },
-                            {
-                                label: 'TOA calibrado (S2 L1C, nuestro POC)',
-                                data: toaData,
-                                borderColor: '#2e7d32',
-                                backgroundColor: 'rgba(76,175,80,0.25)',
-                                borderWidth: 2,
-                                fill: true,
-                                tension: 0.2,
-                                pointRadius: 3,
-                            },
-                            {
-                                label: 'L2A + VRP (dashboard principal)',
-                                data: l2aData,
-                                borderColor: '#58a6ff',
-                                backgroundColor: 'rgba(88,166,255,0.10)',
-                                borderWidth: 2,
-                                borderDash: [5,5],
-                                fill: false,
-                                tension: 0.2,
-                                pointRadius: 3,
-                            },
-                        ]
-                    },
-                    options: chartOptions('Area hotspot (m2)', { timeAxis: true })
+                    data: { datasets },
+                    options: chartOptions(`Area hotspot (m2) — ${volcan}`, { timeAxis: true })
                 });
             } catch (e) {
                 console.error('Error rendering TOA comparison:', e);

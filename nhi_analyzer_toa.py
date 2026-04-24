@@ -281,33 +281,103 @@ def procesar_volcan_toa(catalog, nombre, datos, fi, ff):
     return resultados
 
 
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--volcan", required=True)
-    parser.add_argument("--dias", type=int, default=60)
-    args = parser.parse_args()
+# Buffer TOA por volcan. Default 5 km; Lascar en 3 km (match del NHI Tool GEE).
+DEFAULT_TOA_BUFFER_KM = 5.0
+TOA_BUFFER_OVERRIDES = {
+    "Lascar": 3.0,
+}
 
-    volcanes = get_active_volcanoes()
-    if args.volcan not in volcanes:
-        log.error(f"Volcan '{args.volcan}' no existe")
-        sys.exit(1)
 
-    datos = volcanes[args.volcan]
-    ff = datetime.now()
-    fi = ff - timedelta(days=args.dias)
+def resolve_buffer(volcan):
+    return TOA_BUFFER_OVERRIDES.get(volcan, DEFAULT_TOA_BUFFER_KM)
 
-    log.info(f"=== TOA NHI Tool replica: {args.volcan} ({args.dias} dias) ===")
-    catalog = pystac_client.Client.open(EARTHSEARCH_URL)
-    resultados = procesar_volcan_toa(catalog, args.volcan, datos, fi, ff)
 
-    out_dir = os.path.join("docs", "nhi_data_toa", args.volcan)
+def procesar_y_guardar(catalog, nombre, datos, fi, ff):
+    """Procesa un volcan y guarda JSON. Retorna numero de alertas."""
+    datos = dict(datos)
+    datos["buffer_km"] = resolve_buffer(nombre)
+    try:
+        resultados = procesar_volcan_toa(catalog, nombre, datos, fi, ff)
+    except Exception as e:
+        log.error(f"  {nombre}: ERROR {e}")
+        return -1
+
+    out_dir = os.path.join("docs", "nhi_data_toa", nombre)
     os.makedirs(out_dir, exist_ok=True)
     out_path = os.path.join(out_dir, "nhi_timeseries.json")
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(resultados, f, ensure_ascii=False, indent=2)
 
     alertas = sum(1 for r in resultados if r["alerta"])
-    log.info(f"Guardado: {out_path} ({len(resultados)} obs, {alertas} con anomalias)")
+    log.info(f"  {nombre}: {len(resultados)} obs, {alertas} alertas -> {out_path}")
+    return alertas
+
+
+def generar_resumen_toa(volcanoes_data):
+    """Genera resumen global TOA paralelo al principal."""
+    resumen = {}
+    for nombre, datos in volcanoes_data.items():
+        path = os.path.join("docs", "nhi_data_toa", nombre, "nhi_timeseries.json")
+        if not os.path.isfile(path):
+            continue
+        with open(path, encoding="utf-8") as f:
+            obs = json.load(f)
+        alertas_7d = [r for r in obs if r.get("alerta") and
+                      (datetime.now() - datetime.strptime(r["fecha"], "%Y-%m-%d")).days <= 7]
+        alertas_30d = [r for r in obs if r.get("alerta") and
+                       (datetime.now() - datetime.strptime(r["fecha"], "%Y-%m-%d")).days <= 30]
+        if alertas_7d:
+            nivel = "rojo"
+        elif alertas_30d:
+            nivel = "amarillo"
+        else:
+            nivel = "verde"
+        ultima = obs[0]["fecha"] if obs else None
+        max_area = max((r["pixeles_calientes"] * r.get("pixel_area_m2", 400) for r in obs), default=0)
+        resumen[nombre] = {
+            "nivel": nivel,
+            "alertas_7d": len(alertas_7d),
+            "alertas_30d": len(alertas_30d),
+            "max_area_m2": round(max_area, 1),
+            "ultima_fecha": ultima,
+            "total_observaciones": len(obs),
+            "buffer_km": resolve_buffer(nombre),
+            "zona": datos.get("zona", ""),
+            "lat": datos.get("lat", 0),
+            "lon": datos.get("lon", 0),
+        }
+    out = os.path.join("docs", "nhi_data_toa", "resumen_global.json")
+    os.makedirs(os.path.dirname(out), exist_ok=True)
+    with open(out, "w", encoding="utf-8") as f:
+        json.dump(resumen, f, ensure_ascii=False, indent=2)
+    log.info(f"Resumen TOA: {out}")
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--volcan", default=None, help="Procesar solo un volcan; si se omite, procesa todos")
+    parser.add_argument("--dias", type=int, default=60)
+    args = parser.parse_args()
+
+    volcanes = get_active_volcanoes()
+    if args.volcan:
+        if args.volcan not in volcanes:
+            log.error(f"Volcan '{args.volcan}' no existe")
+            sys.exit(1)
+        volcanes = {args.volcan: volcanes[args.volcan]}
+
+    ff = datetime.now()
+    fi = ff - timedelta(days=args.dias)
+
+    log.info(f"=== TOA NHI Tool replica: {len(volcanes)} volcanes, {args.dias} dias ===")
+    catalog = pystac_client.Client.open(EARTHSEARCH_URL)
+
+    for i, (nombre, datos) in enumerate(volcanes.items(), 1):
+        log.info(f"[{i}/{len(volcanes)}] {nombre} ({datos.get('zona','')}) buffer={resolve_buffer(nombre)}km")
+        procesar_y_guardar(catalog, nombre, datos, fi, ff)
+
+    if len(volcanes) > 1:
+        generar_resumen_toa(volcanes)
 
 
 if __name__ == "__main__":
