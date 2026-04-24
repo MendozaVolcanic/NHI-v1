@@ -697,22 +697,38 @@
                     <ul>
                         <li>[x] Investigacion de disponibilidad en Planetary Computer</li>
                         <li>[x] Confirmado: PC no sirve TOA para OLI/MSI modernos</li>
-                        <li>[ ] Setup de acceso AWS Open Data (boto3)</li>
-                        <li>[ ] Migracion de Landsat 8/9 a L1 TOA</li>
-                        <li>[ ] Migracion de Sentinel-2 a L1C TOA</li>
-                        <li>[ ] Validacion cruzada vs NHI Tool en Lascar</li>
-                        <li>[ ] Merge a main + regeneracion historica</li>
+                        <li>[x] Descubierto Element84 earth-search con S2 L1C anonimo (AWS_NO_SIGN_REQUEST)</li>
+                        <li>[x] Migracion de Sentinel-2 a L1C TOA (<code>nhi_analyzer_toa.py</code>)</li>
+                        <li>[x] Validacion cruzada vs NHI Tool en Lascar: <strong>8/9 escenas dentro de 0.2-5x, 5/9 excelentes (0.5-2x)</strong></li>
+                        <li>[ ] Migracion de Landsat 8/9 a L1 TOA (bucket usgs-landsat es requester-pays, necesita credenciales AWS)</li>
+                        <li>[ ] Extender a los otros 42 volcanes</li>
+                        <li>[ ] Merge a pipeline principal + regeneracion historica</li>
                     </ul>
                 </div>
 
                 <div class="guia-card">
-                    <h2>Comparacion prevista</h2>
-                    <p>Cuando la migracion este lista, esta pestania mostrara el <strong>grafico de area
-                    de hotspots TOA</strong> lado a lado con la version L2A actual, para validar la
-                    correspondencia con el NHI Tool.</p>
-                    <div style="background:#0d1117; border:1px dashed #30363d; border-radius:6px; padding:40px; text-align:center; color:#8b949e; margin-top:12px;">
-                        Grafico comparativo aqui (pendiente)
+                    <h2>Calibracion TOA (Lascar, Feb-Abr 2026)</h2>
+                    <p>Parametros calibrados contra NHI Tool GEE:</p>
+                    <ul style="font-size:0.85em;">
+                        <li>Circular mask: <code>3 km</code> de radio (igual que NHI Tool)</li>
+                        <li><code>NHI_SWIR &gt; 0.15</code> — discrimina termal real vs mineralogia piroclastica</li>
+                        <li><code>NHI_SWNIR &gt; -0.08</code> — fuentes termales calientes empujan NIR (cuerpo negro ~700K)</li>
+                        <li><code>SWIR2_TOA &gt; 0.30</code> — descarta pixeles oscuros ruidosos</li>
+                        <li>Sin cloud mask (B10 es alto a 5,500m por atmosfera delgada)</li>
+                    </ul>
+                </div>
+
+                <div class="guia-card">
+                    <h2>Comparativa Lascar: L2A actual vs TOA calibrado vs NHI Tool</h2>
+                    <p style="font-size:0.85em;">Linea verde = TOA POC (esta pestania). Linea azul = L2A+VRP actual (dashboard principal).
+                    Marcas rojas = valores leidos del chart NHI Tool GEE para el mismo periodo.</p>
+                    <div class="chart-card" style="margin-top:10px;">
+                        <canvas id="chart-toa-comparison"></canvas>
                     </div>
+                    <p style="font-size:0.8em; color:#8b949e; margin-top:10px;">
+                        Datos: <code>docs/nhi_data_toa/Lascar/nhi_timeseries.json</code> (S2 L1C Element84) vs
+                        <code>docs/nhi_data/Lascar/nhi_timeseries.json</code> (S2 L2A + L8 L2 Planetary Computer).
+                    </p>
                 </div>
             </div>
         </div>
@@ -1259,7 +1275,96 @@
                     if (leafletMap) leafletMap.invalidateSize();
                 }, 100);
             }
+            if (name === 'toa') {
+                setTimeout(() => renderTOAComparison(), 100);
+            }
         };
+
+        // ========================
+        // TOA COMPARISON CHART (Lascar)
+        // ========================
+        let toaChartInstance = null;
+        async function renderTOAComparison() {
+            if (toaChartInstance) return;
+            try {
+                const [l2aResp, toaResp] = await Promise.all([
+                    fetch(`${NHI_BASE}/nhi_data/Lascar/nhi_timeseries.json?t=${Date.now()}`),
+                    fetch(`${NHI_BASE}/nhi_data_toa/Lascar/nhi_timeseries.json?t=${Date.now()}`)
+                ]);
+                if (!l2aResp.ok || !toaResp.ok) {
+                    console.warn('TOA: no se pudo cargar alguno de los JSON');
+                    return;
+                }
+                const l2a = await l2aResp.json();
+                const toa = await toaResp.json();
+
+                // L2A area per date (S2=400, L8=900)
+                const l2aData = l2a
+                    .filter(d => d.fecha >= '2026-02-01')
+                    .map(d => ({
+                        x: d.fecha,
+                        y: d.pixeles_calientes * (d.sensor && d.sensor.includes('Sentinel') ? 400 : 900)
+                    }));
+                // TOA area per date (solo S2 por ahora)
+                const toaData = toa
+                    .filter(d => d.fecha >= '2026-02-01')
+                    .map(d => ({ x: d.fecha, y: d.pixeles_calientes * 400 }));
+                // NHI Tool reference (del chart GEE para Lascar Feb-Abr 2026)
+                const nhiRef = [
+                    {x:'2026-02-11', y:3600}, {x:'2026-02-21', y:1600},
+                    {x:'2026-02-26', y:2700}, {x:'2026-03-03', y:2700},
+                    {x:'2026-03-08', y:1800}, {x:'2026-03-13', y:3600},
+                    {x:'2026-03-18', y:2400}, {x:'2026-03-23', y:2700},
+                    {x:'2026-04-02', y:1600}, {x:'2026-04-07', y:3600},
+                    {x:'2026-04-12', y:2800}, {x:'2026-04-17', y:1800}
+                ];
+
+                const ctx = document.getElementById('chart-toa-comparison');
+                if (!ctx) return;
+                toaChartInstance = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        datasets: [
+                            {
+                                label: 'NHI Tool GEE (referencia)',
+                                data: nhiRef,
+                                borderColor: '#da3633',
+                                backgroundColor: 'rgba(218,54,51,0.15)',
+                                borderWidth: 2,
+                                fill: false,
+                                tension: 0.2,
+                                pointRadius: 5,
+                                pointStyle: 'rectRot',
+                            },
+                            {
+                                label: 'TOA calibrado (S2 L1C, nuestro POC)',
+                                data: toaData,
+                                borderColor: '#2e7d32',
+                                backgroundColor: 'rgba(76,175,80,0.25)',
+                                borderWidth: 2,
+                                fill: true,
+                                tension: 0.2,
+                                pointRadius: 3,
+                            },
+                            {
+                                label: 'L2A + VRP (dashboard principal)',
+                                data: l2aData,
+                                borderColor: '#58a6ff',
+                                backgroundColor: 'rgba(88,166,255,0.10)',
+                                borderWidth: 2,
+                                borderDash: [5,5],
+                                fill: false,
+                                tension: 0.2,
+                                pointRadius: 3,
+                            },
+                        ]
+                    },
+                    options: chartOptions('Area hotspot (m2)', { timeAxis: true })
+                });
+            } catch (e) {
+                console.error('Error rendering TOA comparison:', e);
+            }
+        }
 
         // ========================
         // INIT
