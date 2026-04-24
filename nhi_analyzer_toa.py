@@ -1,15 +1,30 @@
 """
-NHI Analyzer TOA (proof-of-concept) — Sentinel-2 L1C TOA via Element84.
+NHI Analyzer TOA — Replica del NHI Tool de Genzano (GEE) para Sentinel-2 L1C.
 
-Valida la hipotesis: con radiancia TOA (como el paper NHI Tool), el criterio
-puro NHI_SWIR > 0 AND NHI_SWNIR > 0 sin filtros extra deberia converger a
-magnitudes similares al GEE NHI Tool.
+Implementa el algoritmo EXACTO del NHI Tool, decifrado del source GEE
+(asset users/nicogenzano/default:vulcani/nhi-v1.5).
 
-Por ahora solo Sentinel-2 L1C (Element84 AWS anonimo). Landsat L1 TOA requiere
-credenciales AWS (bucket requester-pays usgs-landsat) — se deja para segunda fase.
+Pasos:
+  1. Lee bandas B5 (705nm), B8A (865nm), B11 (1610nm), B12 (2186nm) como DN
+  2. Convierte DN -> radiancia TOA: b = DN * ESUN * cos(SZA) / d
+     donde d = pi * 10000 / reflectance_conversion_factor
+  3. Calcula 3 indices sobre radiancia:
+       NHI_SWIR     = (b2200 - b1600) / (b2200 + b1600)
+       NHI_SWNIR    = (b1600 - b800)  / (b1600 + b800)
+       TEST_missreg = (b2200 - b800)  / (b2200 + b800)
+  4. Pixel HOT si CUALQUIERA de:
+       A) NHI_SWIR  > 0 AND b2200 > 2  AND b703 < 90 AND TEST_missreg > -0.6
+       B) NHI_SWNIR > 0 AND b800 > 10  AND b2200 > 2 AND b703 < 70 AND TEST_missreg > -0.3
+       C) EXTREME (saturados): NOT(A) AND NOT(B) AND b1600 >= 70 AND b703 < 70
 
-Uso:
-  python nhi_analyzer_toa.py --volcan Lascar --dias 60
+Mascara circular adicional (no en NHI Tool original, pero NHI Tool usa area
+dibujada por el usuario): aplicamos circulo de buffer_km del centro del volcan
+para descartar las esquinas del bbox cuadrado.
+
+Datos: Sentinel-2 L1C via Element84 STAC (anonymous AWS).
+Landsat L1 TOA pendiente (bucket usgs-landsat es requester-pays).
+
+Uso: python nhi_analyzer_toa.py --volcan Lascar --dias 60
 """
 
 import argparse
@@ -29,9 +44,7 @@ from config_nhi import (
     VOLCANES, MAX_CLOUD_COVER, IMAGE_SIZE, get_bbox, get_active_volcanoes,
 )
 
-# ============================================
-# S2 L1C sin firmar AWS
-# ============================================
+# AWS sin firmar para s3://sentinel-s2-l1c (Element84 anonymous access)
 os.environ.setdefault("AWS_NO_SIGN_REQUEST", "YES")
 os.environ.setdefault("AWS_REGION", "eu-central-1")
 os.environ.setdefault("GDAL_DISABLE_READDIR_ON_OPEN", "EMPTY_DIR")
@@ -39,27 +52,29 @@ os.environ.setdefault("GDAL_DISABLE_READDIR_ON_OPEN", "EMPTY_DIR")
 EARTHSEARCH_URL = "https://earth-search.aws.element84.com/v1"
 S2_L1C_COLLECTION = "sentinel-2-l1c"
 
-# Element84 S2 L1C asset names + scale/offset TOA
-S2_L1C_BANDS = {
-    "nir": "nir08", "swir1": "swir16", "swir2": "swir22",
-    "blue": "blue",    # B02, para mascara de nubes opacas
-    "cirrus": "cirrus" # B10, para mascara de cirrus
+# Element84 nombres de assets para S2 L1C
+S2_ASSETS = {
+    "b703": "rededge1",  # B5  ~705 nm
+    "b800": "nir08",     # B8A ~865 nm
+    "b1600": "swir16",   # B11 ~1610 nm
+    "b2200": "swir22",   # B12 ~2186 nm
 }
-S2_L1C_SCALE = 0.0001
-S2_L1C_OFFSET = -0.1
 
-# Umbrales cloud mask (sobre TOA reflectance)
-CLOUD_BLUE_MAX = 0.25   # nubes opacas son brillantes en azul
-CLOUD_CIRRUS_MAX = 0.03 # cirrus en B10 (1.375 um). 0.01 era muy estricto para altiplano
+# Solar Exoatmospheric Irradiance (W/m^2/um) — valores ESA
+# Variacion S2A/S2B/S2C es ~1%, usamos S2B como nominal.
+ESUN = {
+    "b703":  1287.69,  # B5
+    "b800":   956.52,  # B8A
+    "b1600":  247.15,  # B11
+    "b2200":   87.83,  # B12
+}
 
-# ============================================
-# LOGGING
-# ============================================
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s", datefmt="%H:%M:%S")
 log = logging.getLogger(__name__)
 
 
 def leer_banda(href, lat, lon, buffer_km, size=IMAGE_SIZE):
+    """Lee un window de la banda dado bbox WGS84 y tamano final cuadrado."""
     bbox_wgs84 = get_bbox(lat, lon, buffer_km)
     with rasterio.open(href) as src:
         bbox_crs = transform_bounds(CRS.from_epsg(4326), src.crs, *bbox_wgs84)
@@ -69,57 +84,110 @@ def leer_banda(href, lat, lon, buffer_km, size=IMAGE_SIZE):
     return data.astype(np.float32)
 
 
-SWIR2_TOA_MIN = 0.30    # Umbral absoluto para pixeles termales reales
-NHI_SWIR_MIN = 0.15     # Pixeles termales genuinos dan >0.15; mineralogia/halo 0.10-0.15
-NHI_SWNIR_MIN = -0.08   # Permite pixeles termales (emiten en NIR -> SWNIR ligeramente neg)
-
 def _circular_mask(size):
-    """Genera mascara circular inscrita en un raster cuadrado de lado 'size'."""
+    """Mascara circular inscrita en raster cuadrado."""
     yy, xx = np.ogrid[:size, :size]
     cy, cx = (size - 1) / 2.0, (size - 1) / 2.0
-    r2 = ((yy - cy) ** 2 + (xx - cx) ** 2)
-    return r2 <= (size / 2.0) ** 2
+    return ((yy - cy) ** 2 + (xx - cx) ** 2) <= (size / 2.0) ** 2
 
 
-def calcular_nhi_toa(nir, swir1, swir2, scale, offset, blue=None, cirrus=None):
-    """Criterio NHI Tool sobre TOA reflectance + umbral absoluto SWIR2 + cloud mask + mascara circular."""
-    nir_ref = nir * scale + offset
-    swir1_ref = swir1 * scale + offset
-    swir2_ref = swir2 * scale + offset
+def to_radiance(dn, esun_band, cos_sza, sun_earth_dist_factor):
+    """
+    Convierte DN -> radiancia TOA (W/m2/sr/um) replicando el calculo del NHI Tool.
+
+    Formula GEE: b = DN_harmonized * ESUN * cos(SZA) / d
+    donde d = pi * 10000 / REFLECTANCE_CONVERSION_CORRECTION,
+    y DN_harmonized = DN - 1000 para processing baseline >= 04.00.
+
+    El NHI Tool usa COPERNICUS/S2_HARMONIZED que resta 1000 automaticamente.
+    Element84 sirve los DN crudos con baseline 05.12, asi que aplicamos
+    el offset manualmente. Clipeamos negativos a 0 para evitar artefactos.
+    """
+    dn_harmonized = np.maximum(dn - 1000.0, 0.0)
+    return dn_harmonized * esun_band * cos_sza / sun_earth_dist_factor
+
+
+def calcular_nhi_toa(b703, b800, b1600, b2200, sun_elevation_deg, refl_conv_factor, circular):
+    """
+    Aplica el algoritmo EXACTO del NHI Tool sobre radiancias.
+
+    Retorna dict con: pixeles_validos, pixeles_calientes, mascaras y stats.
+    """
+    sza_rad = np.radians(90.0 - sun_elevation_deg)
+    cos_sza = np.cos(sza_rad)
+    d_factor = np.pi * 10000.0 / refl_conv_factor  # divisor en formula radiancia
+
+    # Conversion DN -> radiancia para las 4 bandas
+    b703_r  = to_radiance(b703,  ESUN["b703"],  cos_sza, d_factor)
+    b800_r  = to_radiance(b800,  ESUN["b800"],  cos_sza, d_factor)
+    b1600_r = to_radiance(b1600, ESUN["b1600"], cos_sza, d_factor)
+    b2200_r = to_radiance(b2200, ESUN["b2200"], cos_sza, d_factor)
+
     eps = 1e-10
+    nhi_swir  = (b2200_r - b1600_r) / (b2200_r + b1600_r + eps)
+    nhi_swnir = (b1600_r - b800_r)  / (b1600_r + b800_r  + eps)
+    test_miss_reg = (b2200_r - b800_r) / (b2200_r + b800_r + eps)
 
-    nhi_swir = (swir2_ref - swir1_ref) / (swir2_ref + swir1_ref + eps)
-    nhi_swnir = (swir1_ref - nir_ref) / (swir1_ref + nir_ref + eps)
-
-    valid = (nir_ref > 0) & (swir1_ref > 0) & (swir2_ref > 0)
-    valid &= (swir1_ref < 1.0) & (swir2_ref < 1.0)
-
-    # Mascara circular: descartar esquinas del bbox (fuera del radio del volcan)
-    # NHI Tool usa circulo, nuestro bbox es cuadrado -> las esquinas son altiplano arido ruidoso
-    valid &= _circular_mask(nir.shape[0])
-
-    # Cloud mask deshabilitado: en altiplano a 5000m+ B10 es naturalmente alto (<poca atmosfera
-    # sobre el sensor), lo que mata pixeles termales reales. Usamos solo circular + SWIR2>0.15.
-    _ = cirrus  # reservado para version futura con umbral calibrado por altitud
+    # Validez basica + mascara circular
+    valid = (b800_r > 0) & (b1600_r > 0) & (b2200_r > 0) & circular
 
     total = int(valid.sum())
     if total < 100:
-        return {"pixeles_validos": 0, "pixeles_calientes": 0,
-                "max_nhiswir": 0, "max_nhiswnir": 0, "alerta": False}
+        return _empty_result()
 
-    # Criterio: NHI_SWIR > umbral + SWIR2 > umbral + NHI_SWNIR > umbral relajado.
-    # El filtro NHI_SWNIR > 0 del paper discrimina vegetacion, pero fuentes termales
-    # activas emiten en NIR (cuerpo negro ~700K), empujando NHI_SWNIR ligeramente
-    # negativo. Relajamos a > -0.08 para capturarlas sin perder el filtro de vegetacion.
-    hot_mask = valid & (nhi_swir > NHI_SWIR_MIN) & (nhi_swnir > NHI_SWNIR_MIN) & (swir2_ref > SWIR2_TOA_MIN)
+    # Criterios NHI Tool S2 (linea por linea del source GEE)
+    cond_a = (
+        valid
+        & (nhi_swir > 0)
+        & (b2200_r > 2)
+        & (b703_r < 90)
+        & (test_miss_reg > -0.6)
+    )
+    cond_b = (
+        valid
+        & (nhi_swnir > 0)
+        & (b800_r > 10)
+        & (b2200_r > 2)
+        & (b703_r < 70)
+        & (test_miss_reg > -0.3)
+    )
+    cond_extreme = (
+        valid
+        & ~cond_a
+        & ~cond_b
+        & (b1600_r >= 70)
+        & (b703_r < 70)
+    )
+
+    hot_mask = cond_a | cond_b | cond_extreme
     hot = int(hot_mask.sum())
+
+    if hot > 0:
+        max_swir  = float(nhi_swir[hot_mask].max())
+        max_swnir = float(nhi_swnir[hot_mask].max())
+        max_b2200 = float(b2200_r[hot_mask].max())
+    else:
+        max_swir = max_swnir = max_b2200 = 0.0
 
     return {
         "pixeles_validos": total,
         "pixeles_calientes": hot,
-        "max_nhiswir": float(nhi_swir[hot_mask].max()) if hot > 0 else 0.0,
-        "max_nhiswnir": float(nhi_swnir[hot_mask].max()) if hot > 0 else 0.0,
+        "pixeles_cond_a": int(cond_a.sum()),
+        "pixeles_cond_b": int(cond_b.sum()),
+        "pixeles_extreme": int(cond_extreme.sum()),
+        "max_nhiswir": round(max_swir, 6),
+        "max_nhiswnir": round(max_swnir, 6),
+        "max_b2200_radiance": round(max_b2200, 4),
         "alerta": hot > 0,
+    }
+
+
+def _empty_result():
+    return {
+        "pixeles_validos": 0, "pixeles_calientes": 0,
+        "pixeles_cond_a": 0, "pixeles_cond_b": 0, "pixeles_extreme": 0,
+        "max_nhiswir": 0, "max_nhiswnir": 0, "max_b2200_radiance": 0,
+        "alerta": False,
     }
 
 
@@ -127,6 +195,7 @@ def procesar_volcan_toa(catalog, nombre, datos, fi, ff):
     lat, lon = datos["lat"], datos["lon"]
     buffer_km = datos.get("buffer_km", 3.0)
     bbox = get_bbox(lat, lon, buffer_km)
+    circular = _circular_mask(IMAGE_SIZE)
 
     search = catalog.search(
         collections=[S2_L1C_COLLECTION], bbox=bbox,
@@ -144,26 +213,32 @@ def procesar_volcan_toa(catalog, nombre, datos, fi, ff):
         if fecha in fechas_procesadas:
             continue
 
+        sun_elev = item.properties.get("view:sun_elevation")
+        refl_conv = item.properties.get("s2:reflectance_conversion_factor")
+        if sun_elev is None or refl_conv is None:
+            log.warning(f"  {fecha}: falta metadata SZA o reflectance_conversion_factor")
+            continue
+
         try:
-            nir = leer_banda(item.assets[S2_L1C_BANDS["nir"]].href, lat, lon, buffer_km)
-            swir1 = leer_banda(item.assets[S2_L1C_BANDS["swir1"]].href, lat, lon, buffer_km)
-            swir2 = leer_banda(item.assets[S2_L1C_BANDS["swir2"]].href, lat, lon, buffer_km)
-            blue = leer_banda(item.assets[S2_L1C_BANDS["blue"]].href, lat, lon, buffer_km)
-            cirrus = leer_banda(item.assets[S2_L1C_BANDS["cirrus"]].href, lat, lon, buffer_km)
+            b703  = leer_banda(item.assets[S2_ASSETS["b703"]].href,  lat, lon, buffer_km)
+            b800  = leer_banda(item.assets[S2_ASSETS["b800"]].href,  lat, lon, buffer_km)
+            b1600 = leer_banda(item.assets[S2_ASSETS["b1600"]].href, lat, lon, buffer_km)
+            b2200 = leer_banda(item.assets[S2_ASSETS["b2200"]].href, lat, lon, buffer_km)
         except Exception as e:
             log.warning(f"  {fecha}: error leyendo bandas: {e}")
             continue
 
-        stats = calcular_nhi_toa(nir, swir1, swir2, S2_L1C_SCALE, S2_L1C_OFFSET, blue=blue, cirrus=cirrus)
+        stats = calcular_nhi_toa(b703, b800, b1600, b2200, sun_elev, refl_conv, circular)
         stats["fecha"] = fecha
         stats["sensor"] = "Sentinel-2"
-        stats["fuente"] = "S2 L1C TOA (Element84)"
+        stats["fuente"] = "S2 L1C TOA radiance (Element84) — algoritmo NHI Tool exacto"
         stats["cloud_cover"] = item.properties.get("eo:cloud_cover")
+        stats["sun_elevation"] = sun_elev
         resultados.append(stats)
         fechas_procesadas.add(fecha)
         if stats["alerta"]:
             area = stats["pixeles_calientes"] * 400
-            log.info(f"    {fecha}: {stats['pixeles_calientes']} px calientes -> {area} m2")
+            log.info(f"    {fecha}: {stats['pixeles_calientes']} px ({stats['pixeles_cond_a']}A + {stats['pixeles_cond_b']}B + {stats['pixeles_extreme']}X) -> {area} m2")
 
     resultados.sort(key=lambda x: x["fecha"], reverse=True)
     return resultados
@@ -184,7 +259,7 @@ def main():
     ff = datetime.now()
     fi = ff - timedelta(days=args.dias)
 
-    log.info(f"=== TOA POC: {args.volcan} ({args.dias} dias) ===")
+    log.info(f"=== TOA NHI Tool replica: {args.volcan} ({args.dias} dias) ===")
     catalog = pystac_client.Client.open(EARTHSEARCH_URL)
     resultados = procesar_volcan_toa(catalog, args.volcan, datos, fi, ff)
 
