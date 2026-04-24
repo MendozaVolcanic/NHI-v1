@@ -1,0 +1,145 @@
+[
+  {
+    "pixeles_validos": 125676,
+    "pixeles_calientes": 0,
+    "max_nhiswir": 0.0,
+    "max_nhiswnir": 0.0,
+    "alerta": false,
+    "fecha": "2026-04-22",
+    "sensor": "Sentinel-2",
+    "fuente": "S2 L1C TOA (Element84)",
+    "cloud_cover": 1.6448040998435
+  },
+  {
+    "pixeles_validos": 125676,
+    "pixeles_calientes": 4,
+    "max_nhiswir": 0.3926912546157837,
+    "max_nhiswnir": -0.034729957580566406,
+    "alerta": true,
+    "fecha": "2026-04-17",
+    "sensor": "Sentinel-2",
+    "fuente": "S2 L1C TOA (Element84)",
+    "cloud_cover": 0.0355518238747517
+  },
+  {
+    "pixeles_validos": 125676,
+    "pixeles_calientes": 0,
+    "max_nhiswir": 0.0,
+    "max_nhiswnir": 0.0,
+    "alerta": false,
+    "fecha": "2026-04-14",
+    "sensor": "Sentinel-2",
+    "fuente": "S2 L1C TOA (Element84)",
+    "cloud_cover": 8.39989600586057
+  },
+  {
+    "pixeles_validos": 125676,
+    "pixeles_calientes": 9,
+    "max_nhiswir": 0.4903424382209778,
+    "max_nhiswnir": 0.05589475855231285,
+    "alerta": true,
+    "fecha": "2026-04-12",
+    "sensor": "Sentinel-2",
+    "fuente": "S2 L1C TOA (Element84)",
+    "cloud_cover": 0.0385286691890186
+  },
+  {
+    "pixeles_validos": 125676,
+    "pixeles_calientes": 7,
+    "max_nhiswir": 0.48852774500846863,
+    "max_nhiswnir": 0.01229895744472742,
+    "alerta": true,
+    "fecha": "2026-04-07",
+    "sensor": "Sentinel-2",
+    "fuente": "S2 L1C TOA (Element84)",
+    "cloud_cover": 0.120141879427799
+  },
+  {
+    "pixeles_validos": 125676,
+    "pixeles_calientes": 5,
+    "max_nhiswir": 0.5086290836334229,
+    "max_nhiswnir": 0.03438885882496834,
+    "alerta": true,
+    "fecha": "2026-04-02",
+    "sensor": "Sentinel-2",
+    "fuente": "S2 L1C TOA (Element84)",
+    "cloud_cover": 7.93547232087587
+  },
+  {
+    "pixeles_validos": 125635,
+    "pixeles_calientes": 0,
+    "max_nhiswir": 0.0,
+    "max_nhiswnir": 0.0,
+    "alerta": false,
+    "fecha": "2026-03-28",
+    "sensor": "Sentinel-2",
+    "fuente": "S2 L1C TOA (Element84)",
+    "cloud_cover": 9.32684086171655
+  },
+  {
+    "pixeles_validos": 125676,
+    "pixeles_calientes": 4,
+    "max_nhiswir": 0.3849719762802124,
+    "max_nhiswnir": -0.030450640246272087,
+    "alerta": true,
+    "fecha": "2026-03-25",
+    "sensor": "Sentinel-2",
+    "fuente": "S2 L1C TOA (Element84)",
+    "cloud_cover": 0.307469248339041
+  },
+  {
+    "pixeles_validos": 125676,
+    "pixeles_calientes": 14,
+    "max_nhiswir": 0.5154558420181274,
+    "max_nhiswnir": -0.0025157658383250237,
+    "alerta": true,
+    "fecha": "2026-03-18",
+    "sensor": "Sentinel-2",
+    "fuente": "S2 L1C TOA (Element84)",
+    "cloud_cover": 0.0418883507333918
+  },
+  {
+    "pixeles_validos": 125676,
+    "pixeles_calientes": 19,
+    "max_nhiswir": 0.5987010598182678,
+    "max_nhiswnir": 0.09192382544279099,
+    "alerta": true,
+    "fecha": "2026-03-13",
+    "sensor": "Sentinel-2",
+    "fuente": "S2 L1C TOA (Element84)",
+    "cloud_cover": 0.137290991903636
+  },
+  {
+    "pixeles_validos": 125676,
+    "pixeles_calientes": 21,
+    "max_nhiswir": 0.5799972414970398,
+    "max_nhiswnir": 0.10655148327350616,
+    "alerta": true,
+    "fecha": "2026-03-08",
+    "sensor": "Sentinel-2",
+    "fuente": "S2 L1C TOA (Element84)",
+    "cloud_cover": 0
+  },
+  {
+    "pixeles_validos": 125676,
+    "pixeles_calientes": 12,
+    "max_nhiswir": 0.5483871698379517,
+    "max_nhiswnir": 0.11173181235790253,
+    "alerta": true,
+    "fecha": "2026-03-03",
+    "sensor": "Sentinel-2",
+    "fuente": "S2 L1C TOA (Element84)",
+    "cloud_cover": 0.152241846326551
+  },
+  {
+    "pixeles_validos": 125676,
+    "pixeles_calientes": 0,
+    "max_nhiswir": 0.0,
+    "max_nhiswnir": 0.0,
+    "alerta": false,
+    "fecha": "2026-02-26",
+    "sensor": "Sentinel-2",
+    "fuente": "S2 L1C TOA (Element84)",
+    "cloud_cover": 0
+  }
+]
