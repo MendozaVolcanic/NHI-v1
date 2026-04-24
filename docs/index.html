@@ -699,23 +699,43 @@
                         <li>[x] Confirmado: PC no sirve TOA para OLI/MSI modernos</li>
                         <li>[x] Descubierto Element84 earth-search con S2 L1C anonimo (AWS_NO_SIGN_REQUEST)</li>
                         <li>[x] Migracion de Sentinel-2 a L1C TOA (<code>nhi_analyzer_toa.py</code>)</li>
-                        <li>[x] Validacion cruzada vs NHI Tool en Lascar: <strong>8/9 escenas dentro de 0.2-5x, 5/9 excelentes (0.5-2x)</strong></li>
+                        <li>[x] <strong>Source code del NHI Tool GEE descifrado</strong> (URL publica de modules.json, sin auth)</li>
+                        <li>[x] <strong>Replica EXACTA del algoritmo NHI Tool</strong> linea por linea (en radiancia TOA)</li>
+                        <li>[x] Validacion cruzada vs NHI Tool en Lascar: <strong>5/9 escenas EXCELENTE (0.5-2x), 7/9 dentro de 0.2-5x</strong></li>
                         <li>[ ] Migracion de Landsat 8/9 a L1 TOA (bucket usgs-landsat es requester-pays, necesita credenciales AWS)</li>
                         <li>[ ] Extender a los otros 42 volcanes</li>
-                        <li>[ ] Merge a pipeline principal + regeneracion historica</li>
+                        <li>[ ] Parsear ESUN per-imagen del SAFE metadata (mejor precision que constantes nominales S2B)</li>
+                        <li>[ ] Decidir merge a pipeline principal + regeneracion historica</li>
                     </ul>
                 </div>
 
                 <div class="guia-card">
-                    <h2>Calibracion TOA (Lascar, Feb-Abr 2026)</h2>
-                    <p>Parametros calibrados contra NHI Tool GEE:</p>
-                    <ul style="font-size:0.85em;">
-                        <li>Circular mask: <code>3 km</code> de radio (igual que NHI Tool)</li>
-                        <li><code>NHI_SWIR &gt; 0.15</code> — discrimina termal real vs mineralogia piroclastica</li>
-                        <li><code>NHI_SWNIR &gt; -0.08</code> — fuentes termales calientes empujan NIR (cuerpo negro ~700K)</li>
-                        <li><code>SWIR2_TOA &gt; 0.30</code> — descarta pixeles oscuros ruidosos</li>
-                        <li>Sin cloud mask (B10 es alto a 5,500m por atmosfera delgada)</li>
-                    </ul>
+                    <h2>Algoritmo NHI Tool (decifrado del GEE source)</h2>
+                    <p>Asset: <code>users/nicogenzano/default:vulcani/nhi-v1.5</code> (descargado via URL publica del app, sin auth requerida).</p>
+                    <p><strong>1. Conversion DN -&gt; radiancia TOA</strong> (W/m<sup>2</sup>/sr/&micro;m):</p>
+                    <div style="background:#0d1117; padding:8px 12px; border-radius:4px; font-family:monospace; font-size:0.82em; color:#c9d1d9;">
+                        b = (DN - 1000) &times; ESUN_band &times; cos(SZA) / d<br>
+                        d = &pi; &times; 10000 / reflectance_conversion_factor
+                    </div>
+                    <p style="margin-top:8px;">El (-1000) replica el offset que aplica <code>COPERNICUS/S2_HARMONIZED</code>.
+                    ESUN nominal S2B: B5=1287.69, B8A=956.52, B11=247.15, B12=87.83 W/m<sup>2</sup>/&micro;m.</p>
+                    <p style="margin-top:10px;"><strong>2. Indices normalizados:</strong></p>
+                    <div style="background:#0d1117; padding:8px 12px; border-radius:4px; font-family:monospace; font-size:0.82em; color:#c9d1d9;">
+                        NHI_SWIR     = (b2200 - b1600) / (b2200 + b1600)<br>
+                        NHI_SWNIR    = (b1600 - b800)  / (b1600 + b800)<br>
+                        TEST_missreg = (b2200 - b800)  / (b2200 + b800)
+                    </div>
+                    <p style="margin-top:10px;"><strong>3. Pixel HOT si ALGUNA condicion (OR):</strong></p>
+                    <div style="background:#0d1117; padding:8px 12px; border-radius:4px; font-family:monospace; font-size:0.78em; color:#c9d1d9;">
+                        A) NHI_SWIR &gt; 0 AND b2200 &gt; 2 AND b703 &lt; 90 AND TEST_missreg &gt; -0.6<br>
+                        B) NHI_SWNIR &gt; 0 AND b800 &gt; 10 AND b2200 &gt; 2 AND b703 &lt; 70 AND TEST_missreg &gt; -0.3<br>
+                        C) EXTREME (saturados): NOT(A) AND NOT(B) AND b1600 &gt;= 70 AND b703 &lt; 70
+                    </div>
+                    <p style="margin-top:10px; font-size:0.82em; color:#8b949e;">
+                        El criterio <code>b703 &lt; 90</code> (B5 red-edge) actua como cloud mask
+                        implicito (las nubes son brillantes en B5). NHI Tool no aplica QA60 ni cloud
+                        mask explicito ("senza cloud mask" en el source).
+                    </p>
                 </div>
 
                 <div class="guia-card">
