@@ -1147,17 +1147,28 @@
         function renderHotspotViewer(data, volcanName) {
             const sel = document.getElementById('hotspot-date-select');
             const container = document.getElementById('hotspot-img-container');
-            const noData = document.getElementById('hotspot-no-data');
             const infoSpan = document.getElementById('hotspot-info');
             sel.textContent = '';
             container.textContent = '';
 
-            const withImages = data.filter(d => d.hotspot_image);
-            if (withImages.length === 0) {
-                container.appendChild(noData);
-                noData.style.display = '';
+            // Mensaje "sin datos" recreado en cada render (evita null tras textContent='')
+            function showNoData(msg) {
+                const div = document.createElement('div');
+                div.className = 'no-data';
+                div.id = 'hotspot-no-data';
+                div.textContent = msg;
+                container.appendChild(div);
                 infoSpan.textContent = '';
                 sel.style.display = 'none';
+            }
+
+            const withImages = data.filter(d => d.hotspot_image);
+            if (withImages.length === 0) {
+                // El pipeline TOA no genera PNGs; solo L2A los produce.
+                const msg = (typeof CURRENT_PIPELINE !== 'undefined' && CURRENT_PIPELINE === 'toa')
+                    ? 'Visor de hotspots no disponible en pipeline TOA (replica NHI Tool). Ver datos en el grafico arriba.'
+                    : 'Sin imagenes de hotspot disponibles';
+                showNoData(msg);
                 return;
             }
 
