@@ -742,7 +742,8 @@
                     <h2>Comparativa por volcan: L2A actual vs TOA replica</h2>
                     <p style="font-size:0.85em;">Linea verde = TOA replica NHI Tool (S2 L1C, esta pestania).
                     Linea azul dashed = L2A+VRP actual (dashboard principal).
-                    Marcas rojas = valores NHI Tool GEE (solo disponibles para Lascar Feb-Abr 2026).</p>
+                    Marcas rojas = valores NHI Tool GEE exportados directamente del app en CSV
+                    (ground truth; disponible para Lascar en <code>docs/nhi_data_toa/{volcan}/nhi_tool_gee_reference.csv</code>).</p>
                     <div class="controls" style="margin-top:12px;">
                         <label style="color:#8b949e; font-size:0.85em;">Volcan:</label>
                         <select id="toa-volcan-select" style="min-width:200px;"></select>
@@ -1315,18 +1316,47 @@
         let toaChartInstance = null;
         let toaInited = false;
 
-        // Valores leidos manualmente del chart NHI Tool GEE para Lascar Feb-Abr 2026.
-        // Solo tenemos referencia visual para Lascar (los otros volcanes no los leimos del GEE).
-        const NHI_TOOL_REF = {
-            'Lascar': [
-                {x:'2026-02-11', y:3600}, {x:'2026-02-21', y:1600},
-                {x:'2026-02-26', y:2700}, {x:'2026-03-03', y:2700},
-                {x:'2026-03-08', y:1800}, {x:'2026-03-13', y:3600},
-                {x:'2026-03-18', y:2400}, {x:'2026-03-23', y:2700},
-                {x:'2026-04-02', y:1600}, {x:'2026-04-07', y:3600},
-                {x:'2026-04-12', y:2800}, {x:'2026-04-17', y:1800}
-            ]
-        };
+        // Referencia NHI Tool GEE cargada desde CSV exportado directamente del app GEE.
+        // Se almacena por volcan en docs/nhi_data_toa/{volcan}/nhi_tool_gee_reference.csv.
+        // Formato: "Feb 6, 2026",<valor_m2>  (puede tener comillas y coma de miles).
+        const NHI_TOOL_REF_CACHE = {};
+
+        function parseGeeCsv(text) {
+            const lines = text.trim().split(/\r?\n/).slice(1); // omit header
+            const result = [];
+            for (const raw of lines) {
+                const line = raw.trim();
+                if (!line) continue;
+                // GEE exporta siempre con fecha entre comillas "Mmm d, YYYY",val
+                const closeQ = line.indexOf('"', 1);
+                if (line[0] !== '"' || closeQ === -1) continue;
+                const dateStr = line.slice(1, closeQ);
+                let rest = line.slice(closeQ + 1).replace(/^,/, '').trim();
+                rest = rest.replace(/^"|"$/g, '').replace(/,/g, ''); // quita comillas y miles
+                const val = parseInt(rest, 10);
+                if (Number.isNaN(val)) continue;
+                const d = new Date(dateStr + ' UTC');
+                if (isNaN(d)) continue;
+                const iso = d.toISOString().slice(0, 10);
+                result.push({ x: iso, y: val });
+            }
+            return result;
+        }
+
+        async function loadNhiToolReference(volcan) {
+            if (NHI_TOOL_REF_CACHE[volcan] !== undefined) return NHI_TOOL_REF_CACHE[volcan];
+            try {
+                const resp = await fetch(`${NHI_BASE}/nhi_data_toa/${encodeURIComponent(volcan)}/nhi_tool_gee_reference.csv?t=${Date.now()}`);
+                if (!resp.ok) { NHI_TOOL_REF_CACHE[volcan] = []; return []; }
+                const text = await resp.text();
+                const parsed = parseGeeCsv(text);
+                NHI_TOOL_REF_CACHE[volcan] = parsed;
+                return parsed;
+            } catch (e) {
+                NHI_TOOL_REF_CACHE[volcan] = [];
+                return [];
+            }
+        }
         const TOA_BUFFER_KM = { 'Lascar': 3.0 };
         const TOA_DEFAULT_BUFFER_KM = 5.0;
 
@@ -1356,9 +1386,10 @@
             if (info) info.textContent = `(buffer ${buffer} km)`;
 
             try {
-                const [l2aResp, toaResp] = await Promise.all([
+                const [l2aResp, toaResp, nhiRef] = await Promise.all([
                     fetch(`${NHI_BASE}/nhi_data/${encodeURIComponent(volcan)}/nhi_timeseries.json?t=${Date.now()}`),
-                    fetch(`${NHI_BASE}/nhi_data_toa/${encodeURIComponent(volcan)}/nhi_timeseries.json?t=${Date.now()}`)
+                    fetch(`${NHI_BASE}/nhi_data_toa/${encodeURIComponent(volcan)}/nhi_timeseries.json?t=${Date.now()}`),
+                    loadNhiToolReference(volcan)
                 ]);
                 const l2a = l2aResp.ok ? await l2aResp.json() : [];
                 const toa = toaResp.ok ? await toaResp.json() : [];
@@ -1372,7 +1403,6 @@
                 const toaData = toa
                     .filter(d => d.fecha >= '2026-02-01')
                     .map(d => ({ x: d.fecha, y: d.pixeles_calientes * (d.pixel_area_m2 || 400) }));
-                const nhiRef = NHI_TOOL_REF[volcan] || [];
 
                 if (toaChartInstance) toaChartInstance.destroy();
                 const ctx = document.getElementById('chart-toa-comparison');
@@ -1381,7 +1411,7 @@
                 const datasets = [];
                 if (nhiRef.length) {
                     datasets.push({
-                        label: 'NHI Tool GEE (referencia manual)',
+                        label: 'NHI Tool GEE (CSV exportado)',
                         data: nhiRef,
                         borderColor: '#da3633',
                         backgroundColor: 'rgba(218,54,51,0.15)',
