@@ -1,0 +1,87 @@
+name: NHI Analysis TOA (replica NHI Tool)
+
+on:
+  schedule:
+    # Diario 14:00 UTC, 2h despues del L2A para no overlap
+    - cron: "0 14 * * *"
+  workflow_dispatch:
+    inputs:
+      dias:
+        description: "Dias atras a analizar (default: 14 incremental; 365 para backfill)"
+        required: false
+        default: "14"
+      volcan:
+        description: "Nombre de un volcan especifico (opcional)"
+        required: false
+        default: ""
+
+# El workflow puede correr largo (backfill 365 toma ~6-12h)
+# Cancelar runs antiguos si se dispara uno nuevo
+concurrency:
+  group: nhi-toa
+  cancel-in-progress: false
+
+jobs:
+  analizar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 720  # 12h max (default es 360 / 6h)
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repositorio
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Instalar dependencias
+        run: pip install -r requirements.txt
+
+      - name: Ejecutar analisis TOA
+        env:
+          # Acceso anonimo a Element84 S2 L1C bucket
+          AWS_NO_SIGN_REQUEST: "YES"
+          AWS_REGION: "eu-central-1"
+          GDAL_DISABLE_READDIR_ON_OPEN: "EMPTY_DIR"
+          # Optimizaciones de descarga JP2 / TIFF via HTTPS
+          GDAL_HTTP_MULTIPLEX: "YES"
+          GDAL_HTTP_VERSION: "2"
+          VSI_CACHE: "TRUE"
+          VSI_CACHE_SIZE: "33554432"
+          CPL_VSIL_CURL_USE_HEAD: "NO"
+        run: |
+          DIAS="${{ github.event.inputs.dias || '14' }}"
+          VOLCAN="${{ github.event.inputs.volcan }}"
+
+          if [ -n "$VOLCAN" ]; then
+            python nhi_analyzer_toa.py --dias "$DIAS" --volcan "$VOLCAN"
+          else
+            python nhi_analyzer_toa.py --dias "$DIAS"
+          fi
+
+      - name: Commit y push resultados
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add docs/nhi_data_toa/
+          git diff --cached --quiet && echo "Sin cambios TOA nuevos" && exit 0
+
+          FECHA=$(date -u +"%Y-%m-%d %H:%M UTC")
+          DIAS="${{ github.event.inputs.dias || '14' }}"
+          git commit -m "toa: analisis actualizado dias=${DIAS} ($FECHA)"
+
+          # Push con retry (fetch+merge para evitar conflicto con cron L2A)
+          for i in 1 2 3; do
+            git fetch origin main
+            git merge origin/main --no-edit -X ours || true
+            git push origin main && exit 0
+            sleep $((i * 3))
+          done
+          echo "Push fallo despues de 3 intentos" && exit 1
