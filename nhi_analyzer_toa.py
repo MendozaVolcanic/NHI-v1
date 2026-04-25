@@ -39,9 +39,11 @@ import pystac_client
 import rasterio
 from rasterio.crs import CRS
 from rasterio.warp import transform_bounds
+from PIL import Image as PILImage
 
 from config_nhi import (
-    VOLCANES, MAX_CLOUD_COVER, IMAGE_SIZE, get_bbox, get_active_volcanoes,
+    VOLCANES, MAX_CLOUD_COVER, IMAGE_SIZE, HOTSPOT_IMAGE_SIZE,
+    get_bbox, get_active_volcanoes,
 )
 
 # AWS sin firmar para s3://sentinel-s2-l1c (Element84 anonymous access)
@@ -205,6 +207,11 @@ def calcular_nhi_toa(b703, b800, b1600, b2200, sun_elevation_deg, refl_conv_fact
         "max_nhiswnir": round(max_swnir, 6),
         "max_b2200_radiance": round(max_b2200, 4),
         "alerta": hot > 0,
+        # Masks (no se serializan en JSON; se usan para generar PNG)
+        "_mask_a": cond_a,
+        "_mask_b": cond_b,
+        "_mask_extreme": cond_extreme,
+        "_b2200_radiance": b2200_r,
     }
 
 
@@ -215,6 +222,64 @@ def _empty_result():
         "max_nhiswir": 0, "max_nhiswnir": 0, "max_b2200_radiance": 0,
         "alerta": False,
     }
+
+
+def generar_mapa_hotspot_toa(b2200_r, mask_a, mask_b, mask_extreme, nombre, fecha):
+    """
+    Genera PNG con b2200 (SWIR2 radiance) como fondo grayscale + pixeles calientes
+    coloreados por criterio:
+      - Rojo (255,40,40):  cond A (NHI_SWIR fuerte) — actividad termal clara
+      - Naranja (255,140,0): cond B (NHI_SWNIR + NIR alto) — actividad con emision NIR
+      - Amarillo (255,220,0): EXTREME — pixel saturado, lava muy caliente
+
+    Permite distinguir actividad volcanica concentrada (sobre crater) de ruido (disperso).
+    Retorna nombre del archivo PNG generado o None si fallo.
+    """
+    try:
+        out_size = HOTSPOT_IMAGE_SIZE
+        src_size = b2200_r.shape[0]
+        # Fondo grayscale: percentil 98 para contraste sin saturar
+        if (b2200_r > 0).any():
+            vmax = max(float(np.percentile(b2200_r[b2200_r > 0], 98)), 0.1)
+        else:
+            vmax = 1.0
+        gray = np.clip(b2200_r / vmax * 255, 0, 255).astype(np.uint8)
+        img = PILImage.fromarray(gray, mode='L').convert('RGB')
+        img = img.resize((out_size, out_size), PILImage.Resampling.NEAREST)
+
+        # Overlay por criterio (orden: extreme -> A -> B para que A y B sobrescriban EXTREME)
+        scale = out_size / src_size
+        pixels = img.load()
+
+        def paint(mask, color):
+            rows, cols = np.where(mask)
+            for r, c in zip(rows, cols):
+                y = int(r * scale); x = int(c * scale)
+                # Pintamos un cuadrado 3x3 para que se vea bien
+                for dy in range(-1, 2):
+                    for dx in range(-1, 2):
+                        nx, ny = x + dx, y + dy
+                        if 0 <= nx < out_size and 0 <= ny < out_size:
+                            pixels[nx, ny] = color
+
+        # EXTREME primero (saturado, amarillo brillante)
+        if mask_extreme.any():
+            paint(mask_extreme, (255, 220, 0))
+        # B (naranja)
+        if mask_b.any():
+            paint(mask_b, (255, 140, 0))
+        # A (rojo, prioritario - se pinta arriba si overlap)
+        if mask_a.any():
+            paint(mask_a, (255, 40, 40))
+
+        out_dir = os.path.join("docs", "nhi_data_toa", nombre)
+        os.makedirs(out_dir, exist_ok=True)
+        filename = f"{fecha}_s2_hotspot.png"
+        img.save(os.path.join(out_dir, filename), optimize=True)
+        return filename
+    except Exception as e:
+        log.warning(f"  {nombre} {fecha}: error generando PNG: {e}")
+        return None
 
 
 def procesar_volcan_toa(catalog, nombre, datos, fi, ff):
@@ -260,6 +325,22 @@ def procesar_volcan_toa(catalog, nombre, datos, fi, ff):
 
         circular_mask = _circular_mask_geo(b703.shape, tr, src_crs, lat, lon, buffer_km)
         stats = calcular_nhi_toa(b703, b800, b1600, b2200, sun_elev, refl_conv, circular_mask)
+
+        # Generar PNG si hay alerta (color-coded por criterio A/B/EXTREME)
+        if stats.get("alerta"):
+            png = generar_mapa_hotspot_toa(
+                stats.pop("_b2200_radiance"),
+                stats.pop("_mask_a"),
+                stats.pop("_mask_b"),
+                stats.pop("_mask_extreme"),
+                nombre, fecha
+            )
+            if png:
+                stats["hotspot_image"] = png
+        # Limpiar masks que no se serializan
+        for k in ("_mask_a", "_mask_b", "_mask_extreme", "_b2200_radiance"):
+            stats.pop(k, None)
+
         stats["fecha"] = fecha
         stats["sensor"] = "Sentinel-2"
         stats["fuente"] = "S2 L1C TOA radiance (Element84) — algoritmo NHI Tool exacto"
@@ -281,15 +362,19 @@ def procesar_volcan_toa(catalog, nombre, datos, fi, ff):
     return resultados
 
 
-# Buffer TOA por volcan. Default 5 km; Lascar en 3 km (match del NHI Tool GEE).
-DEFAULT_TOA_BUFFER_KM = 5.0
+# Buffer TOA por volcan: usa el buffer_km del config (que ya esta dimensionado por
+# tamano del edificio volcanico — Cordon Caulle 10km, Hudson 8km, etc).
+# Solo override explicito Lascar a 3km (match con default NHI Tool GEE para Lascar).
 TOA_BUFFER_OVERRIDES = {
     "Lascar": 3.0,
 }
 
 
 def resolve_buffer(volcan):
-    return TOA_BUFFER_OVERRIDES.get(volcan, DEFAULT_TOA_BUFFER_KM)
+    if volcan in TOA_BUFFER_OVERRIDES:
+        return TOA_BUFFER_OVERRIDES[volcan]
+    # Default: usar el buffer_km del config_nhi (dimensionado por geologo)
+    return VOLCANES.get(volcan, {}).get("buffer_km", 5.0)
 
 
 def procesar_y_guardar(catalog, nombre, datos, fi, ff):
@@ -356,6 +441,8 @@ def generar_resumen_toa(volcanoes_data):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--volcan", default=None, help="Procesar solo un volcan; si se omite, procesa todos")
+    parser.add_argument("--zona", default=None, choices=["Norte","Centro","Sur","Austral"],
+                        help="Procesar solo una zona (Norte/Centro/Sur/Austral)")
     parser.add_argument("--dias", type=int, default=60)
     args = parser.parse_args()
 
@@ -365,6 +452,9 @@ def main():
             log.error(f"Volcan '{args.volcan}' no existe")
             sys.exit(1)
         volcanes = {args.volcan: volcanes[args.volcan]}
+    elif args.zona:
+        volcanes = {k: v for k, v in volcanes.items() if v.get("zona") == args.zona}
+        log.info(f"Filtro zona '{args.zona}': {len(volcanes)} volcanes")
 
     ff = datetime.now()
     fi = ff - timedelta(days=args.dias)

@@ -14,11 +14,17 @@ on:
         description: "Nombre de un volcan especifico (opcional)"
         required: false
         default: ""
+      zona:
+        description: "Filtro por zona (Norte/Centro/Sur/Austral) - util para chunking backfill"
+        required: false
+        default: ""
+        type: choice
+        options: ["", "Norte", "Centro", "Sur", "Austral"]
 
-# El workflow puede correr largo (backfill 365 toma ~6-12h)
-# Cancelar runs antiguos si se dispara uno nuevo
+# Concurrency separado por zona/volcan para permitir 4 jobs paralelos
+# (uno por zona) en backfill. Runs sin zona/volcan comparten group "all".
 concurrency:
-  group: nhi-toa
+  group: nhi-toa-${{ github.event.inputs.zona || github.event.inputs.volcan || 'all' }}
   cancel-in-progress: false
 
 jobs:
@@ -58,12 +64,15 @@ jobs:
         run: |
           DIAS="${{ github.event.inputs.dias || '14' }}"
           VOLCAN="${{ github.event.inputs.volcan }}"
+          ZONA="${{ github.event.inputs.zona }}"
 
+          ARGS="--dias $DIAS"
           if [ -n "$VOLCAN" ]; then
-            python nhi_analyzer_toa.py --dias "$DIAS" --volcan "$VOLCAN"
-          else
-            python nhi_analyzer_toa.py --dias "$DIAS"
+            ARGS="$ARGS --volcan \"$VOLCAN\""
+          elif [ -n "$ZONA" ]; then
+            ARGS="$ARGS --zona $ZONA"
           fi
+          eval python nhi_analyzer_toa.py $ARGS
 
       - name: Commit y push resultados
         run: |
