@@ -267,11 +267,11 @@
         <h1>NHI Dashboard</h1>
         <p>Normalized Hotspot Indices — Anomalias Termales en 43 Volcanes de Chile</p>
         <p style="margin-top:3px; font-size:0.8em; color:#484f58;" id="header-subtitle">
-            Algoritmo: Marchese et al. 2019 | Datos: Sentinel-2 + Landsat 8/9 via Planetary Computer
+            Pipeline TOA (replica NHI Tool) — Sentinel-2 L1C via Element84 | Algoritmo: Genzano 2020 / Marchese 2019
         </p>
         <div style="margin-top:10px; display:inline-flex; gap:6px; background:#0d1117; border:1px solid #30363d; border-radius:6px; padding:4px;">
-            <button id="pipeline-l2a" class="pipeline-btn active" onclick="setPipeline('l2a')" style="padding:6px 14px; border:none; background:#ff6b35; color:white; border-radius:4px; cursor:pointer; font-size:0.85em;">L2A + VRP (actual)</button>
-            <button id="pipeline-toa" class="pipeline-btn" onclick="setPipeline('toa')" style="padding:6px 14px; border:none; background:transparent; color:#8b949e; border-radius:4px; cursor:pointer; font-size:0.85em;">TOA (replica NHI Tool)</button>
+            <button id="pipeline-toa" class="pipeline-btn active" onclick="setPipeline('toa')" style="padding:6px 14px; border:none; background:#ff6b35; color:white; border-radius:4px; cursor:pointer; font-size:0.85em;">TOA (replica NHI Tool)</button>
+            <button id="pipeline-l2a" class="pipeline-btn" onclick="setPipeline('l2a')" style="padding:6px 14px; border:none; background:transparent; color:#8b949e; border-radius:4px; cursor:pointer; font-size:0.85em;">L2A + VRP (legacy)</button>
         </div>
     </div>
 
@@ -363,6 +363,26 @@
                 <div class="stat-card">
                     <div class="value" id="ind-obs">-</div>
                     <div class="label">Observaciones</div>
+                </div>
+            </div>
+
+            <!-- Mini mapa con buffer del volcan + filtro de fechas (replica NHI Tool) -->
+            <div style="display:grid; grid-template-columns: 1fr 360px; gap:15px; margin-top:15px;" id="ind-map-row">
+                <div class="chart-card" style="padding:10px;">
+                    <h3 style="margin-bottom:8px;">Filtros</h3>
+                    <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; font-size:0.85em;">
+                        <label style="color:#8b949e;">Desde:</label>
+                        <input type="date" id="ind-date-start" style="padding:5px 8px; background:#0d1117; border:1px solid #30363d; color:#e6edf3; border-radius:4px;">
+                        <label style="color:#8b949e;">Hasta:</label>
+                        <input type="date" id="ind-date-end" style="padding:5px 8px; background:#0d1117; border:1px solid #30363d; color:#e6edf3; border-radius:4px;">
+                        <button id="ind-date-reset" style="padding:5px 12px; background:#21262d; border:1px solid #30363d; color:#c9d1d9; border-radius:4px; cursor:pointer; font-size:0.85em;">Reset</button>
+                        <span id="ind-date-info" style="color:#8b949e; font-size:0.78em;"></span>
+                    </div>
+                    <div id="ind-buffer-info" style="margin-top:10px; color:#8b949e; font-size:0.82em;"></div>
+                </div>
+                <div class="chart-card" style="padding:10px;">
+                    <h3 style="margin-bottom:8px;">Area de analisis</h3>
+                    <div id="ind-mini-map" style="height:250px; border-radius:6px; border:1px solid #30363d;"></div>
                 </div>
             </div>
 
@@ -778,8 +798,8 @@
         let resumenGlobal = {};
         let chartInstances = {};
 
-        // Pipeline activo: 'l2a' (default) o 'toa' (replica NHI Tool en radiancia)
-        let CURRENT_PIPELINE = 'l2a';
+        // Pipeline activo: 'toa' (replica NHI Tool, default) o 'l2a' (legacy)
+        let CURRENT_PIPELINE = 'toa';
         function dataDir() { return CURRENT_PIPELINE === 'toa' ? 'nhi_data_toa' : 'nhi_data'; }
 
         function setPipeline(which) {
@@ -996,7 +1016,34 @@
             tbody.appendChild(tr);
         }
 
+        // Almacena la data full del volcan actual (sin filtro de fecha) para refiltrar
+        let currentVolcanFullData = null;
+        let currentVolcanName = null;
+
         function renderIndividual(data) {
+            // Guardar full data para filtros
+            currentVolcanFullData = data;
+            currentVolcanName = document.getElementById('volcan-select').value;
+
+            // Aplicar filtro de fechas si activo
+            const ds = document.getElementById('ind-date-start').value;
+            const de = document.getElementById('ind-date-end').value;
+            const filtered = (ds || de)
+                ? data.filter(d => (!ds || d.fecha >= ds) && (!de || d.fecha <= de))
+                : data;
+
+            const info = document.getElementById('ind-date-info');
+            if (info) {
+                info.textContent = (ds || de)
+                    ? `${filtered.length} de ${data.length} obs`
+                    : `${data.length} obs (${data.length>0?data[data.length-1].fecha:'-'} → ${data.length>0?data[0].fecha:'-'})`;
+            }
+
+            renderIndividualCore(filtered);
+            renderMiniMap();
+        }
+
+        function renderIndividualCore(data) {
             // Stats
             const alertas = data.filter(d => d.alerta).length;
             const maxArea = Math.max(...data.map(d => pixelsToArea(d.pixeles_calientes, d.sensor)), 0);
@@ -1495,6 +1542,69 @@
                 console.error('Error rendering TOA comparison:', e);
             }
         }
+
+        // ========================
+        // MINI MAP en Vista Individual (volcan + buffer)
+        // ========================
+        let indMiniMap = null;
+        let indMiniLayers = [];
+
+        function renderMiniMap() {
+            if (!currentVolcanName) return;
+            const meta = (resumenGlobal && resumenGlobal[currentVolcanName]) || {};
+            const lat = meta.lat;
+            const lon = meta.lon;
+            const buffer = meta.buffer_km || (CURRENT_PIPELINE === 'toa' ? 5 : 3);
+
+            // Info de buffer en el panel
+            const info = document.getElementById('ind-buffer-info');
+            if (info) {
+                info.textContent = `Buffer: ${buffer} km radio | Coords: ${lat?.toFixed(4)}, ${lon?.toFixed(4)} | Pipeline: ${CURRENT_PIPELINE.toUpperCase()}`;
+            }
+
+            const container = document.getElementById('ind-mini-map');
+            if (!container || !lat || !lon) return;
+
+            // Calcular zoom apropiado para el buffer (mayor buffer -> menor zoom)
+            // 1km -> 14, 3km -> 13, 5km -> 12, 10km -> 11
+            const zoom = Math.max(10, Math.min(15, Math.round(14 - Math.log2(Math.max(buffer, 1)))));
+
+            if (!indMiniMap) {
+                indMiniMap = L.map('ind-mini-map', { zoomControl: true }).setView([lat, lon], zoom);
+                L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                    attribution: 'Esri World Imagery', maxZoom: 17
+                }).addTo(indMiniMap);
+            } else {
+                indMiniMap.setView([lat, lon], zoom);
+            }
+
+            // Limpiar capas previas (marcador y buffer del volcan anterior)
+            for (const lyr of indMiniLayers) indMiniMap.removeLayer(lyr);
+            indMiniLayers = [];
+
+            const mk = L.marker([lat, lon]).addTo(indMiniMap);
+            const circle = L.circle([lat, lon], {
+                radius: buffer * 1000,
+                color: '#ff6b35', weight: 2, fillOpacity: 0.10
+            }).addTo(indMiniMap);
+            indMiniLayers.push(mk, circle);
+
+            // Forzar redraw para asegurar tiles aparezcan (en caso de container size change)
+            setTimeout(() => indMiniMap.invalidateSize(), 100);
+        }
+
+        // Wire up date filter handlers
+        document.getElementById('ind-date-start')?.addEventListener('change', () => {
+            if (currentVolcanFullData) renderIndividual(currentVolcanFullData);
+        });
+        document.getElementById('ind-date-end')?.addEventListener('change', () => {
+            if (currentVolcanFullData) renderIndividual(currentVolcanFullData);
+        });
+        document.getElementById('ind-date-reset')?.addEventListener('click', () => {
+            document.getElementById('ind-date-start').value = '';
+            document.getElementById('ind-date-end').value = '';
+            if (currentVolcanFullData) renderIndividual(currentVolcanFullData);
+        });
 
         // ========================
         // INIT
