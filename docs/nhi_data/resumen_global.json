@@ -79,7 +79,7 @@
   "Lascar": {
     "nivel": "amarillo",
     "alertas_7d": 0,
-    "alertas_30d": 6,
+    "alertas_30d": 5,
     "max_pixeles_calientes": 134,
     "ultima_fecha_analizada": "2026-04-14",
     "total_observaciones": 21,
