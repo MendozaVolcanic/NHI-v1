@@ -305,17 +305,22 @@
                 </div>
             </div>
 
+            <div style="margin-bottom:10px; display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+                <input type="search" id="resumen-filter" placeholder="Filtrar por nombre o zona…"
+                    style="padding:6px 10px; background:#0d1117; border:1px solid #30363d; color:#e6edf3; border-radius:4px; font-size:0.85em; min-width:240px;">
+                <span id="resumen-count" style="color:#8b949e; font-size:0.78em;"></span>
+            </div>
             <table class="volcano-table" id="volcano-table">
                 <thead>
                     <tr>
-                        <th>Estado</th>
-                        <th>Volcan</th>
-                        <th>Zona</th>
-                        <th>Alertas 7d</th>
-                        <th>Alertas 30d</th>
-                        <th>Max area</th>
-                        <th>Ultima fecha</th>
-                        <th>Obs.</th>
+                        <th data-sort="nivel" style="cursor:pointer;" title="Ordenar">Estado</th>
+                        <th data-sort="nombre" style="cursor:pointer;" title="Ordenar">Volcan</th>
+                        <th data-sort="zona" style="cursor:pointer;" title="Ordenar">Zona</th>
+                        <th data-sort="alertas_7d" style="cursor:pointer;" title="Ordenar">Alertas 7d</th>
+                        <th data-sort="alertas_30d" style="cursor:pointer;" title="Ordenar">Alertas 30d</th>
+                        <th data-sort="max_area" style="cursor:pointer;" title="Ordenar">Max area</th>
+                        <th data-sort="ultima_fecha" style="cursor:pointer;" title="Ordenar">Ultima fecha</th>
+                        <th data-sort="total_observaciones" style="cursor:pointer;" title="Ordenar">Obs.</th>
                     </tr>
                 </thead>
                 <tbody id="table-body">
@@ -376,6 +381,7 @@
                         <label style="color:#8b949e;">Hasta:</label>
                         <input type="date" id="ind-date-end" style="padding:5px 8px; background:#0d1117; border:1px solid #30363d; color:#e6edf3; border-radius:4px;">
                         <button id="ind-date-reset" style="padding:5px 12px; background:#21262d; border:1px solid #30363d; color:#c9d1d9; border-radius:4px; cursor:pointer; font-size:0.85em;">Reset</button>
+                        <button id="ind-export-csv" title="Descargar las observaciones filtradas como CSV" style="padding:5px 12px; background:#238636; border:1px solid #2ea043; color:white; border-radius:4px; cursor:pointer; font-size:0.85em;">⤓ Export CSV</button>
                         <span id="ind-date-info" style="color:#8b949e; font-size:0.78em;"></span>
                     </div>
                     <div id="ind-buffer-info" style="margin-top:10px; color:#8b949e; font-size:0.82em;"></div>
@@ -822,8 +828,13 @@
             // Recargar datos y refrescar la vista activa
             resumenGlobal = {};
             cargarResumen().then(() => {
-                if (leafletMap && currentVolcanoMarkers) { refreshMapMarkers && refreshMapMarkers(); }
+                refreshMapMarkers();
                 cambiarZonaNHI();
+                // Si la pestaña BETA ya estaba inicializada, refrescar el chart
+                toaInited = false;
+                if (document.getElementById('section-toa')?.classList.contains('active')) {
+                    renderTOAComparison();
+                }
             });
         }
 
@@ -862,41 +873,114 @@
         // ========================
         // RESUMEN GLOBAL
         // ========================
+        function setTableMessage(msg, kind) {
+            const tbody = document.getElementById('table-body');
+            tbody.textContent = '';
+            const tr = document.createElement('tr');
+            const td = document.createElement('td');
+            td.colSpan = 8;
+            td.className = kind === 'error' ? 'no-data' : 'loading';
+            td.style.color = kind === 'error' ? '#f85149' : '#8b949e';
+            td.textContent = msg;
+            tr.appendChild(td);
+            tbody.appendChild(tr);
+        }
+
         async function cargarResumen() {
+            setTableMessage(`Cargando datos del pipeline ${CURRENT_PIPELINE.toUpperCase()}…`, 'loading');
             try {
                 const resp = await fetch(`${NHI_BASE}/${dataDir()}/resumen_global.json?t=${Date.now()}`);
                 if (!resp.ok) {
-                    document.getElementById('table-body').textContent = '';
-                    const tr = document.createElement('tr');
-                    const td = document.createElement('td');
-                    td.colSpan = 9;
-                    td.className = 'no-data';
-                    td.textContent = 'Sin datos NHI. Ejecuta el workflow nhi_analysis.yml para generar datos.';
-                    tr.appendChild(td);
-                    document.getElementById('table-body').appendChild(tr);
+                    setTableMessage(`Sin datos NHI (HTTP ${resp.status}). Ejecuta el workflow para generar datos.`, 'error');
                     return;
                 }
                 resumenGlobal = await resp.json();
                 renderResumen();
             } catch (e) {
                 console.error('Error cargando resumen:', e);
+                setTableMessage(`Error de red al cargar resumen: ${e.message || e}. Reintentá en unos segundos.`, 'error');
+            }
+        }
+
+        // Estado de sort + filter de la tabla Resumen
+        let resumenSort = { key: 'nivel', dir: 'asc' };
+        const ORDEN_NIVEL = { rojo: 0, amarillo: 1, verde: 2 };
+        function maxAreaValue(d) {
+            if (typeof d.max_area_m2 === 'number') return d.max_area_m2;
+            if (typeof d.max_pixeles_calientes === 'number') return d.max_pixeles_calientes * 400;
+            return 0;
+        }
+        function sortKeyValue(nombre, d, key) {
+            switch (key) {
+                case 'nivel': return ORDEN_NIVEL[d.nivel] ?? 3;
+                case 'nombre': return nombre.toLowerCase();
+                case 'zona': return (d.zona || '').toLowerCase();
+                case 'alertas_7d': return d.alertas_7d || 0;
+                case 'alertas_30d': return d.alertas_30d || 0;
+                case 'max_area': return maxAreaValue(d);
+                case 'ultima_fecha': return d.ultima_fecha_analizada || d.ultima_fecha || '';
+                case 'total_observaciones': return d.total_observaciones || 0;
+                default: return 0;
             }
         }
 
         function renderResumen() {
             const entries = Object.entries(resumenGlobal);
-            // Ordenar: rojo primero, luego amarillo, luego verde
-            const orden = { rojo: 0, amarillo: 1, verde: 2 };
-            entries.sort((a, b) => (orden[a[1].nivel] || 3) - (orden[b[1].nivel] || 3));
 
+            // Filtro texto
+            const q = (document.getElementById('resumen-filter')?.value || '').trim().toLowerCase();
+            const filtered = q
+                ? entries.filter(([n, d]) =>
+                    n.toLowerCase().includes(q) || (d.zona || '').toLowerCase().includes(q))
+                : entries;
+
+            // Sort
+            const { key, dir } = resumenSort;
+            const mult = dir === 'asc' ? 1 : -1;
+            filtered.sort((a, b) => {
+                const va = sortKeyValue(a[0], a[1], key);
+                const vb = sortKeyValue(b[0], b[1], key);
+                if (va < vb) return -1 * mult;
+                if (va > vb) return 1 * mult;
+                return 0;
+            });
+
+            // Stats globales (sobre TODOS los volcanes, no solo filtrados)
             let rojos = 0, amarillos = 0, verdes = 0;
+            for (const [, d] of entries) {
+                if (d.nivel === 'rojo') rojos++;
+                else if (d.nivel === 'amarillo') amarillos++;
+                else verdes++;
+            }
+
+            // Indicadores de sort en headers
+            document.querySelectorAll('#volcano-table thead th[data-sort]').forEach(th => {
+                const k = th.dataset.sort;
+                const base = th.textContent.replace(/[ ▲▼]+$/, '');
+                th.textContent = base + (k === key ? (dir === 'asc' ? ' ▲' : ' ▼') : '');
+            });
+
             const tbody = document.getElementById('table-body');
             tbody.textContent = '';
+            const countEl = document.getElementById('resumen-count');
+            if (countEl) countEl.textContent = q
+                ? `Mostrando ${filtered.length} de ${entries.length} volcanes`
+                : `${entries.length} volcanes`;
 
-            for (const [nombre, data] of entries) {
-                if (data.nivel === 'rojo') rojos++;
-                else if (data.nivel === 'amarillo') amarillos++;
-                else verdes++;
+            if (filtered.length === 0) {
+                const tr = document.createElement('tr');
+                const td = document.createElement('td');
+                td.colSpan = 8; td.className = 'no-data';
+                td.textContent = 'Ningún volcán coincide con el filtro.';
+                tr.appendChild(td); tbody.appendChild(tr);
+                document.getElementById('stat-rojos').textContent = rojos;
+                document.getElementById('stat-amarillos').textContent = amarillos;
+                document.getElementById('stat-verdes').textContent = verdes;
+                document.getElementById('stat-total').textContent = entries.length;
+                return;
+            }
+
+            for (const [nombre, data] of filtered) {
 
                 const tr = document.createElement('tr');
                 tr.addEventListener('click', () => {
@@ -984,26 +1068,32 @@
             document.getElementById('link-copernicus').href =
                 `https://mendozavolcanic.github.io/Copernicus-v1/`;
 
+            // Loading state inmediato
+            const info = document.getElementById('ind-date-info');
+            if (info) info.textContent = `Cargando ${nombre}…`;
             try {
                 const resp = await fetch(
                     `${NHI_BASE}/${dataDir()}/${encodeURIComponent(nombre)}/nhi_timeseries.json?t=${Date.now()}`
                 );
                 if (!resp.ok) {
-                    mostrarSinDatos();
+                    mostrarSinDatos(`Sin datos para ${nombre} (HTTP ${resp.status}).`);
                     return;
                 }
                 const data = await resp.json();
-                renderIndividual(data);
+                renderIndividual(data, { resetFilters: true });
             } catch (e) {
-                mostrarSinDatos();
+                console.error('Error cargando volcan:', e);
+                mostrarSinDatos(`Error de red cargando ${nombre}: ${e.message || e}`);
             }
         }
 
-        function mostrarSinDatos() {
+        function mostrarSinDatos(msg) {
             document.getElementById('ind-alertas').textContent = '-';
             document.getElementById('ind-max-px').textContent = '-';
             document.getElementById('ind-max-nhiswir').textContent = '-';
             document.getElementById('ind-obs').textContent = '0';
+            const info = document.getElementById('ind-date-info');
+            if (info) info.textContent = '';
             destroyCharts();
             const tbody = document.getElementById('detail-body');
             tbody.textContent = '';
@@ -1011,7 +1101,7 @@
             const td = document.createElement('td');
             td.colSpan = 9;
             td.className = 'no-data';
-            td.textContent = 'Sin datos NHI para este volcan.';
+            td.textContent = msg || 'Sin datos NHI para este volcan.';
             tr.appendChild(td);
             tbody.appendChild(tr);
         }
@@ -1020,10 +1110,28 @@
         let currentVolcanFullData = null;
         let currentVolcanName = null;
 
-        function renderIndividual(data) {
+        function renderIndividual(data, opts) {
             // Guardar full data para filtros
             currentVolcanFullData = data;
             currentVolcanName = document.getElementById('volcan-select').value;
+
+            // Si es carga inicial de volcan, default a ultimos 90 dias (si hay datos suficientes)
+            if (opts && opts.resetFilters && data.length > 0) {
+                const fechas = data.map(d => d.fecha).sort();
+                const ultima = fechas[fechas.length - 1];
+                const ultimaDate = new Date(ultima + 'T00:00:00Z');
+                const desde = new Date(ultimaDate);
+                desde.setUTCDate(desde.getUTCDate() - 90);
+                const desdeStr = desde.toISOString().slice(0, 10);
+                // Solo aplicar si la primera fecha es anterior a 90d (sino, no tiene sentido filtrar)
+                if (fechas[0] < desdeStr) {
+                    document.getElementById('ind-date-start').value = desdeStr;
+                    document.getElementById('ind-date-end').value = ultima;
+                } else {
+                    document.getElementById('ind-date-start').value = '';
+                    document.getElementById('ind-date-end').value = '';
+                }
+            }
 
             // Aplicar filtro de fechas si activo
             const ds = document.getElementById('ind-date-start').value;
@@ -1324,6 +1432,7 @@
         // MAPA LEAFLET
         // ========================
         let leafletMap = null;
+        let mapMarkersLayer = null;
 
         function initMap() {
             if (leafletMap) return;
@@ -1332,7 +1441,17 @@
                 attribution: 'OSM',
                 maxZoom: 15,
             }).addTo(leafletMap);
+            mapMarkersLayer = L.layerGroup().addTo(leafletMap);
+            addMapMarkers();
+        }
 
+        function refreshMapMarkers() {
+            if (!leafletMap || !mapMarkersLayer) return;
+            mapMarkersLayer.clearLayers();
+            addMapMarkers();
+        }
+
+        function addMapMarkers() {
             const colores = { rojo: '#da3633', amarillo: '#d29922', verde: '#238636' };
 
             for (const [nombre, data] of Object.entries(resumenGlobal)) {
@@ -1390,7 +1509,7 @@
                 popupDiv.appendChild(btn);
 
                 marker.bindPopup(popupDiv);
-                marker.addTo(leafletMap);
+                mapMarkersLayer.addLayer(marker);
             }
         }
 
@@ -1604,6 +1723,66 @@
             document.getElementById('ind-date-start').value = '';
             document.getElementById('ind-date-end').value = '';
             if (currentVolcanFullData) renderIndividual(currentVolcanFullData);
+        });
+
+        function csvEscape(v) {
+            if (v === null || v === undefined) return '';
+            const s = String(v);
+            return /[",\n;]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+        }
+
+        document.getElementById('ind-export-csv')?.addEventListener('click', () => {
+            if (!currentVolcanFullData || !currentVolcanName) {
+                alert('No hay datos cargados.');
+                return;
+            }
+            const ds = document.getElementById('ind-date-start').value;
+            const de = document.getElementById('ind-date-end').value;
+            const rows = (ds || de)
+                ? currentVolcanFullData.filter(d => (!ds || d.fecha >= ds) && (!de || d.fecha <= de))
+                : currentVolcanFullData;
+            const headers = ['fecha','sensor','nubes_pct','pixeles_calientes','area_m2','max_nhiswir','max_nhiswnir','swir2_total','alerta'];
+            const lines = [headers.join(',')];
+            for (const d of rows) {
+                const area = d.area_m2 !== undefined ? d.area_m2 : (d.pixeles_calientes || 0) * (d.pixel_area_m2 || (d.sensor === 'Sentinel-2' ? 400 : 900));
+                lines.push([
+                    d.fecha,
+                    d.sensor || '',
+                    d.nubes_pct !== undefined ? d.nubes_pct : (d.cloud_pct || ''),
+                    d.pixeles_calientes || 0,
+                    Math.round(area),
+                    d.max_nhiswir ?? '',
+                    d.max_nhiswnir ?? '',
+                    d.swir2_total ?? d.suma_swir2 ?? '',
+                    d.alerta ? 1 : 0
+                ].map(csvEscape).join(','));
+            }
+            const blob = new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            const tag = (ds || de) ? `_${ds||'inicio'}_${de||'fin'}` : '';
+            a.download = `${currentVolcanName.replace(/[^A-Za-z0-9_-]/g,'_')}_${CURRENT_PIPELINE}${tag}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+
+        // Sort + filter handlers para tabla Resumen
+        document.querySelectorAll('#volcano-table thead th[data-sort]').forEach(th => {
+            th.addEventListener('click', () => {
+                const k = th.dataset.sort;
+                if (resumenSort.key === k) {
+                    resumenSort.dir = resumenSort.dir === 'asc' ? 'desc' : 'asc';
+                } else {
+                    resumenSort = { key: k, dir: (k === 'nombre' || k === 'zona') ? 'asc' : 'desc' };
+                }
+                renderResumen();
+            });
+        });
+        document.getElementById('resumen-filter')?.addEventListener('input', () => {
+            if (Object.keys(resumenGlobal).length) renderResumen();
         });
 
         // ========================
