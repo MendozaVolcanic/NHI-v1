@@ -53,24 +53,5 @@
     "sun_elevation": 49.1094728300757,
     "pixel_area_m2": 400.0,
     "pixel_size_m": 20.0
-  },
-  {
-    "pixeles_validos": 70694,
-    "pixeles_calientes": 7,
-    "pixeles_cond_a": 7,
-    "pixeles_cond_b": 0,
-    "pixeles_extreme": 0,
-    "max_nhiswir": 0.203553,
-    "max_nhiswnir": -0.502423,
-    "max_b2200_radiance": 13.5726,
-    "alerta": true,
-    "hotspot_image": "2026-04-12_s2_hotspot.png",
-    "fecha": "2026-04-12",
-    "sensor": "Sentinel-2",
-    "fuente": "S2 L1C TOA radiance (Element84) — algoritmo NHI Tool exacto",
-    "cloud_cover": 0.0385286691890186,
-    "sun_elevation": 49.5599445235845,
-    "pixel_area_m2": 400.0,
-    "pixel_size_m": 20.0
   }
 ]
