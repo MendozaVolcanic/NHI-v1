@@ -1,5 +1,23 @@
 [
   {
+    "pixeles_validos": 96211,
+    "pixeles_calientes": 0,
+    "pixeles_cond_a": 0,
+    "pixeles_cond_b": 0,
+    "pixeles_extreme": 0,
+    "max_nhiswir": 0.0,
+    "max_nhiswnir": 0.0,
+    "max_b2200_radiance": 0.0,
+    "alerta": false,
+    "fecha": "2026-04-29",
+    "sensor": "Sentinel-2",
+    "fuente": "S2 L1C TOA radiance (Element84) — algoritmo NHI Tool exacto",
+    "cloud_cover": 0.0916776292307849,
+    "sun_elevation": 32.5841406286689,
+    "pixel_area_m2": 400.0,
+    "pixel_size_m": 20.0
+  },
+  {
     "pixeles_validos": 96212,
     "pixeles_calientes": 0,
     "pixeles_cond_a": 0,
