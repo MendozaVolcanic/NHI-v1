@@ -390,11 +390,32 @@ def procesar_y_guardar(catalog, nombre, datos, fi, ff):
     out_dir = os.path.join("docs", "nhi_data_toa", nombre)
     os.makedirs(out_dir, exist_ok=True)
     out_path = os.path.join(out_dir, "nhi_timeseries.json")
-    with open(out_path, "w", encoding="utf-8") as f:
-        json.dump(resultados, f, ensure_ascii=False, indent=2)
 
-    alertas = sum(1 for r in resultados if r["alerta"])
-    log.info(f"  {nombre}: {len(resultados)} obs, {alertas} alertas -> {out_path}")
+    # Mergear con historial existente: las nuevas obs reemplazan las antiguas con
+    # la misma fecha; el resto del historial se preserva.
+    historico: dict[str, dict] = {}
+    if os.path.isfile(out_path):
+        try:
+            with open(out_path, encoding="utf-8") as f:
+                prev = json.load(f)
+            historico = {r["fecha"]: r for r in prev if "fecha" in r}
+        except Exception as e:
+            log.warning(f"  {nombre}: no se pudo leer historial previo ({e}), se sobreescribe")
+
+    nuevas = len(resultados)
+    for r in resultados:
+        historico[r["fecha"]] = r
+
+    merged = sorted(historico.values(), key=lambda r: r["fecha"], reverse=True)
+
+    if len(merged) < len(historico) - nuevas:
+        log.warning(f"  {nombre}: merged ({len(merged)}) < prev ({len(historico)}), revisar")
+
+    with open(out_path, "w", encoding="utf-8") as f:
+        json.dump(merged, f, ensure_ascii=False, indent=2)
+
+    alertas = sum(1 for r in merged if r.get("alerta"))
+    log.info(f"  {nombre}: {nuevas} nuevas + {len(merged)-nuevas} hist = {len(merged)} total, {alertas} alertas -> {out_path}")
     return alertas
 
 

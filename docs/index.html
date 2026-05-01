@@ -774,10 +774,18 @@
                     Linea azul dashed = L2A+VRP actual (dashboard principal).
                     Marcas rojas = valores NHI Tool GEE exportados directamente del app en CSV
                     (ground truth; disponible para Lascar en <code>docs/nhi_data_toa/{volcan}/nhi_tool_gee_reference.csv</code>).</p>
-                    <div class="controls" style="margin-top:12px;">
+                    <div class="controls" style="margin-top:12px; display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
                         <label style="color:#8b949e; font-size:0.85em;">Volcan:</label>
                         <select id="toa-volcan-select" style="min-width:200px;"></select>
-                        <span id="toa-buffer-info" style="color:#8b949e; font-size:0.82em; margin-left:8px;"></span>
+                        <span id="toa-buffer-info" style="color:#8b949e; font-size:0.82em;"></span>
+                        <span style="border-left:1px solid #30363d; height:20px; margin:0 4px;"></span>
+                        <label style="color:#8b949e; font-size:0.85em;">Desde:</label>
+                        <input type="date" id="toa-date-start" style="padding:5px 8px; background:#0d1117; border:1px solid #30363d; color:#e6edf3; border-radius:4px; font-size:0.85em;">
+                        <label style="color:#8b949e; font-size:0.85em;">Hasta:</label>
+                        <input type="date" id="toa-date-end" style="padding:5px 8px; background:#0d1117; border:1px solid #30363d; color:#e6edf3; border-radius:4px; font-size:0.85em;">
+                        <button id="toa-date-reset" style="padding:5px 12px; background:#21262d; border:1px solid #30363d; color:#c9d1d9; border-radius:4px; cursor:pointer; font-size:0.85em;">Reset</button>
+                        <button id="toa-export-csv" title="Descargar las 3 series alineadas por fecha" style="padding:5px 12px; background:#238636; border:1px solid #2ea043; color:white; border-radius:4px; cursor:pointer; font-size:0.85em;">⤓ Export CSV</button>
+                        <span id="toa-date-info" style="color:#8b949e; font-size:0.78em;"></span>
                     </div>
                     <div class="chart-card" style="margin-top:10px;">
                         <canvas id="chart-toa-comparison"></canvas>
@@ -1578,88 +1586,196 @@
         const TOA_BUFFER_KM = { 'Lascar': 3.0 };
         const TOA_DEFAULT_BUFFER_KM = 5.0;
 
+        // Estado del chart BETA: cache de datos crudos por volcan + volcan actual
+        const TOA_CACHE = {}; // { volcan: { l2a:[], toa:[], nhiRef:[] } }
+        let toaCurrentVolcan = null;
+
         async function renderTOAComparison() {
-            if (toaInited) return;
-            toaInited = true;
             const select = document.getElementById('toa-volcan-select');
             if (!select) return;
 
-            // Poblar selector desde resumenGlobal (los 43 volcanes)
-            while (select.firstChild) select.removeChild(select.firstChild);
-            const nombres = Object.keys(resumenGlobal || {}).sort();
-            for (const n of nombres) {
-                const opt = document.createElement('option');
-                opt.value = n;
-                opt.textContent = n;
-                if (n === 'Lascar') opt.selected = true;
-                select.appendChild(opt);
+            if (!toaInited) {
+                toaInited = true;
+                // Poblar selector desde resumenGlobal (los 43 volcanes)
+                while (select.firstChild) select.removeChild(select.firstChild);
+                const nombres = Object.keys(resumenGlobal || {}).sort();
+                for (const n of nombres) {
+                    const opt = document.createElement('option');
+                    opt.value = n;
+                    opt.textContent = n;
+                    if (n === 'Lascar') opt.selected = true;
+                    select.appendChild(opt);
+                }
+                select.addEventListener('change', () => loadTOAVolcan(select.value, true));
+                // Date filter handlers — re-render sin re-fetch
+                ['toa-date-start','toa-date-end'].forEach(id => {
+                    document.getElementById(id)?.addEventListener('change', () => redrawTOAChart());
+                });
+                document.getElementById('toa-date-reset')?.addEventListener('click', () => {
+                    document.getElementById('toa-date-start').value = '';
+                    document.getElementById('toa-date-end').value = '';
+                    redrawTOAChart();
+                });
+                document.getElementById('toa-export-csv')?.addEventListener('click', exportTOACsv);
             }
-            select.addEventListener('change', () => refreshTOAChart(select.value));
-            refreshTOAChart(select.value || 'Lascar');
+            loadTOAVolcan(select.value || 'Lascar', true);
         }
 
-        async function refreshTOAChart(volcan) {
-            const buffer = TOA_BUFFER_KM[volcan] || TOA_DEFAULT_BUFFER_KM;
-            const info = document.getElementById('toa-buffer-info');
-            if (info) info.textContent = `(buffer ${buffer} km)`;
+        async function loadTOAVolcan(volcan, resetDates) {
+            toaCurrentVolcan = volcan;
+            const info = document.getElementById('toa-date-info');
+            if (info) info.textContent = `Cargando ${volcan}…`;
 
             try {
-                const [l2aResp, toaResp, nhiRef] = await Promise.all([
-                    fetch(`${NHI_BASE}/nhi_data/${encodeURIComponent(volcan)}/nhi_timeseries.json?t=${Date.now()}`),
-                    fetch(`${NHI_BASE}/nhi_data_toa/${encodeURIComponent(volcan)}/nhi_timeseries.json?t=${Date.now()}`),
-                    loadNhiToolReference(volcan)
-                ]);
-                const l2a = l2aResp.ok ? await l2aResp.json() : [];
-                const toa = toaResp.ok ? await toaResp.json() : [];
-
-                const l2aData = l2a
-                    .filter(d => d.fecha >= '2026-02-01')
-                    .map(d => ({
-                        x: d.fecha,
-                        y: d.pixeles_calientes * (d.sensor && d.sensor.includes('Sentinel') ? 400 : 900)
-                    }));
-                const toaData = toa
-                    .filter(d => d.fecha >= '2026-02-01')
-                    .map(d => ({ x: d.fecha, y: d.pixeles_calientes * (d.pixel_area_m2 || 400) }));
-
-                if (toaChartInstance) toaChartInstance.destroy();
-                const ctx = document.getElementById('chart-toa-comparison');
-                if (!ctx) return;
-
-                const datasets = [];
-                if (nhiRef.length) {
-                    datasets.push({
-                        label: 'NHI Tool GEE (CSV exportado)',
-                        data: nhiRef,
-                        borderColor: '#da3633',
-                        backgroundColor: 'rgba(218,54,51,0.15)',
-                        borderWidth: 2, fill: false, tension: 0,
-                        pointRadius: 5, pointStyle: 'rectRot',
-                    });
+                if (!TOA_CACHE[volcan]) {
+                    const [l2aResp, toaResp, nhiRef] = await Promise.all([
+                        fetch(`${NHI_BASE}/nhi_data/${encodeURIComponent(volcan)}/nhi_timeseries.json?t=${Date.now()}`),
+                        fetch(`${NHI_BASE}/nhi_data_toa/${encodeURIComponent(volcan)}/nhi_timeseries.json?t=${Date.now()}`),
+                        loadNhiToolReference(volcan)
+                    ]);
+                    TOA_CACHE[volcan] = {
+                        l2a: l2aResp.ok ? await l2aResp.json() : [],
+                        toa: toaResp.ok ? await toaResp.json() : [],
+                        nhiRef: nhiRef
+                    };
                 }
-                datasets.push({
-                    label: 'TOA replica NHI Tool (S2 L1C)',
-                    data: toaData,
-                    borderColor: '#2e7d32',
-                    backgroundColor: 'rgba(76,175,80,0.25)',
-                    borderWidth: 2, fill: true, tension: 0, pointRadius: 3,
-                });
-                datasets.push({
-                    label: 'L2A + VRP (dashboard principal)',
-                    data: l2aData,
-                    borderColor: '#58a6ff',
-                    backgroundColor: 'rgba(88,166,255,0.10)',
-                    borderWidth: 2, borderDash: [5,5], fill: false, tension: 0, pointRadius: 3,
-                });
-
-                toaChartInstance = new Chart(ctx, {
-                    type: 'line',
-                    data: { datasets },
-                    options: chartOptions(`Area hotspot (m2) — ${volcan}`, { timeAxis: true })
-                });
+                if (resetDates) setTOADefaultDateRange(volcan);
+                redrawTOAChart();
             } catch (e) {
-                console.error('Error rendering TOA comparison:', e);
+                console.error('Error cargando volcan en BETA:', e);
+                if (info) info.textContent = `Error cargando ${volcan}: ${e.message || e}`;
             }
+        }
+
+        function setTOADefaultDateRange(volcan) {
+            const cache = TOA_CACHE[volcan];
+            if (!cache) return;
+            // Default: ultimos 90 dias respecto a la observacion mas reciente disponible (cualquier serie)
+            const allDates = [
+                ...cache.toa.map(d => d.fecha),
+                ...cache.l2a.map(d => d.fecha),
+                ...cache.nhiRef.map(d => d.x)
+            ].filter(Boolean).sort();
+            if (allDates.length === 0) return;
+            const ultima = allDates[allDates.length - 1];
+            const ultimaDate = new Date(ultima + 'T00:00:00Z');
+            const desde = new Date(ultimaDate);
+            desde.setUTCDate(desde.getUTCDate() - 90);
+            const desdeStr = desde.toISOString().slice(0, 10);
+            if (allDates[0] < desdeStr) {
+                document.getElementById('toa-date-start').value = desdeStr;
+                document.getElementById('toa-date-end').value = ultima;
+            } else {
+                document.getElementById('toa-date-start').value = '';
+                document.getElementById('toa-date-end').value = '';
+            }
+        }
+
+        function redrawTOAChart() {
+            const volcan = toaCurrentVolcan;
+            if (!volcan || !TOA_CACHE[volcan]) return;
+            const buffer = TOA_BUFFER_KM[volcan] || TOA_DEFAULT_BUFFER_KM;
+            const bufInfo = document.getElementById('toa-buffer-info');
+            if (bufInfo) bufInfo.textContent = `(buffer ${buffer} km)`;
+
+            const ds = document.getElementById('toa-date-start')?.value || '';
+            const de = document.getElementById('toa-date-end')?.value || '';
+            const inRange = (date) => (!ds || date >= ds) && (!de || date <= de);
+
+            const { l2a, toa, nhiRef } = TOA_CACHE[volcan];
+
+            const l2aData = l2a
+                .filter(d => inRange(d.fecha))
+                .map(d => ({
+                    x: d.fecha,
+                    y: d.pixeles_calientes * (d.sensor && d.sensor.includes('Sentinel') ? 400 : 900)
+                }));
+            const toaData = toa
+                .filter(d => inRange(d.fecha))
+                .map(d => ({ x: d.fecha, y: d.pixeles_calientes * (d.pixel_area_m2 || 400) }));
+            const refData = nhiRef.filter(p => inRange(p.x));
+
+            const totalObs = l2aData.length + toaData.length + refData.length;
+            const info = document.getElementById('toa-date-info');
+            if (info) {
+                info.textContent = (ds || de)
+                    ? `Rango: ${ds||'inicio'} → ${de||'fin'} | TOA: ${toaData.length} | L2A: ${l2aData.length} | GEE: ${refData.length}`
+                    : `Todas las fechas | TOA: ${toaData.length} | L2A: ${l2aData.length} | GEE: ${refData.length}`;
+            }
+            void totalObs;
+
+            if (toaChartInstance) toaChartInstance.destroy();
+            const ctx = document.getElementById('chart-toa-comparison');
+            if (!ctx) return;
+
+            const datasets = [];
+            if (refData.length) {
+                datasets.push({
+                    label: 'NHI Tool GEE (CSV exportado)',
+                    data: refData,
+                    borderColor: '#da3633',
+                    backgroundColor: 'rgba(218,54,51,0.15)',
+                    borderWidth: 2, fill: false, tension: 0,
+                    pointRadius: 5, pointStyle: 'rectRot',
+                });
+            }
+            datasets.push({
+                label: 'TOA replica NHI Tool (S2 L1C)',
+                data: toaData,
+                borderColor: '#2e7d32',
+                backgroundColor: 'rgba(76,175,80,0.25)',
+                borderWidth: 2, fill: true, tension: 0, pointRadius: 3,
+            });
+            datasets.push({
+                label: 'L2A + VRP (dashboard principal)',
+                data: l2aData,
+                borderColor: '#58a6ff',
+                backgroundColor: 'rgba(88,166,255,0.10)',
+                borderWidth: 2, borderDash: [5,5], fill: false, tension: 0, pointRadius: 3,
+            });
+
+            toaChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: { datasets },
+                options: chartOptions(`Area hotspot (m2) — ${volcan}`, { timeAxis: true })
+            });
+        }
+
+        function exportTOACsv() {
+            const volcan = toaCurrentVolcan;
+            if (!volcan || !TOA_CACHE[volcan]) { alert('No hay datos cargados.'); return; }
+            const ds = document.getElementById('toa-date-start')?.value || '';
+            const de = document.getElementById('toa-date-end')?.value || '';
+            const inRange = (date) => (!ds || date >= ds) && (!de || date <= de);
+            const { l2a, toa, nhiRef } = TOA_CACHE[volcan];
+            // Mapa por fecha con las 3 series
+            const map = new Map();
+            for (const d of toa) if (inRange(d.fecha)) {
+                const k = d.fecha;
+                if (!map.has(k)) map.set(k, { fecha: k, toa_m2: '', l2a_m2: '', gee_m2: '' });
+                map.get(k).toa_m2 = Math.round(d.pixeles_calientes * (d.pixel_area_m2 || 400));
+            }
+            for (const d of l2a) if (inRange(d.fecha)) {
+                const k = d.fecha;
+                if (!map.has(k)) map.set(k, { fecha: k, toa_m2: '', l2a_m2: '', gee_m2: '' });
+                map.get(k).l2a_m2 = Math.round(d.pixeles_calientes * (d.sensor && d.sensor.includes('Sentinel') ? 400 : 900));
+            }
+            for (const p of nhiRef) if (inRange(p.x)) {
+                const k = p.x;
+                if (!map.has(k)) map.set(k, { fecha: k, toa_m2: '', l2a_m2: '', gee_m2: '' });
+                map.get(k).gee_m2 = p.y;
+            }
+            const rows = Array.from(map.values()).sort((a, b) => a.fecha.localeCompare(b.fecha));
+            const lines = ['fecha,toa_replica_m2,l2a_dashboard_m2,nhi_tool_gee_m2'];
+            for (const r of rows) lines.push(`${r.fecha},${r.toa_m2},${r.l2a_m2},${r.gee_m2}`);
+            const blob = new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            const tag = (ds || de) ? `_${ds||'inicio'}_${de||'fin'}` : '';
+            a.download = `${volcan.replace(/[^A-Za-z0-9_-]/g,'_')}_comparacion${tag}.csv`;
+            document.body.appendChild(a); a.click(); document.body.removeChild(a);
+            URL.revokeObjectURL(url);
         }
 
         // ========================
