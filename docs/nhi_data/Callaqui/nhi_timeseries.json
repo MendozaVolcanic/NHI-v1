@@ -1,5 +1,39 @@
 [
   {
+    "pixeles_validos": 160000,
+    "pixeles_calientes": 0,
+    "fraccion_caliente": 0.0,
+    "max_nhiswir": 0.0,
+    "max_nhiswnir": 0.0,
+    "swir2_total": 0.0,
+    "thresh_swir": 0.103621,
+    "thresh_swnir": 0.405437,
+    "bg_median_swir": -0.072739,
+    "bg_std_swir": 0.058787,
+    "alerta": false,
+    "fecha": "2026-05-02",
+    "satelite": "Sentinel-2C",
+    "cloud_cover": 0.240742,
+    "sensor": "Sentinel-2"
+  },
+  {
+    "pixeles_validos": 159939,
+    "pixeles_calientes": 0,
+    "fraccion_caliente": 0.0,
+    "max_nhiswir": 0.0,
+    "max_nhiswnir": 0.0,
+    "swir2_total": 0.0,
+    "thresh_swir": 0.123315,
+    "thresh_swnir": 0.458346,
+    "bg_median_swir": -0.068039,
+    "bg_std_swir": 0.063785,
+    "alerta": false,
+    "fecha": "2026-04-29",
+    "satelite": "Sentinel-2C",
+    "cloud_cover": 3.549581,
+    "sensor": "Sentinel-2"
+  },
+  {
     "pixeles_validos": 116544,
     "pixeles_calientes": 5,
     "fraccion_caliente": 4.3e-05,
@@ -16,6 +50,23 @@
     "cloud_cover": 29.7,
     "sensor": "Landsat",
     "hotspot_image": "2026-04-24_ls_hotspot.png"
+  },
+  {
+    "pixeles_validos": 159546,
+    "pixeles_calientes": 0,
+    "fraccion_caliente": 0.0,
+    "max_nhiswir": 0.0,
+    "max_nhiswnir": 0.0,
+    "swir2_total": 0.0,
+    "thresh_swir": 0.121526,
+    "thresh_swnir": 0.48037,
+    "bg_median_swir": -0.031989,
+    "bg_std_swir": 0.051172,
+    "alerta": false,
+    "fecha": "2026-04-24",
+    "satelite": "Sentinel-2B",
+    "cloud_cover": 10.812096,
+    "sensor": "Sentinel-2"
   },
   {
     "pixeles_validos": 159607,
