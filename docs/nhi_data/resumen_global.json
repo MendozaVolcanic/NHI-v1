@@ -143,8 +143,8 @@
     "lon": -70.7483
   },
   "Tatara-San Pedro": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 8,
     "max_pixeles_calientes": 301,
     "ultima_fecha_analizada": "2026-05-03",
@@ -232,7 +232,7 @@
   },
   "Llaima": {
     "nivel": "rojo",
-    "alertas_7d": 2,
+    "alertas_7d": 1,
     "alertas_30d": 4,
     "max_pixeles_calientes": 464,
     "ultima_fecha_analizada": "2026-05-02",
@@ -253,8 +253,8 @@
     "lon": -71.51557
   },
   "Villarrica": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 3,
     "max_pixeles_calientes": 780,
     "ultima_fecha_analizada": "2026-05-02",
