@@ -12,7 +12,7 @@
   },
   "Parinacota": {
     "nivel": "rojo",
-    "alertas_7d": 2,
+    "alertas_7d": 1,
     "alertas_30d": 6,
     "max_pixeles_calientes": 614,
     "ultima_fecha_analizada": "2026-05-05",
@@ -22,8 +22,8 @@
     "lon": -69.14534
   },
   "Guallatiri": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 2,
     "max_pixeles_calientes": 12,
     "ultima_fecha_analizada": "2026-05-05",
@@ -79,7 +79,7 @@
   "Lascar": {
     "nivel": "rojo",
     "alertas_7d": 3,
-    "alertas_30d": 9,
+    "alertas_30d": 8,
     "max_pixeles_calientes": 134,
     "ultima_fecha_analizada": "2026-05-07",
     "total_observaciones": 29,
@@ -112,7 +112,7 @@
   "Tinguiririca": {
     "nivel": "amarillo",
     "alertas_7d": 0,
-    "alertas_30d": 5,
+    "alertas_30d": 4,
     "max_pixeles_calientes": 167,
     "ultima_fecha_analizada": "2026-05-07",
     "total_observaciones": 46,
@@ -121,9 +121,9 @@
     "lon": -70.34917
   },
   "Planchon-Peteroa": {
-    "nivel": "amarillo",
+    "nivel": "verde",
     "alertas_7d": 0,
-    "alertas_30d": 1,
+    "alertas_30d": 0,
     "max_pixeles_calientes": 278,
     "ultima_fecha_analizada": "2026-05-07",
     "total_observaciones": 50,
@@ -134,7 +134,7 @@
   "Descabezado Grande": {
     "nivel": "rojo",
     "alertas_7d": 1,
-    "alertas_30d": 4,
+    "alertas_30d": 3,
     "max_pixeles_calientes": 42,
     "ultima_fecha_analizada": "2026-05-07",
     "total_observaciones": 47,
@@ -145,7 +145,7 @@
   "Tatara-San Pedro": {
     "nivel": "amarillo",
     "alertas_7d": 0,
-    "alertas_30d": 7,
+    "alertas_30d": 6,
     "max_pixeles_calientes": 301,
     "ultima_fecha_analizada": "2026-05-07",
     "total_observaciones": 45,
@@ -156,7 +156,7 @@
   "Laguna del Maule": {
     "nivel": "rojo",
     "alertas_7d": 2,
-    "alertas_30d": 5,
+    "alertas_30d": 4,
     "max_pixeles_calientes": 107,
     "ultima_fecha_analizada": "2026-05-07",
     "total_observaciones": 47,
@@ -200,7 +200,7 @@
   "Copahue": {
     "nivel": "rojo",
     "alertas_7d": 1,
-    "alertas_30d": 4,
+    "alertas_30d": 3,
     "max_pixeles_calientes": 456,
     "ultima_fecha_analizada": "2026-05-07",
     "total_observaciones": 46,
@@ -222,7 +222,7 @@
   "Lonquimay": {
     "nivel": "amarillo",
     "alertas_7d": 0,
-    "alertas_30d": 2,
+    "alertas_30d": 1,
     "max_pixeles_calientes": 337,
     "ultima_fecha_analizada": "2026-05-02",
     "total_observaciones": 36,
@@ -275,9 +275,9 @@
     "lon": -71.70337
   },
   "Lanin": {
-    "nivel": "amarillo",
+    "nivel": "verde",
     "alertas_7d": 0,
-    "alertas_30d": 1,
+    "alertas_30d": 0,
     "max_pixeles_calientes": 1,
     "ultima_fecha_analizada": "2026-05-02",
     "total_observaciones": 34,
@@ -374,9 +374,9 @@
     "lon": -72.43178
   },
   "Huequi": {
-    "nivel": "amarillo",
+    "nivel": "verde",
     "alertas_7d": 0,
-    "alertas_30d": 1,
+    "alertas_30d": 0,
     "max_pixeles_calientes": 78,
     "ultima_fecha_analizada": "2026-05-01",
     "total_observaciones": 19,
