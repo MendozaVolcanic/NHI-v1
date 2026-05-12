@@ -78,7 +78,7 @@
   },
   "Lascar": {
     "nivel": "rojo",
-    "alertas_7d": 2,
+    "alertas_7d": 1,
     "alertas_30d": 8,
     "max_pixeles_calientes": 134,
     "ultima_fecha_analizada": "2026-05-07",
@@ -145,7 +145,7 @@
   "Tatara-San Pedro": {
     "nivel": "amarillo",
     "alertas_7d": 0,
-    "alertas_30d": 5,
+    "alertas_30d": 4,
     "max_pixeles_calientes": 301,
     "ultima_fecha_analizada": "2026-05-09",
     "total_observaciones": 46,
@@ -167,7 +167,7 @@
   "Nevado de Longavi": {
     "nivel": "rojo",
     "alertas_7d": 1,
-    "alertas_30d": 5,
+    "alertas_30d": 4,
     "max_pixeles_calientes": 30,
     "ultima_fecha_analizada": "2026-05-09",
     "total_observaciones": 44,
@@ -200,7 +200,7 @@
   "Copahue": {
     "nivel": "amarillo",
     "alertas_7d": 0,
-    "alertas_30d": 3,
+    "alertas_30d": 2,
     "max_pixeles_calientes": 456,
     "ultima_fecha_analizada": "2026-05-09",
     "total_observaciones": 47,
