@@ -85,7 +85,7 @@
   },
   "Lascar": {
     "nivel": "rojo",
-    "alertas_7d": 2,
+    "alertas_7d": 1,
     "alertas_30d": 6,
     "max_area_m2": 11200.0,
     "ultima_fecha": "2026-05-07",
