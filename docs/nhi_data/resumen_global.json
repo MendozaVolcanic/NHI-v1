@@ -77,8 +77,8 @@
     "lon": -68.40706
   },
   "Lascar": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 7,
     "max_pixeles_calientes": 134,
     "ultima_fecha_analizada": "2026-05-07",
@@ -156,7 +156,7 @@
   "Laguna del Maule": {
     "nivel": "amarillo",
     "alertas_7d": 0,
-    "alertas_30d": 3,
+    "alertas_30d": 2,
     "max_pixeles_calientes": 107,
     "ultima_fecha_analizada": "2026-05-09",
     "total_observaciones": 48,
