@@ -66,9 +66,9 @@
     "lon": -68.17941
   },
   "San Pedro": {
-    "nivel": "amarillo",
+    "nivel": "verde",
     "alertas_7d": 0,
-    "alertas_30d": 1,
+    "alertas_30d": 0,
     "max_pixeles_calientes": 24,
     "ultima_fecha_analizada": "2026-05-07",
     "total_observaciones": 29,
@@ -79,7 +79,7 @@
   "Lascar": {
     "nivel": "amarillo",
     "alertas_7d": 0,
-    "alertas_30d": 7,
+    "alertas_30d": 6,
     "max_pixeles_calientes": 134,
     "ultima_fecha_analizada": "2026-05-07",
     "total_observaciones": 29,
@@ -88,8 +88,8 @@
     "lon": -67.73611
   },
   "Tupungatito": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 2,
     "max_pixeles_calientes": 245,
     "ultima_fecha_analizada": "2026-05-14",
@@ -110,9 +110,9 @@
     "lon": -69.89732
   },
   "Tinguiririca": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
-    "alertas_30d": 4,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
+    "alertas_30d": 3,
     "max_pixeles_calientes": 167,
     "ultima_fecha_analizada": "2026-05-14",
     "total_observaciones": 48,
@@ -166,7 +166,7 @@
   },
   "Nevado de Longavi": {
     "nivel": "rojo",
-    "alertas_7d": 2,
+    "alertas_7d": 1,
     "alertas_30d": 5,
     "max_pixeles_calientes": 30,
     "ultima_fecha_analizada": "2026-05-14",
@@ -176,8 +176,8 @@
     "lon": -71.1701
   },
   "Nevados de Chillan": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 2,
     "max_pixeles_calientes": 7,
     "ultima_fecha_analizada": "2026-05-14",
@@ -187,8 +187,8 @@
     "lon": -71.35231
   },
   "Antuco": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 2,
     "max_pixeles_calientes": 20,
     "ultima_fecha_analizada": "2026-05-14",
@@ -232,7 +232,7 @@
   },
   "Llaima": {
     "nivel": "rojo",
-    "alertas_7d": 2,
+    "alertas_7d": 1,
     "alertas_30d": 4,
     "max_pixeles_calientes": 464,
     "ultima_fecha_analizada": "2026-05-14",
@@ -298,7 +298,7 @@
   },
   "Carran - Los Venados": {
     "nivel": "rojo",
-    "alertas_7d": 2,
+    "alertas_7d": 1,
     "alertas_30d": 3,
     "max_pixeles_calientes": 338,
     "ultima_fecha_analizada": "2026-05-14",
