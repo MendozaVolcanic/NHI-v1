@@ -4,19 +4,19 @@
     "alertas_7d": 0,
     "alertas_30d": 3,
     "max_pixeles_calientes": 33,
-    "ultima_fecha_analizada": "2026-05-15",
-    "total_observaciones": 30,
+    "ultima_fecha_analizada": "2026-05-17",
+    "total_observaciones": 31,
     "zona": "Norte",
     "lat": -18.10922,
     "lon": -69.50584
   },
   "Parinacota": {
     "nivel": "rojo",
-    "alertas_7d": 1,
-    "alertas_30d": 6,
+    "alertas_7d": 2,
+    "alertas_30d": 7,
     "max_pixeles_calientes": 614,
-    "ultima_fecha_analizada": "2026-05-15",
-    "total_observaciones": 30,
+    "ultima_fecha_analizada": "2026-05-17",
+    "total_observaciones": 31,
     "zona": "Norte",
     "lat": -18.17126,
     "lon": -69.14534
@@ -26,8 +26,8 @@
     "alertas_7d": 0,
     "alertas_30d": 2,
     "max_pixeles_calientes": 12,
-    "ultima_fecha_analizada": "2026-05-15",
-    "total_observaciones": 29,
+    "ultima_fecha_analizada": "2026-05-17",
+    "total_observaciones": 30,
     "zona": "Norte",
     "lat": -18.42781,
     "lon": -69.085
@@ -178,7 +178,7 @@
   "Nevados de Chillan": {
     "nivel": "rojo",
     "alertas_7d": 1,
-    "alertas_30d": 3,
+    "alertas_30d": 2,
     "max_pixeles_calientes": 23,
     "ultima_fecha_analizada": "2026-05-17",
     "total_observaciones": 47,
@@ -189,7 +189,7 @@
   "Antuco": {
     "nivel": "rojo",
     "alertas_7d": 1,
-    "alertas_30d": 3,
+    "alertas_30d": 2,
     "max_pixeles_calientes": 20,
     "ultima_fecha_analizada": "2026-05-17",
     "total_observaciones": 47,
@@ -299,7 +299,7 @@
   "Carran - Los Venados": {
     "nivel": "rojo",
     "alertas_7d": 2,
-    "alertas_30d": 4,
+    "alertas_30d": 3,
     "max_pixeles_calientes": 441,
     "ultima_fecha_analizada": "2026-05-17",
     "total_observaciones": 29,
