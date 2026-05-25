@@ -2,21 +2,21 @@
   "Taapaca": {
     "nivel": "amarillo",
     "alertas_7d": 0,
-    "alertas_30d": 3,
+    "alertas_30d": 4,
     "max_pixeles_calientes": 33,
     "ultima_fecha_analizada": "2026-05-20",
-    "total_observaciones": 32,
+    "total_observaciones": 33,
     "zona": "Norte",
     "lat": -18.10922,
     "lon": -69.50584
   },
   "Parinacota": {
     "nivel": "rojo",
-    "alertas_7d": 2,
+    "alertas_7d": 1,
     "alertas_30d": 8,
     "max_pixeles_calientes": 614,
     "ultima_fecha_analizada": "2026-05-20",
-    "total_observaciones": 32,
+    "total_observaciones": 33,
     "zona": "Norte",
     "lat": -18.17126,
     "lon": -69.14534
@@ -37,8 +37,8 @@
     "alertas_7d": 0,
     "alertas_30d": 1,
     "max_pixeles_calientes": 218,
-    "ultima_fecha_analizada": "2026-05-22",
-    "total_observaciones": 44,
+    "ultima_fecha_analizada": "2026-05-24",
+    "total_observaciones": 45,
     "zona": "Norte",
     "lat": -19.16737,
     "lon": -68.82225
@@ -48,41 +48,41 @@
     "alertas_7d": 0,
     "alertas_30d": 0,
     "max_pixeles_calientes": 310,
-    "ultima_fecha_analizada": "2026-05-22",
-    "total_observaciones": 26,
+    "ultima_fecha_analizada": "2026-05-24",
+    "total_observaciones": 27,
     "zona": "Norte",
     "lat": -20.73329,
     "lon": -68.56041
   },
   "Ollague": {
     "nivel": "rojo",
-    "alertas_7d": 1,
+    "alertas_7d": 2,
     "alertas_30d": 2,
     "max_pixeles_calientes": 9,
-    "ultima_fecha_analizada": "2026-05-22",
-    "total_observaciones": 30,
+    "ultima_fecha_analizada": "2026-05-24",
+    "total_observaciones": 31,
     "zona": "Norte",
     "lat": -21.30685,
     "lon": -68.17941
   },
   "San Pedro": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 1,
     "max_pixeles_calientes": 24,
-    "ultima_fecha_analizada": "2026-05-22",
-    "total_observaciones": 31,
+    "ultima_fecha_analizada": "2026-05-24",
+    "total_observaciones": 32,
     "zona": "Norte",
     "lat": -21.88485,
     "lon": -68.40706
   },
   "Lascar": {
-    "nivel": "amarillo",
-    "alertas_7d": 0,
+    "nivel": "rojo",
+    "alertas_7d": 1,
     "alertas_30d": 5,
     "max_pixeles_calientes": 134,
-    "ultima_fecha_analizada": "2026-05-22",
-    "total_observaciones": 31,
+    "ultima_fecha_analizada": "2026-05-24",
+    "total_observaciones": 32,
     "zona": "Norte",
     "lat": -23.36726,
     "lon": -67.73611
@@ -92,8 +92,8 @@
     "alertas_7d": 0,
     "alertas_30d": 2,
     "max_pixeles_calientes": 245,
-    "ultima_fecha_analizada": "2026-05-22",
-    "total_observaciones": 57,
+    "ultima_fecha_analizada": "2026-05-24",
+    "total_observaciones": 58,
     "zona": "Centro",
     "lat": -33.40849,
     "lon": -69.82181
@@ -101,7 +101,7 @@
   "San Jose": {
     "nivel": "amarillo",
     "alertas_7d": 0,
-    "alertas_30d": 2,
+    "alertas_30d": 1,
     "max_pixeles_calientes": 88,
     "ultima_fecha_analizada": "2026-05-22",
     "total_observaciones": 55,
@@ -112,7 +112,7 @@
   "Tinguiririca": {
     "nivel": "amarillo",
     "alertas_7d": 0,
-    "alertas_30d": 2,
+    "alertas_30d": 1,
     "max_pixeles_calientes": 167,
     "ultima_fecha_analizada": "2026-05-22",
     "total_observaciones": 51,
@@ -134,7 +134,7 @@
   "Descabezado Grande": {
     "nivel": "amarillo",
     "alertas_7d": 0,
-    "alertas_30d": 3,
+    "alertas_30d": 2,
     "max_pixeles_calientes": 42,
     "ultima_fecha_analizada": "2026-05-22",
     "total_observaciones": 53,
@@ -144,8 +144,8 @@
   },
   "Tatara-San Pedro": {
     "nivel": "rojo",
-    "alertas_7d": 2,
-    "alertas_30d": 5,
+    "alertas_7d": 1,
+    "alertas_30d": 4,
     "max_pixeles_calientes": 301,
     "ultima_fecha_analizada": "2026-05-22",
     "total_observaciones": 51,
@@ -167,7 +167,7 @@
   "Nevado de Longavi": {
     "nivel": "rojo",
     "alertas_7d": 2,
-    "alertas_30d": 6,
+    "alertas_30d": 5,
     "max_pixeles_calientes": 30,
     "ultima_fecha_analizada": "2026-05-22",
     "total_observaciones": 49,
@@ -176,8 +176,8 @@
     "lon": -71.1701
   },
   "Nevados de Chillan": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 2,
     "max_pixeles_calientes": 23,
     "ultima_fecha_analizada": "2026-05-22",
@@ -187,8 +187,8 @@
     "lon": -71.35231
   },
   "Antuco": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 2,
     "max_pixeles_calientes": 20,
     "ultima_fecha_analizada": "2026-05-22",
@@ -211,7 +211,7 @@
   "Callaqui": {
     "nivel": "amarillo",
     "alertas_7d": 0,
-    "alertas_30d": 2,
+    "alertas_30d": 1,
     "max_pixeles_calientes": 562,
     "ultima_fecha_analizada": "2026-05-22",
     "total_observaciones": 50,
@@ -220,9 +220,9 @@
     "lon": -71.46113
   },
   "Lonquimay": {
-    "nivel": "amarillo",
+    "nivel": "verde",
     "alertas_7d": 0,
-    "alertas_30d": 1,
+    "alertas_30d": 0,
     "max_pixeles_calientes": 337,
     "ultima_fecha_analizada": "2026-05-22",
     "total_observaciones": 41,
@@ -232,7 +232,7 @@
   },
   "Llaima": {
     "nivel": "rojo",
-    "alertas_7d": 3,
+    "alertas_7d": 2,
     "alertas_30d": 7,
     "max_pixeles_calientes": 464,
     "ultima_fecha_analizada": "2026-05-22",
@@ -254,7 +254,7 @@
   },
   "Villarrica": {
     "nivel": "rojo",
-    "alertas_7d": 4,
+    "alertas_7d": 3,
     "alertas_30d": 6,
     "max_pixeles_calientes": 780,
     "ultima_fecha_analizada": "2026-05-22",
@@ -298,7 +298,7 @@
   },
   "Carran - Los Venados": {
     "nivel": "rojo",
-    "alertas_7d": 4,
+    "alertas_7d": 3,
     "alertas_30d": 6,
     "max_pixeles_calientes": 441,
     "ultima_fecha_analizada": "2026-05-22",
@@ -364,7 +364,7 @@
   },
   "Hornopiren": {
     "nivel": "rojo",
-    "alertas_7d": 2,
+    "alertas_7d": 1,
     "alertas_30d": 2,
     "max_pixeles_calientes": 709,
     "ultima_fecha_analizada": "2026-05-22",
@@ -385,9 +385,9 @@
     "lon": -72.58103
   },
   "Michinmahuida": {
-    "nivel": "amarillo",
+    "nivel": "verde",
     "alertas_7d": 0,
-    "alertas_30d": 1,
+    "alertas_30d": 0,
     "max_pixeles_calientes": 112,
     "ultima_fecha_analizada": "2026-05-22",
     "total_observaciones": 28,
