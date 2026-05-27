@@ -143,8 +143,8 @@
     "lon": -70.7483
   },
   "Tatara-San Pedro": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 3,
     "max_pixeles_calientes": 301,
     "ultima_fecha_analizada": "2026-05-22",
@@ -166,7 +166,7 @@
   },
   "Nevado de Longavi": {
     "nivel": "rojo",
-    "alertas_7d": 2,
+    "alertas_7d": 1,
     "alertas_30d": 4,
     "max_pixeles_calientes": 30,
     "ultima_fecha_analizada": "2026-05-22",
@@ -254,7 +254,7 @@
   },
   "Villarrica": {
     "nivel": "rojo",
-    "alertas_7d": 3,
+    "alertas_7d": 2,
     "alertas_30d": 6,
     "max_pixeles_calientes": 780,
     "ultima_fecha_analizada": "2026-05-22",
@@ -298,7 +298,7 @@
   },
   "Carran - Los Venados": {
     "nivel": "rojo",
-    "alertas_7d": 3,
+    "alertas_7d": 2,
     "alertas_30d": 6,
     "max_pixeles_calientes": 441,
     "ultima_fecha_analizada": "2026-05-22",
@@ -308,8 +308,8 @@
     "lon": -72.10509
   },
   "Puyehue - Cordon Caulle": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 1,
     "max_pixeles_calientes": 210,
     "ultima_fecha_analizada": "2026-05-22",
