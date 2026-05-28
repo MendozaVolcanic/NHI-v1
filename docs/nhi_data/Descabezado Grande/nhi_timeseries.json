@@ -1,5 +1,23 @@
 [
   {
+    "pixeles_validos": 107983,
+    "pixeles_calientes": 92,
+    "fraccion_caliente": 0.000852,
+    "max_nhiswir": 0.328255,
+    "max_nhiswnir": 0.989484,
+    "swir2_total": 8.9394,
+    "thresh_swir": 0.170103,
+    "thresh_swnir": 0.84242,
+    "bg_median_swir": 0.011425,
+    "bg_std_swir": 0.052893,
+    "alerta": true,
+    "fecha": "2026-05-26",
+    "satelite": "landsat-9",
+    "cloud_cover": 13.94,
+    "sensor": "Landsat",
+    "hotspot_image": "2026-05-26_ls_hotspot.png"
+  },
+  {
     "pixeles_validos": 160000,
     "pixeles_calientes": 0,
     "fraccion_caliente": 0.0,
