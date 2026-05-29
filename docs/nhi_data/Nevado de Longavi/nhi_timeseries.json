@@ -71,6 +71,23 @@
     "hotspot_image": "2026-05-19_s2_hotspot.png"
   },
   {
+    "pixeles_validos": 95544,
+    "pixeles_calientes": 0,
+    "fraccion_caliente": 0.0,
+    "max_nhiswir": 0.0,
+    "max_nhiswnir": 0.0,
+    "swir2_total": 0.0,
+    "thresh_swir": 0.113325,
+    "thresh_swnir": 0.520801,
+    "bg_median_swir": -0.123828,
+    "bg_std_swir": 0.079051,
+    "alerta": false,
+    "fecha": "2026-05-18",
+    "satelite": "landsat-8",
+    "cloud_cover": 9.28,
+    "sensor": "Landsat"
+  },
+  {
     "pixeles_validos": 159997,
     "pixeles_calientes": 0,
     "fraccion_caliente": 0.0,

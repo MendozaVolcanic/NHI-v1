@@ -52,6 +52,23 @@
     "sensor": "Sentinel-2"
   },
   {
+    "pixeles_validos": 145831,
+    "pixeles_calientes": 0,
+    "fraccion_caliente": 0.0,
+    "max_nhiswir": 0.0,
+    "max_nhiswnir": 0.0,
+    "swir2_total": 0.0,
+    "thresh_swir": 0.091244,
+    "thresh_swnir": 0.181278,
+    "bg_median_swir": -0.008524,
+    "bg_std_swir": 0.033256,
+    "alerta": false,
+    "fecha": "2026-05-18",
+    "satelite": "landsat-8",
+    "cloud_cover": 0.53,
+    "sensor": "Landsat"
+  },
+  {
     "pixeles_validos": 160000,
     "pixeles_calientes": 0,
     "fraccion_caliente": 0.0,
