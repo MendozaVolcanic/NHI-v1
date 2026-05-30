@@ -56,7 +56,7 @@
   },
   "Ollague": {
     "nivel": "rojo",
-    "alertas_7d": 2,
+    "alertas_7d": 1,
     "alertas_30d": 2,
     "max_pixeles_calientes": 9,
     "ultima_fecha_analizada": "2026-05-26",
@@ -145,7 +145,7 @@
   "Tatara-San Pedro": {
     "nivel": "rojo",
     "alertas_7d": 1,
-    "alertas_30d": 5,
+    "alertas_30d": 4,
     "max_pixeles_calientes": 301,
     "ultima_fecha_analizada": "2026-05-26",
     "total_observaciones": 53,
@@ -231,9 +231,9 @@
     "lon": -71.5853
   },
   "Llaima": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
-    "alertas_30d": 8,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
+    "alertas_30d": 7,
     "max_pixeles_calientes": 464,
     "ultima_fecha_analizada": "2026-05-26",
     "total_observaciones": 39,
@@ -254,8 +254,8 @@
   },
   "Villarrica": {
     "nivel": "rojo",
-    "alertas_7d": 2,
-    "alertas_30d": 7,
+    "alertas_7d": 1,
+    "alertas_30d": 6,
     "max_pixeles_calientes": 780,
     "ultima_fecha_analizada": "2026-05-26",
     "total_observaciones": 41,
@@ -297,8 +297,8 @@
     "lon": -72.00281
   },
   "Carran - Los Venados": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 7,
     "max_pixeles_calientes": 441,
     "ultima_fecha_analizada": "2026-05-26",
