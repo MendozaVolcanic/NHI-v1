@@ -1,7 +1,7 @@
 {
   "Taapaca": {
     "nivel": "rojo",
-    "alertas_7d": 2,
+    "alertas_7d": 1,
     "alertas_30d": 4,
     "max_pixeles_calientes": 33,
     "ultima_fecha_analizada": "2026-05-30",
@@ -13,7 +13,7 @@
   "Parinacota": {
     "nivel": "rojo",
     "alertas_7d": 2,
-    "alertas_30d": 8,
+    "alertas_30d": 7,
     "max_pixeles_calientes": 614,
     "ultima_fecha_analizada": "2026-05-30",
     "total_observaciones": 36,
@@ -24,7 +24,7 @@
   "Guallatiri": {
     "nivel": "rojo",
     "alertas_7d": 2,
-    "alertas_30d": 3,
+    "alertas_30d": 2,
     "max_pixeles_calientes": 12,
     "ultima_fecha_analizada": "2026-05-30",
     "total_observaciones": 33,
@@ -56,7 +56,7 @@
   },
   "Ollague": {
     "nivel": "rojo",
-    "alertas_7d": 2,
+    "alertas_7d": 1,
     "alertas_30d": 3,
     "max_pixeles_calientes": 9,
     "ultima_fecha_analizada": "2026-05-27",
@@ -77,8 +77,8 @@
     "lon": -68.40706
   },
   "Lascar": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 4,
     "max_pixeles_calientes": 134,
     "ultima_fecha_analizada": "2026-05-26",
