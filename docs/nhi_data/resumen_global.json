@@ -1,7 +1,7 @@
 {
   "Taapaca": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 4,
     "max_pixeles_calientes": 33,
     "ultima_fecha_analizada": "2026-05-30",
@@ -12,7 +12,7 @@
   },
   "Parinacota": {
     "nivel": "rojo",
-    "alertas_7d": 2,
+    "alertas_7d": 1,
     "alertas_30d": 7,
     "max_pixeles_calientes": 614,
     "ultima_fecha_analizada": "2026-05-30",
@@ -23,7 +23,7 @@
   },
   "Guallatiri": {
     "nivel": "rojo",
-    "alertas_7d": 2,
+    "alertas_7d": 1,
     "alertas_30d": 2,
     "max_pixeles_calientes": 12,
     "ultima_fecha_analizada": "2026-05-30",
@@ -79,7 +79,7 @@
   "Lascar": {
     "nivel": "amarillo",
     "alertas_7d": 0,
-    "alertas_30d": 4,
+    "alertas_30d": 3,
     "max_pixeles_calientes": 134,
     "ultima_fecha_analizada": "2026-05-26",
     "total_observaciones": 34,
@@ -99,9 +99,9 @@
     "lon": -69.82181
   },
   "San Jose": {
-    "nivel": "amarillo",
+    "nivel": "verde",
     "alertas_7d": 0,
-    "alertas_30d": 1,
+    "alertas_30d": 0,
     "max_pixeles_calientes": 88,
     "ultima_fecha_analizada": "2026-05-26",
     "total_observaciones": 57,
@@ -156,7 +156,7 @@
   "Laguna del Maule": {
     "nivel": "rojo",
     "alertas_7d": 1,
-    "alertas_30d": 5,
+    "alertas_30d": 4,
     "max_pixeles_calientes": 107,
     "ultima_fecha_analizada": "2026-05-26",
     "total_observaciones": 55,
@@ -233,7 +233,7 @@
   "Llaima": {
     "nivel": "amarillo",
     "alertas_7d": 0,
-    "alertas_30d": 7,
+    "alertas_30d": 6,
     "max_pixeles_calientes": 464,
     "ultima_fecha_analizada": "2026-05-26",
     "total_observaciones": 39,
