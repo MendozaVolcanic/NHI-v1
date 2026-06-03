@@ -37,8 +37,8 @@
     "alertas_7d": 0,
     "alertas_30d": 0,
     "max_pixeles_calientes": 218,
-    "ultima_fecha_analizada": "2026-05-30",
-    "total_observaciones": 47,
+    "ultima_fecha_analizada": "2026-06-01",
+    "total_observaciones": 48,
     "zona": "Norte",
     "lat": -19.16737,
     "lon": -68.82225
@@ -48,19 +48,19 @@
     "alertas_7d": 0,
     "alertas_30d": 0,
     "max_pixeles_calientes": 310,
-    "ultima_fecha_analizada": "2026-05-24",
-    "total_observaciones": 27,
+    "ultima_fecha_analizada": "2026-06-01",
+    "total_observaciones": 28,
     "zona": "Norte",
     "lat": -20.73329,
     "lon": -68.56041
   },
   "Ollague": {
     "nivel": "rojo",
-    "alertas_7d": 1,
-    "alertas_30d": 3,
+    "alertas_7d": 2,
+    "alertas_30d": 4,
     "max_pixeles_calientes": 9,
-    "ultima_fecha_analizada": "2026-05-27",
-    "total_observaciones": 34,
+    "ultima_fecha_analizada": "2026-06-01",
+    "total_observaciones": 35,
     "zona": "Norte",
     "lat": -21.30685,
     "lon": -68.17941
@@ -70,19 +70,19 @@
     "alertas_7d": 0,
     "alertas_30d": 2,
     "max_pixeles_calientes": 24,
-    "ultima_fecha_analizada": "2026-05-26",
-    "total_observaciones": 34,
+    "ultima_fecha_analizada": "2026-06-01",
+    "total_observaciones": 35,
     "zona": "Norte",
     "lat": -21.88485,
     "lon": -68.40706
   },
   "Lascar": {
-    "nivel": "amarillo",
-    "alertas_7d": 0,
-    "alertas_30d": 3,
+    "nivel": "rojo",
+    "alertas_7d": 1,
+    "alertas_30d": 4,
     "max_pixeles_calientes": 134,
-    "ultima_fecha_analizada": "2026-05-26",
-    "total_observaciones": 34,
+    "ultima_fecha_analizada": "2026-06-01",
+    "total_observaciones": 35,
     "zona": "Norte",
     "lat": -23.36726,
     "lon": -67.73611
@@ -92,8 +92,8 @@
     "alertas_7d": 0,
     "alertas_30d": 1,
     "max_pixeles_calientes": 245,
-    "ultima_fecha_analizada": "2026-05-26",
-    "total_observaciones": 60,
+    "ultima_fecha_analizada": "2026-06-01",
+    "total_observaciones": 61,
     "zona": "Centro",
     "lat": -33.40849,
     "lon": -69.82181
@@ -103,15 +103,15 @@
     "alertas_7d": 0,
     "alertas_30d": 0,
     "max_pixeles_calientes": 88,
-    "ultima_fecha_analizada": "2026-05-26",
-    "total_observaciones": 57,
+    "ultima_fecha_analizada": "2026-06-01",
+    "total_observaciones": 58,
     "zona": "Centro",
     "lat": -33.78682,
     "lon": -69.89732
   },
   "Tinguiririca": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 2,
     "max_pixeles_calientes": 167,
     "ultima_fecha_analizada": "2026-05-26",
@@ -121,8 +121,8 @@
     "lon": -70.34917
   },
   "Planchon-Peteroa": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 1,
     "max_pixeles_calientes": 278,
     "ultima_fecha_analizada": "2026-05-26",
@@ -132,9 +132,9 @@
     "lon": -70.57189
   },
   "Descabezado Grande": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
-    "alertas_30d": 3,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
+    "alertas_30d": 2,
     "max_pixeles_calientes": 92,
     "ultima_fecha_analizada": "2026-05-26",
     "total_observaciones": 55,
@@ -143,8 +143,8 @@
     "lon": -70.7483
   },
   "Tatara-San Pedro": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 4,
     "max_pixeles_calientes": 301,
     "ultima_fecha_analizada": "2026-05-26",
@@ -154,9 +154,9 @@
     "lon": -70.84533
   },
   "Laguna del Maule": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
-    "alertas_30d": 4,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
+    "alertas_30d": 3,
     "max_pixeles_calientes": 107,
     "ultima_fecha_analizada": "2026-05-26",
     "total_observaciones": 55,
@@ -165,8 +165,8 @@
     "lon": -70.49828
   },
   "Nevado de Longavi": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 5,
     "max_pixeles_calientes": 30,
     "ultima_fecha_analizada": "2026-05-26",
@@ -198,9 +198,9 @@
     "lon": -71.34097
   },
   "Copahue": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
-    "alertas_30d": 4,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
+    "alertas_30d": 3,
     "max_pixeles_calientes": 456,
     "ultima_fecha_analizada": "2026-05-26",
     "total_observaciones": 54,
@@ -209,9 +209,9 @@
     "lon": -71.16836
   },
   "Callaqui": {
-    "nivel": "amarillo",
+    "nivel": "verde",
     "alertas_7d": 0,
-    "alertas_30d": 1,
+    "alertas_30d": 0,
     "max_pixeles_calientes": 562,
     "ultima_fecha_analizada": "2026-05-26",
     "total_observaciones": 52,
@@ -220,8 +220,8 @@
     "lon": -71.46113
   },
   "Lonquimay": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 1,
     "max_pixeles_calientes": 337,
     "ultima_fecha_analizada": "2026-05-26",
@@ -253,8 +253,8 @@
     "lon": -71.51557
   },
   "Villarrica": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 6,
     "max_pixeles_calientes": 780,
     "ultima_fecha_analizada": "2026-05-26",
@@ -352,8 +352,8 @@
     "lon": -72.60399
   },
   "Yate": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 2,
     "max_pixeles_calientes": 5,
     "ultima_fecha_analizada": "2026-05-26",
@@ -385,8 +385,8 @@
     "lon": -72.58103
   },
   "Michinmahuida": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 2,
     "max_pixeles_calientes": 112,
     "ultima_fecha_analizada": "2026-05-27",
