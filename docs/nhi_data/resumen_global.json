@@ -56,7 +56,7 @@
   },
   "Ollague": {
     "nivel": "rojo",
-    "alertas_7d": 2,
+    "alertas_7d": 1,
     "alertas_30d": 4,
     "max_pixeles_calientes": 9,
     "ultima_fecha_analizada": "2026-06-01",
@@ -79,7 +79,7 @@
   "Lascar": {
     "nivel": "rojo",
     "alertas_7d": 1,
-    "alertas_30d": 4,
+    "alertas_30d": 3,
     "max_pixeles_calientes": 134,
     "ultima_fecha_analizada": "2026-06-01",
     "total_observaciones": 35,
