@@ -240,8 +240,8 @@
     "lon": -71.46113
   },
   "Lonquimay": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 1,
     "max_area_m2": 1600.0,
     "ultima_fecha": "2026-06-03",
