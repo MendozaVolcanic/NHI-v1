@@ -17,6 +17,23 @@
     "sensor": "Sentinel-2"
   },
   {
+    "pixeles_validos": 160000,
+    "pixeles_calientes": 0,
+    "fraccion_caliente": 0.0,
+    "max_nhiswir": 0.0,
+    "max_nhiswnir": 0.0,
+    "swir2_total": 0.0,
+    "thresh_swir": -0.005643,
+    "thresh_swnir": -0.035124,
+    "bg_median_swir": -0.090454,
+    "bg_std_swir": 0.028271,
+    "alerta": false,
+    "fecha": "2026-06-01",
+    "satelite": "Sentinel-2C",
+    "cloud_cover": 69.422197,
+    "sensor": "Sentinel-2"
+  },
+  {
     "pixeles_validos": 120136,
     "pixeles_calientes": 0,
     "fraccion_caliente": 0.0,
@@ -32,6 +49,23 @@
     "satelite": "landsat-9",
     "cloud_cover": 21.5,
     "sensor": "Landsat"
+  },
+  {
+    "pixeles_validos": 159997,
+    "pixeles_calientes": 0,
+    "fraccion_caliente": 0.0,
+    "max_nhiswir": 0.0,
+    "max_nhiswnir": 0.0,
+    "swir2_total": 0.0,
+    "thresh_swir": -0.030778,
+    "thresh_swnir": -0.023414,
+    "bg_median_swir": -0.145902,
+    "bg_std_swir": 0.038375,
+    "alerta": false,
+    "fecha": "2026-05-24",
+    "satelite": "Sentinel-2B",
+    "cloud_cover": 78.207183,
+    "sensor": "Sentinel-2"
   },
   {
     "pixeles_validos": 160000,
