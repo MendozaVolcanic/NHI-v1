@@ -79,12 +79,21 @@ Pixel HOT si CUALQUIERA (OR):
 - ✓ Tiene Landsat 8/9 ya integrado
 - ✓ Genera PNGs hotspot (mono-color rojo)
 
-### TOA (replica NHI Tool, Element84)
-- ✅ Algoritmo replica linea por linea
+### TOA (replica NHI Tool, Element84 S2 + USGS M2M Landsat)
+- ✅ Algoritmo S2 replica linea por linea (17/17 vs GEE en Lascar)
 - ✅ Buffer respeta `config_nhi.py` (Cordon Caulle 10km, Hudson 8km, Lascar 3km, Villarrica 1.5km)
 - ✅ PNGs color-coded por criterio (A=rojo, B=naranja, EXTREME=amarillo)
-- ❌ Sin Landsat aun (falta aprobacion USGS)
-- 🔄 Backfill 1 año en curso
+- ✅ Radianza SWIR (sum_b1600/sum_b2200) = proxy potencia termica
+- ✅ cloud_cover 50->80 (recupera escenas crater-despejado/tile-nublado)
+- ✅ **LANDSAT 8/9 OLI INTEGRADO (2026-06)**: algoritmo OLI replica GEE 7/7 en Lascar.
+  - `nhi_landsat.py` (algoritmo, 8 tests), `nhi_landsat_reader.py` (lector M2M),
+    `m2m_client.py` (cliente). Window COG desde landsatlook (no baja escenas completas).
+  - Merge S2+OLI por fecha+sensor en un timeseries. Degrada limpio sin token.
+  - Secrets `USGS_USERNAME`/`USGS_TOKEN` cargados; workflow los inyecta.
+  - Cuota M2M real: 20.000 (no 10.000). Staging: escenas recientes quedan en
+    'preparing' y se capturan en la siguiente pasada del cron (--dias 14).
+  - Lascar replica NHI Tool COMPLETO: 17/17 S2 + 7/7 OLI = 24/24.
+- 🔄 Backfill historico de Landsat (1 anio): PENDIENTE disparar (ver abajo)
 
 ## En curso al cierre de sesion
 
