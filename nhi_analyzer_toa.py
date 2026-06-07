@@ -45,6 +45,8 @@ from config_nhi import (
     VOLCANES, MAX_CLOUD_COVER, IMAGE_SIZE, HOTSPOT_IMAGE_SIZE,
     get_bbox, get_active_volcanoes,
 )
+from nhi_landsat_reader import procesar_volcan_landsat, landsat_available
+import m2m_client
 
 # AWS sin firmar para s3://sentinel-s2-l1c (Element84 anonymous access)
 os.environ.setdefault("AWS_NO_SIGN_REQUEST", "YES")
@@ -387,8 +389,8 @@ def resolve_buffer(volcan):
     return VOLCANES.get(volcan, {}).get("buffer_km", 5.0)
 
 
-def procesar_y_guardar(catalog, nombre, datos, fi, ff):
-    """Procesa un volcan y guarda JSON. Retorna numero de alertas."""
+def procesar_y_guardar(catalog, nombre, datos, fi, ff, api_key=None):
+    """Procesa un volcan (S2 + Landsat si hay api_key) y guarda JSON."""
     datos = dict(datos)
     datos["buffer_km"] = resolve_buffer(nombre)
     try:
@@ -397,26 +399,39 @@ def procesar_y_guardar(catalog, nombre, datos, fi, ff):
         log.error(f"  {nombre}: ERROR {e}")
         return -1
 
+    # Landsat 8/9 OLI via M2M (si hay credenciales). Se agrega a las obs S2.
+    if api_key is not None:
+        try:
+            oli = procesar_volcan_landsat(api_key, nombre, datos, fi, ff, _circular_mask_geo)
+            resultados = resultados + oli
+            log.info(f"  {nombre}: +{len(oli)} obs Landsat OLI")
+        except Exception as e:
+            log.warning(f"  {nombre}: Landsat fallo (sigo con S2): {e}")
+
     out_dir = os.path.join("docs", "nhi_data_toa", nombre)
     os.makedirs(out_dir, exist_ok=True)
     out_path = os.path.join(out_dir, "nhi_timeseries.json")
 
-    # Mergear con historial existente: las nuevas obs reemplazan las antiguas con
-    # la misma fecha; el resto del historial se preserva.
+    # Mergear con historial existente. Key = fecha+sensor: un dia puede tener
+    # un pase S2 Y uno Landsat (no se pisan). Las nuevas obs reemplazan las
+    # antiguas con misma fecha+sensor; el resto del historial se preserva.
+    def _key(r):
+        return f"{r.get('fecha')}_{r.get('sensor', 'S2')}"
+
     historico: dict[str, dict] = {}
     if os.path.isfile(out_path):
         try:
             with open(out_path, encoding="utf-8") as f:
                 prev = json.load(f)
-            historico = {r["fecha"]: r for r in prev if "fecha" in r}
+            historico = {_key(r): r for r in prev if "fecha" in r}
         except Exception as e:
             log.warning(f"  {nombre}: no se pudo leer historial previo ({e}), se sobreescribe")
 
     nuevas = len(resultados)
     for r in resultados:
-        historico[r["fecha"]] = r
+        historico[_key(r)] = r
 
-    merged = sorted(historico.values(), key=lambda r: r["fecha"], reverse=True)
+    merged = sorted(historico.values(), key=lambda r: (r["fecha"], r.get("sensor", "")), reverse=True)
 
     if len(merged) < len(historico) - nuevas:
         log.warning(f"  {nombre}: merged ({len(merged)}) < prev ({len(historico)}), revisar")
@@ -493,9 +508,24 @@ def main():
     log.info(f"=== TOA NHI Tool replica: {len(volcanes)} volcanes, {args.dias} dias ===")
     catalog = pystac_client.Client.open(EARTHSEARCH_URL)
 
-    for i, (nombre, datos) in enumerate(volcanes.items(), 1):
-        log.info(f"[{i}/{len(volcanes)}] {nombre} ({datos.get('zona','')}) buffer={resolve_buffer(nombre)}km")
-        procesar_y_guardar(catalog, nombre, datos, fi, ff)
+    # Login M2M una vez (Landsat OLI). Si no hay credenciales, solo S2.
+    api_key = None
+    if landsat_available():
+        try:
+            api_key = m2m_client.login_token()
+            log.info("Landsat OLI ACTIVADO (login M2M OK)")
+        except Exception as e:
+            log.warning(f"Login M2M fallo, sigo solo con S2: {e}")
+    else:
+        log.info("Sin credenciales USGS -> solo Sentinel-2 (Landsat desactivado)")
+
+    try:
+        for i, (nombre, datos) in enumerate(volcanes.items(), 1):
+            log.info(f"[{i}/{len(volcanes)}] {nombre} ({datos.get('zona','')}) buffer={resolve_buffer(nombre)}km")
+            procesar_y_guardar(catalog, nombre, datos, fi, ff, api_key=api_key)
+    finally:
+        if api_key:
+            m2m_client.logout(api_key)
 
     if len(volcanes) > 1:
         generar_resumen_toa(volcanes)
