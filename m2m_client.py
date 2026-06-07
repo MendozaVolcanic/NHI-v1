@@ -72,9 +72,24 @@ def download_options(api_key, entity_ids):
                  {"datasetName": DATASET_L1, "entityIds": entity_ids}, api_key)
 
 
-def download_request(api_key, downloads):
-    """Pide URLs de descarga. CONSUME cuota (download-request)."""
-    return _post("download-request", {"downloads": downloads}, api_key)
+def download_request(api_key, downloads, label=None):
+    """
+    Pide URLs de descarga. CONSUME cuota (download-request).
+    Devuelve availableDownloads (listas ya) + preparingDownloads (en staging).
+    Las recientes suelen quedar en preparing -> recuperar con download_retrieve(label).
+    """
+    payload = {"downloads": downloads}
+    if label:
+        payload["label"] = label
+    return _post("download-request", payload, api_key)
+
+
+def download_retrieve(api_key, label):
+    """
+    Recupera las descargas ya completadas de un label (las que estaban en
+    preparing). No vuelve a consumir cuota de los items ya solicitados.
+    """
+    return _post("download-retrieve", {"label": label}, api_key)
 
 
 def logout(api_key):
