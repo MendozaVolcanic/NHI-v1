@@ -105,10 +105,11 @@ Cada uno hace auto-commit a `docs/nhi_data_toa/` cuando termina. Estimado total:
 **Aprobacion de acceso descarga Landsat L1 TOA via M2M API.**
 
 - Cuenta USGS ERS creada: username `nicolas.mendoza`
-- Application Token generado: `Nhd_fUXftzphJQddHj2Y4FcIHeBx5rWH7qw43BVsn67FbKvcRYh@2jpPzf2q1ZJK` (vence 31-10-2029)
-- Token funciona para login + scene-search; bloqueado en download-options (HTTP 403)
-- Solicitud de Bulk Download Access enviada (necesita aprobacion humana)
-- **Cuando llegue email de aprobacion:** integrar Landsat al analyzer TOA, regenerar backfill, charts separados S2 vs OLI
+- **APROBADO 2026-04-27**: rol "Access to EE's Machine to Machine interface" (Request ID 37862)
+- ⚠️ **TOKEN REVOCADO/A-REVOCAR**: el token anterior quedo expuesto en el historial
+  git de este repo PUBLICO. DEBE revocarse en ers.cr.usgs.gov/profile/access y
+  generar uno nuevo. El nuevo va SOLO como GitHub Secret `USGS_TOKEN`, nunca en archivos.
+- **Integracion Landsat:** ver decision de fuente abajo (M2M vs AWS requester-pays)
 
 ### Validacion de FPs/FNs sospechosos en TOA
 
@@ -185,12 +186,14 @@ git push
 
 ## Tokens / credenciales
 
-⚠️ **El token USGS esta en este documento por conveniencia de retomar la sesion.**
-Cuando llegue la aprobacion de descarga, considerá rotarlo (revocar este, crear nuevo)
-y guardarlo solo como GitHub Actions Secret `USGS_TOKEN` (con `USGS_USERNAME`).
+🚨 **INCIDENTE DE SEGURIDAD (2026-06): el token M2M estuvo en cleartext en este
+archivo, en un repo PUBLICO. Quedo en el historial git (no se puede borrar sin
+reescribir historia). ACCION OBLIGATORIA: revocar ese token en USGS y crear nuevo.**
 
 - USGS ERS Username: `nicolas.mendoza`
-- USGS M2M Token (vence 2029-10-31): `Nhd_fUXftzphJQddHj2Y4FcIHeBx5rWH7qw43BVsn67FbKvcRYh@2jpPzf2q1ZJK`
+- Token: **NO se guarda mas en archivos.** Va como GitHub Secret `USGS_TOKEN`
+  (+ `USGS_USERNAME`) o variable de entorno local. El token viejo se considera
+  comprometido y debe estar revocado.
 
 ---
 
