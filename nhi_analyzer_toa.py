@@ -194,8 +194,15 @@ def calcular_nhi_toa(b703, b800, b1600, b2200, sun_elevation_deg, refl_conv_fact
         max_swir  = float(nhi_swir[hot_mask].max())
         max_swnir = float(nhi_swnir[hot_mask].max())
         max_b2200 = float(b2200_r[hot_mask].max())
+        # Suma de radiancia SWIR de los pixeles calientes (replica NHI Tool:
+        # reduceRegion sum unweighted sobre b1600nm/b2200nm de pixeles NHI==1).
+        # Proxy de POTENCIA TERMICA radiada — escala con tamano E intensidad de
+        # la anomalia, a diferencia del conteo/area que es binario (caliente/no).
+        sum_b1600 = float(b1600_r[hot_mask].sum())
+        sum_b2200 = float(b2200_r[hot_mask].sum())
     else:
         max_swir = max_swnir = max_b2200 = 0.0
+        sum_b1600 = sum_b2200 = 0.0
 
     return {
         "pixeles_validos": total,
@@ -206,6 +213,8 @@ def calcular_nhi_toa(b703, b800, b1600, b2200, sun_elevation_deg, refl_conv_fact
         "max_nhiswir": round(max_swir, 6),
         "max_nhiswnir": round(max_swnir, 6),
         "max_b2200_radiance": round(max_b2200, 4),
+        "sum_b1600_radiance": round(sum_b1600, 4),
+        "sum_b2200_radiance": round(sum_b2200, 4),
         "alerta": hot > 0,
         # Masks (no se serializan en JSON; se usan para generar PNG)
         "_mask_a": cond_a,
@@ -220,6 +229,7 @@ def _empty_result():
         "pixeles_validos": 0, "pixeles_calientes": 0,
         "pixeles_cond_a": 0, "pixeles_cond_b": 0, "pixeles_extreme": 0,
         "max_nhiswir": 0, "max_nhiswnir": 0, "max_b2200_radiance": 0,
+        "sum_b1600_radiance": 0, "sum_b2200_radiance": 0,
         "alerta": False,
     }
 

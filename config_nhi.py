@@ -16,7 +16,14 @@ from math import cos, radians
 # ============================================
 # CONFIGURACION GENERAL
 # ============================================
-MAX_CLOUD_COVER = 50        # Mas estricto que descarga visual
+# Umbral de nube del TILE completo para la busqueda STAC.
+# Subido 50->80 (2026-06): cloud<=50 descartaba escenas con el CRATER despejado
+# pero el tile parcialmente nublado. Medido: Villarrica perdia 46%, Hudson 81%.
+# El algoritmo NHI ya rechaza nubes (test b703<90/70) -> procesarlas es seguro,
+# solo cuesta computo. 80 recupera la mayoria sin procesar tiles 100% nublados.
+# MEJORA FUTURA: cloud-mask por AOI (leer SCL, medir nubes solo en el buffer)
+# recuperaria TODO sin desperdiciar computo en escenas con crater tapado.
+MAX_CLOUD_COVER = 80
 DIAS_ATRAS = 60             # Ventana de busqueda por defecto
 IMAGE_SIZE = 400            # Pixeles (no necesitamos resolucion visual alta)
 HOTSPOT_IMAGE_SIZE = 200    # Pixeles para mapas PNG de hotspots

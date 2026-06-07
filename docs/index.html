@@ -406,7 +406,7 @@
                     <canvas id="chart-nhiswnir"></canvas>
                 </div>
                 <div class="chart-card">
-                    <h3>Reflectancia Total SWIR2 (pixeles calientes)</h3>
+                    <h3>Radianza SWIR total de pixeles calientes (proxy potencia termica)</h3>
                     <canvas id="chart-radiancia"></canvas>
                 </div>
             </div>
@@ -437,7 +437,7 @@
                                 <th>Area (m2)</th>
                                 <th>NHISWIR max</th>
                                 <th>NHISWNIR max</th>
-                                <th>SWIR2 total</th>
+                                <th>Σ Rad. 2200nm</th>
                                 <th>Alerta</th>
                             </tr>
                         </thead>
@@ -1251,20 +1251,29 @@
                 options: chartOptions('Indice')
             });
 
+            // Radianza SWIR total de pixeles calientes (proxy de POTENCIA TERMICA
+            // radiada). Replica NHI Tool: suma de b1600nm y b2200nm sobre pixeles NHI.
+            // A diferencia del area (binario caliente/no), escala con la INTENSIDAD.
             chartInstances.radiancia = new Chart(
                 document.getElementById('chart-radiancia'), {
-                type: 'bar',
+                type: 'line',
                 data: {
                     labels: fechas,
                     datasets: [{
-                        label: 'SWIR2 total',
-                        data: sorted.map(d => d.swir2_total || 0),
-                        backgroundColor: 'rgba(210, 153, 34, 0.7)',
-                        borderColor: '#d29922',
-                        borderWidth: 1,
+                        label: 'Σ Radianza 1600nm',
+                        data: sorted.map(d => d.sum_b1600_radiance || 0),
+                        borderColor: '#58a6ff',
+                        backgroundColor: 'rgba(88, 166, 255, 0.15)',
+                        borderWidth: 2, fill: true, tension: 0, pointRadius: 2.5,
+                    }, {
+                        label: 'Σ Radianza 2200nm',
+                        data: sorted.map(d => d.sum_b2200_radiance || 0),
+                        borderColor: '#da3633',
+                        backgroundColor: 'rgba(218, 54, 51, 0.15)',
+                        borderWidth: 2, fill: true, tension: 0, pointRadius: 2.5,
                     }]
                 },
-                options: chartOptions('Reflectancia')
+                options: chartOptions('Radianza SWIR (W·m⁻²·sr⁻¹·µm⁻¹)')
             });
 
             // Visor de hotspot
@@ -1295,7 +1304,7 @@
                     formatArea(areaM2),
                     (d.max_nhiswir || 0).toFixed(4),
                     (d.max_nhiswnir || 0).toFixed(4),
-                    (d.swir2_total || 0).toFixed(2),
+                    (d.sum_b2200_radiance || 0).toFixed(2),
                     d.alerta ? 'SI' : '-'
                 ];
                 for (const val of fields) {
@@ -1327,11 +1336,9 @@
 
             const withImages = data.filter(d => d.hotspot_image);
             if (withImages.length === 0) {
-                // El pipeline TOA no genera PNGs; solo L2A los produce.
-                const msg = (typeof CURRENT_PIPELINE !== 'undefined' && CURRENT_PIPELINE === 'toa')
-                    ? 'Visor de hotspots no disponible en pipeline TOA (replica NHI Tool). Ver datos en el grafico arriba.'
-                    : 'Sin imagenes de hotspot disponibles';
-                showNoData(msg);
+                // Los PNGs (color-coded por criterio A/B/EXTREME) se generan solo en
+                // escenas CON alerta. Sin alertas en el rango -> no hay imagenes.
+                showNoData('Sin hotspots detectados en el rango seleccionado (los mapas se generan solo cuando hay alerta).');
                 return;
             }
 
@@ -1857,19 +1864,20 @@
             const rows = (ds || de)
                 ? currentVolcanFullData.filter(d => (!ds || d.fecha >= ds) && (!de || d.fecha <= de))
                 : currentVolcanFullData;
-            const headers = ['fecha','sensor','nubes_pct','pixeles_calientes','area_m2','max_nhiswir','max_nhiswnir','swir2_total','alerta'];
+            const headers = ['fecha','sensor','nubes_pct','pixeles_calientes','area_m2','max_nhiswir','max_nhiswnir','sum_b1600_radiance','sum_b2200_radiance','alerta'];
             const lines = [headers.join(',')];
             for (const d of rows) {
                 const area = d.area_m2 !== undefined ? d.area_m2 : (d.pixeles_calientes || 0) * (d.pixel_area_m2 || (d.sensor === 'Sentinel-2' ? 400 : 900));
                 lines.push([
                     d.fecha,
                     d.sensor || '',
-                    d.nubes_pct !== undefined ? d.nubes_pct : (d.cloud_pct || ''),
+                    d.cloud_cover != null ? d.cloud_cover.toFixed(1) : (d.nubes_pct ?? ''),
                     d.pixeles_calientes || 0,
                     Math.round(area),
                     d.max_nhiswir ?? '',
                     d.max_nhiswnir ?? '',
-                    d.swir2_total ?? d.suma_swir2 ?? '',
+                    d.sum_b1600_radiance ?? '',
+                    d.sum_b2200_radiance ?? '',
                     d.alerta ? 1 : 0
                 ].map(csvEscape).join(','));
             }

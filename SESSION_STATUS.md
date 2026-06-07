@@ -58,8 +58,18 @@ Pixel HOT si CUALQUIERA (OR):
 ```
 
 **Validacion vs NHI Tool GEE para Lascar Feb-Abr 2026** (CSV oficial en `docs/nhi_data_toa/Lascar/nhi_tool_gee_reference.csv`):
-- 11 de 12 escenas S2 matchean BIT A BIT (mismo numero)
-- 1 borderline (04-17: GEE 1 pixel = 400 m2; nuestro 0)
+- RE-VERIFICADO 2026-06-06: **17 de 17 escenas S2 matchean BIT A BIT (100%)**
+  - El borderline previo (04-17) ahora matchea exacto (400 = 400 m2)
+- Las "9 fechas extra" que tiene el CSV GEE y nosotros NO son escenas **Landsat 8/9**
+  (confirmado: separadas cada 8 dias = revisit L8+L9; 8/9 matchean un pase Landsat real).
+  NO es bug ni gap de catalogo S2 -> es la pieza Landsat aun no integrada.
+  7 de esas 9 escenas Landsat tenian deteccion termica real (1800-3600 m2).
+  => Integrar Landsat ~duplica la frecuencia de observacion y recupera detecciones.
+- CAVEATS: solo Lascar esta validado (los otros 42 no tienen referencia GEE).
+  La referencia cubre solo feb-abr 2026, no el backfill completo.
+- Causa raiz del gap S2-only verificada: Element84 sentinel-2-l1c y MPC sentinel-2-l2a
+  solo indexan orbita relativa 96 para el bbox de Lascar (misma cobertura ambos).
+  El algoritmo TOA es identico bit-a-bit donde hay datos S2.
 
 ## Estado de los pipelines
 
