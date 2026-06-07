@@ -61,6 +61,10 @@ jobs:
           VSI_CACHE: "TRUE"
           VSI_CACHE_SIZE: "33554432"
           CPL_VSIL_CURL_USE_HEAD: "NO"
+          # Landsat 8/9 OLI via USGS M2M. Si los secrets no existen, el pipeline
+          # corre solo con Sentinel-2 (degrada limpio).
+          USGS_USERNAME: ${{ secrets.USGS_USERNAME }}
+          USGS_TOKEN: ${{ secrets.USGS_TOKEN }}
         run: |
           DIAS="${{ github.event.inputs.dias || '14' }}"
           VOLCAN="${{ github.event.inputs.volcan }}"
