@@ -48,15 +48,25 @@ def _parse_mtl(mtl_text):
     return coef, extra
 
 
-def _read_window(url, lat, lon, buffer_km):
+def _read_window(url, lat, lon, buffer_km, retries=3):
+    """Lee el window del AOI desde el COG. Reintenta ante timeouts de red
+    (landsatlook puede tener latencia variable)."""
     bbox = get_bbox(lat, lon, buffer_km)
-    with rasterio.open("/vsicurl/" + url) as src:
-        bb = transform_bounds(CRS.from_epsg(4326), src.crs, *bbox)
-        win = src.window(*bb)
-        arr = src.read(1, window=win).astype(np.float64)
-        tr = src.window_transform(win)
-        crs = src.crs
-    return arr, tr, crs
+    last = None
+    for intento in range(retries):
+        try:
+            with rasterio.open("/vsicurl/" + url) as src:
+                bb = transform_bounds(CRS.from_epsg(4326), src.crs, *bbox)
+                win = src.window(*bb)
+                arr = src.read(1, window=win).astype(np.float64)
+                tr = src.window_transform(win)
+                crs = src.crs
+            return arr, tr, crs
+        except Exception as e:
+            last = e
+            if intento < retries - 1:
+                time.sleep(3 * (intento + 1))
+    raise last
 
 
 def _platform_from_id(display_id):
@@ -128,6 +138,15 @@ def procesar_volcan_landsat(api_key, nombre, datos, fi, ff, circular_mask_fn):
     if not escenas:
         return []
 
+    # Filtrar a L1TP (Terrain-Precision, con ground control). Descartar L1GT:
+    # son escenas de path/row marginal donde el volcan cae en el BORDE del swath
+    # -> baja calidad geometrica, suelen quedar en staging eterno (cuelgan el polling).
+    # GEE hace esto implicitamente con filterBounds(Point). Replica ese comportamiento.
+    escenas = [r for r in escenas if "L1TP" in (r.get("displayId") or "")]
+    if not escenas:
+        log.info(f"  {nombre}: sin escenas Landsat L1TP en el rango")
+        return []
+
     eids = [r["entityId"] for r in escenas]
     try:
         opts = m.download_options(api_key, eids)
@@ -160,8 +179,10 @@ def procesar_volcan_landsat(api_key, nombre, datos, fi, ff, circular_mask_fn):
     label = f"nhi_{nombre.replace(' ', '_')}_{start}"
     urls = _resolver_urls(api_key, dls, label, all_files)
 
-    resultados = []
-    fechas_vistas = set()
+    # Dedup por (fecha, sensor): un volcan en zona de solape tiene varias escenas
+    # L1TP el mismo dia (distintos path/row). Nos quedamos con la de MAS pixeles
+    # validos (la que centra mejor el AOI; las de borde caen en nodata -> vacias).
+    mejor = {}
     for scene_pref, files in por_escena.items():
         if not all(files[t]["displayId"] in urls for t in needed):
             continue
@@ -171,8 +192,6 @@ def procesar_volcan_landsat(api_key, nombre, datos, fi, ff, circular_mask_fn):
             continue
         d = mfecha.group(1)
         fecha = f"{d[:4]}-{d[4:6]}-{d[6:8]}"
-        if fecha in fechas_vistas:
-            continue
         scene_urls = {t: urls[files[t]["displayId"]] for t in needed}
 
         try:
@@ -200,9 +219,16 @@ def procesar_volcan_landsat(api_key, nombre, datos, fi, ff, circular_mask_fn):
         stats["sun_elevation"] = extra.get("sun_elevation")
         stats["pixel_area_m2"] = PIXEL_AREA_M2
         stats["pixel_size_m"] = PIXEL_SIZE_M
-        resultados.append(stats)
-        fechas_vistas.add(fecha)
-        log.info(f"    [OLI] {fecha}: {stats['pixeles_calientes']} px -> "
-                 f"{stats['pixeles_calientes']*900} m2 ({stats['sensor']})")
+
+        clave = (fecha, stats["sensor"])
+        prev = mejor.get(clave)
+        if prev is None or stats["pixeles_validos"] > prev["pixeles_validos"]:
+            mejor[clave] = stats
+
+    resultados = list(mejor.values())
+    for stats in sorted(resultados, key=lambda s: s["fecha"], reverse=True):
+        log.info(f"    [OLI] {stats['fecha']}: {stats['pixeles_calientes']} px -> "
+                 f"{stats['pixeles_calientes']*900} m2 ({stats['sensor']}, "
+                 f"{stats['pixeles_validos']} val)")
 
     return resultados
