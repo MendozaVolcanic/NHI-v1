@@ -231,8 +231,8 @@
     "lon": -71.5853
   },
   "Llaima": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 6,
     "max_pixeles_calientes": 464,
     "ultima_fecha_analizada": "2026-06-03",
@@ -253,8 +253,8 @@
     "lon": -71.51557
   },
   "Villarrica": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 7,
     "max_pixeles_calientes": 780,
     "ultima_fecha_analizada": "2026-06-03",
@@ -330,8 +330,8 @@
     "lon": -72.15114
   },
   "Osorno": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 1,
     "max_pixeles_calientes": 10,
     "ultima_fecha_analizada": "2026-06-03",
@@ -352,8 +352,8 @@
     "lon": -72.60399
   },
   "Yate": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 4,
     "max_pixeles_calientes": 10,
     "ultima_fecha_analizada": "2026-06-03",
