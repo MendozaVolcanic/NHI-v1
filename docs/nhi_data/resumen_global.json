@@ -1,33 +1,33 @@
 {
   "Taapaca": {
-    "nivel": "amarillo",
+    "nivel": "verde",
     "alertas_7d": 0,
-    "alertas_30d": 3,
-    "max_pixeles_calientes": 33,
-    "ultima_fecha_analizada": "2026-05-30",
-    "total_observaciones": 36,
+    "alertas_30d": 0,
+    "max_pixeles_calientes": 0,
+    "ultima_fecha_analizada": null,
+    "total_observaciones": 0,
     "zona": "Norte",
     "lat": -18.10922,
     "lon": -69.50584
   },
   "Parinacota": {
-    "nivel": "amarillo",
+    "nivel": "verde",
     "alertas_7d": 0,
-    "alertas_30d": 5,
-    "max_pixeles_calientes": 614,
-    "ultima_fecha_analizada": "2026-05-30",
-    "total_observaciones": 36,
+    "alertas_30d": 0,
+    "max_pixeles_calientes": 0,
+    "ultima_fecha_analizada": null,
+    "total_observaciones": 0,
     "zona": "Norte",
     "lat": -18.17126,
     "lon": -69.14534
   },
   "Guallatiri": {
-    "nivel": "amarillo",
+    "nivel": "verde",
     "alertas_7d": 0,
-    "alertas_30d": 2,
-    "max_pixeles_calientes": 12,
-    "ultima_fecha_analizada": "2026-05-30",
-    "total_observaciones": 33,
+    "alertas_30d": 0,
+    "max_pixeles_calientes": 0,
+    "ultima_fecha_analizada": null,
+    "total_observaciones": 0,
     "zona": "Norte",
     "lat": -18.42781,
     "lon": -69.085
@@ -156,7 +156,7 @@
   "Laguna del Maule": {
     "nivel": "amarillo",
     "alertas_7d": 0,
-    "alertas_30d": 3,
+    "alertas_30d": 2,
     "max_pixeles_calientes": 107,
     "ultima_fecha_analizada": "2026-06-01",
     "total_observaciones": 56,
@@ -167,7 +167,7 @@
   "Nevado de Longavi": {
     "nivel": "amarillo",
     "alertas_7d": 0,
-    "alertas_30d": 4,
+    "alertas_30d": 3,
     "max_pixeles_calientes": 30,
     "ultima_fecha_analizada": "2026-06-01",
     "total_observaciones": 52,
@@ -233,7 +233,7 @@
   "Llaima": {
     "nivel": "amarillo",
     "alertas_7d": 0,
-    "alertas_30d": 6,
+    "alertas_30d": 5,
     "max_pixeles_calientes": 464,
     "ultima_fecha_analizada": "2026-06-03",
     "total_observaciones": 41,
@@ -255,7 +255,7 @@
   "Villarrica": {
     "nivel": "amarillo",
     "alertas_7d": 0,
-    "alertas_30d": 7,
+    "alertas_30d": 6,
     "max_pixeles_calientes": 780,
     "ultima_fecha_analizada": "2026-06-03",
     "total_observaciones": 44,
@@ -299,7 +299,7 @@
   "Carran - Los Venados": {
     "nivel": "amarillo",
     "alertas_7d": 0,
-    "alertas_30d": 6,
+    "alertas_30d": 5,
     "max_pixeles_calientes": 441,
     "ultima_fecha_analizada": "2026-06-03",
     "total_observaciones": 36,
