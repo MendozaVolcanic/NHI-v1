@@ -5,7 +5,7 @@
     "alertas_30d": 3,
     "max_pixeles_calientes": 33,
     "ultima_fecha_analizada": "2026-06-09",
-    "total_observaciones": 38,
+    "total_observaciones": 40,
     "zona": "Norte",
     "lat": -18.10922,
     "lon": -69.50584
@@ -13,10 +13,10 @@
   "Parinacota": {
     "nivel": "amarillo",
     "alertas_7d": 0,
-    "alertas_30d": 5,
+    "alertas_30d": 6,
     "max_pixeles_calientes": 614,
-    "ultima_fecha_analizada": "2026-06-02",
-    "total_observaciones": 37,
+    "ultima_fecha_analizada": "2026-06-09",
+    "total_observaciones": 39,
     "zona": "Norte",
     "lat": -18.17126,
     "lon": -69.14534
@@ -24,10 +24,10 @@
   "Guallatiri": {
     "nivel": "amarillo",
     "alertas_7d": 0,
-    "alertas_30d": 2,
+    "alertas_30d": 3,
     "max_pixeles_calientes": 12,
-    "ultima_fecha_analizada": "2026-06-02",
-    "total_observaciones": 34,
+    "ultima_fecha_analizada": "2026-06-06",
+    "total_observaciones": 35,
     "zona": "Norte",
     "lat": -18.42781,
     "lon": -69.085
@@ -37,8 +37,8 @@
     "alertas_7d": 0,
     "alertas_30d": 1,
     "max_pixeles_calientes": 218,
-    "ultima_fecha_analizada": "2026-06-02",
-    "total_observaciones": 49,
+    "ultima_fecha_analizada": "2026-06-06",
+    "total_observaciones": 50,
     "zona": "Norte",
     "lat": -19.16737,
     "lon": -68.82225
@@ -48,8 +48,8 @@
     "alertas_7d": 0,
     "alertas_30d": 0,
     "max_pixeles_calientes": 310,
-    "ultima_fecha_analizada": "2026-06-02",
-    "total_observaciones": 29,
+    "ultima_fecha_analizada": "2026-06-06",
+    "total_observaciones": 30,
     "zona": "Norte",
     "lat": -20.73329,
     "lon": -68.56041
@@ -57,10 +57,10 @@
   "Ollague": {
     "nivel": "amarillo",
     "alertas_7d": 0,
-    "alertas_30d": 5,
+    "alertas_30d": 6,
     "max_pixeles_calientes": 9,
-    "ultima_fecha_analizada": "2026-06-03",
-    "total_observaciones": 36,
+    "ultima_fecha_analizada": "2026-06-06",
+    "total_observaciones": 37,
     "zona": "Norte",
     "lat": -21.30685,
     "lon": -68.17941
@@ -70,8 +70,8 @@
     "alertas_7d": 0,
     "alertas_30d": 3,
     "max_pixeles_calientes": 24,
-    "ultima_fecha_analizada": "2026-06-03",
-    "total_observaciones": 36,
+    "ultima_fecha_analizada": "2026-06-06",
+    "total_observaciones": 37,
     "zona": "Norte",
     "lat": -21.88485,
     "lon": -68.40706
@@ -81,8 +81,8 @@
     "alertas_7d": 0,
     "alertas_30d": 2,
     "max_pixeles_calientes": 134,
-    "ultima_fecha_analizada": "2026-06-03",
-    "total_observaciones": 36,
+    "ultima_fecha_analizada": "2026-06-06",
+    "total_observaciones": 37,
     "zona": "Norte",
     "lat": -23.36726,
     "lon": -67.73611
@@ -93,18 +93,18 @@
     "alertas_30d": 0,
     "max_pixeles_calientes": 245,
     "ultima_fecha_analizada": "2026-06-11",
-    "total_observaciones": 63,
+    "total_observaciones": 65,
     "zona": "Centro",
     "lat": -33.40849,
     "lon": -69.82181
   },
   "San Jose": {
-    "nivel": "verde",
+    "nivel": "amarillo",
     "alertas_7d": 0,
-    "alertas_30d": 0,
+    "alertas_30d": 1,
     "max_pixeles_calientes": 88,
     "ultima_fecha_analizada": "2026-06-11",
-    "total_observaciones": 61,
+    "total_observaciones": 63,
     "zona": "Centro",
     "lat": -33.78682,
     "lon": -69.89732
@@ -112,10 +112,10 @@
   "Tinguiririca": {
     "nivel": "amarillo",
     "alertas_7d": 0,
-    "alertas_30d": 1,
+    "alertas_30d": 2,
     "max_pixeles_calientes": 167,
     "ultima_fecha_analizada": "2026-06-11",
-    "total_observaciones": 55,
+    "total_observaciones": 57,
     "zona": "Centro",
     "lat": -34.80794,
     "lon": -70.34917
@@ -126,7 +126,7 @@
     "alertas_30d": 2,
     "max_pixeles_calientes": 278,
     "ultima_fecha_analizada": "2026-06-11",
-    "total_observaciones": 62,
+    "total_observaciones": 64,
     "zona": "Centro",
     "lat": -35.24212,
     "lon": -70.57189
@@ -137,7 +137,7 @@
     "alertas_30d": 3,
     "max_pixeles_calientes": 206,
     "ultima_fecha_analizada": "2026-06-11",
-    "total_observaciones": 58,
+    "total_observaciones": 60,
     "zona": "Centro",
     "lat": -35.60431,
     "lon": -70.7483
@@ -145,10 +145,10 @@
   "Tatara-San Pedro": {
     "nivel": "amarillo",
     "alertas_7d": 0,
-    "alertas_30d": 4,
+    "alertas_30d": 5,
     "max_pixeles_calientes": 301,
     "ultima_fecha_analizada": "2026-06-11",
-    "total_observaciones": 56,
+    "total_observaciones": 58,
     "zona": "Centro",
     "lat": -35.99755,
     "lon": -70.84533
@@ -159,7 +159,7 @@
     "alertas_30d": 3,
     "max_pixeles_calientes": 107,
     "ultima_fecha_analizada": "2026-06-11",
-    "total_observaciones": 58,
+    "total_observaciones": 60,
     "zona": "Centro",
     "lat": -36.071,
     "lon": -70.49828
@@ -170,7 +170,7 @@
     "alertas_30d": 3,
     "max_pixeles_calientes": 30,
     "ultima_fecha_analizada": "2026-06-11",
-    "total_observaciones": 53,
+    "total_observaciones": 55,
     "zona": "Centro",
     "lat": -36.20001,
     "lon": -71.1701
@@ -178,10 +178,10 @@
   "Nevados de Chillan": {
     "nivel": "amarillo",
     "alertas_7d": 0,
-    "alertas_30d": 1,
-    "max_pixeles_calientes": 23,
+    "alertas_30d": 2,
+    "max_pixeles_calientes": 158,
     "ultima_fecha_analizada": "2026-06-11",
-    "total_observaciones": 54,
+    "total_observaciones": 55,
     "zona": "Centro",
     "lat": -37.41096,
     "lon": -71.35231
@@ -189,10 +189,10 @@
   "Antuco": {
     "nivel": "amarillo",
     "alertas_7d": 0,
-    "alertas_30d": 1,
-    "max_pixeles_calientes": 20,
+    "alertas_30d": 2,
+    "max_pixeles_calientes": 293,
     "ultima_fecha_analizada": "2026-06-11",
-    "total_observaciones": 54,
+    "total_observaciones": 55,
     "zona": "Sur",
     "lat": -37.41859,
     "lon": -71.34097
@@ -203,7 +203,7 @@
     "alertas_30d": 3,
     "max_pixeles_calientes": 456,
     "ultima_fecha_analizada": "2026-06-11",
-    "total_observaciones": 56,
+    "total_observaciones": 57,
     "zona": "Sur",
     "lat": -37.85715,
     "lon": -71.16836
@@ -214,7 +214,7 @@
     "alertas_30d": 0,
     "max_pixeles_calientes": 562,
     "ultima_fecha_analizada": "2026-06-11",
-    "total_observaciones": 55,
+    "total_observaciones": 56,
     "zona": "Sur",
     "lat": -37.92554,
     "lon": -71.46113
@@ -225,7 +225,7 @@
     "alertas_30d": 2,
     "max_pixeles_calientes": 337,
     "ultima_fecha_analizada": "2026-06-11",
-    "total_observaciones": 46,
+    "total_observaciones": 47,
     "zona": "Sur",
     "lat": -38.38216,
     "lon": -71.5853
@@ -233,10 +233,10 @@
   "Llaima": {
     "nivel": "amarillo",
     "alertas_7d": 0,
-    "alertas_30d": 5,
+    "alertas_30d": 6,
     "max_pixeles_calientes": 464,
-    "ultima_fecha_analizada": "2026-06-03",
-    "total_observaciones": 41,
+    "ultima_fecha_analizada": "2026-06-08",
+    "total_observaciones": 42,
     "zona": "Sur",
     "lat": -38.71238,
     "lon": -71.73447
@@ -246,8 +246,8 @@
     "alertas_7d": 0,
     "alertas_30d": 0,
     "max_pixeles_calientes": 0,
-    "ultima_fecha_analizada": "2026-06-03",
-    "total_observaciones": 43,
+    "ultima_fecha_analizada": "2026-06-08",
+    "total_observaciones": 44,
     "zona": "Sur",
     "lat": -38.98103,
     "lon": -71.51557
@@ -255,10 +255,10 @@
   "Villarrica": {
     "nivel": "amarillo",
     "alertas_7d": 0,
-    "alertas_30d": 6,
+    "alertas_30d": 7,
     "max_pixeles_calientes": 780,
-    "ultima_fecha_analizada": "2026-06-03",
-    "total_observaciones": 44,
+    "ultima_fecha_analizada": "2026-06-08",
+    "total_observaciones": 45,
     "zona": "Sur",
     "lat": -39.42052,
     "lon": -71.93939
@@ -268,8 +268,8 @@
     "alertas_7d": 0,
     "alertas_30d": 1,
     "max_pixeles_calientes": 3,
-    "ultima_fecha_analizada": "2026-06-03",
-    "total_observaciones": 44,
+    "ultima_fecha_analizada": "2026-06-08",
+    "total_observaciones": 45,
     "zona": "Sur",
     "lat": -39.5315,
     "lon": -71.70337
@@ -279,8 +279,8 @@
     "alertas_7d": 0,
     "alertas_30d": 0,
     "max_pixeles_calientes": 1,
-    "ultima_fecha_analizada": "2026-06-03",
-    "total_observaciones": 45,
+    "ultima_fecha_analizada": "2026-06-08",
+    "total_observaciones": 46,
     "zona": "Sur",
     "lat": -39.62762,
     "lon": -71.47923
@@ -290,8 +290,8 @@
     "alertas_7d": 0,
     "alertas_30d": 1,
     "max_pixeles_calientes": 125,
-    "ultima_fecha_analizada": "2026-06-03",
-    "total_observaciones": 36,
+    "ultima_fecha_analizada": "2026-06-08",
+    "total_observaciones": 37,
     "zona": "Sur",
     "lat": -39.93439,
     "lon": -72.00281
@@ -299,10 +299,10 @@
   "Carran - Los Venados": {
     "nivel": "amarillo",
     "alertas_7d": 0,
-    "alertas_30d": 5,
+    "alertas_30d": 6,
     "max_pixeles_calientes": 441,
-    "ultima_fecha_analizada": "2026-06-03",
-    "total_observaciones": 36,
+    "ultima_fecha_analizada": "2026-06-08",
+    "total_observaciones": 37,
     "zona": "Sur",
     "lat": -40.37922,
     "lon": -72.10509
@@ -312,8 +312,8 @@
     "alertas_7d": 0,
     "alertas_30d": 1,
     "max_pixeles_calientes": 210,
-    "ultima_fecha_analizada": "2026-06-03",
-    "total_observaciones": 38,
+    "ultima_fecha_analizada": "2026-06-08",
+    "total_observaciones": 40,
     "zona": "Sur",
     "lat": -40.54783,
     "lon": -72.14826
@@ -323,8 +323,8 @@
     "alertas_7d": 0,
     "alertas_30d": 1,
     "max_pixeles_calientes": 90,
-    "ultima_fecha_analizada": "2026-06-03",
-    "total_observaciones": 33,
+    "ultima_fecha_analizada": "2026-06-08",
+    "total_observaciones": 35,
     "zona": "Sur",
     "lat": -40.76716,
     "lon": -72.15114
@@ -335,7 +335,7 @@
     "alertas_30d": 1,
     "max_pixeles_calientes": 10,
     "ultima_fecha_analizada": "2026-06-11",
-    "total_observaciones": 35,
+    "total_observaciones": 37,
     "zona": "Austral",
     "lat": -41.10453,
     "lon": -72.49271
@@ -346,7 +346,7 @@
     "alertas_30d": 0,
     "max_pixeles_calientes": 31,
     "ultima_fecha_analizada": "2026-06-11",
-    "total_observaciones": 35,
+    "total_observaciones": 37,
     "zona": "Austral",
     "lat": -41.33035,
     "lon": -72.60399
@@ -357,7 +357,7 @@
     "alertas_30d": 4,
     "max_pixeles_calientes": 10,
     "ultima_fecha_analizada": "2026-06-11",
-    "total_observaciones": 28,
+    "total_observaciones": 29,
     "zona": "Austral",
     "lat": -41.7775,
     "lon": -72.38678
@@ -368,7 +368,7 @@
     "alertas_30d": 3,
     "max_pixeles_calientes": 709,
     "ultima_fecha_analizada": "2026-06-11",
-    "total_observaciones": 28,
+    "total_observaciones": 29,
     "zona": "Austral",
     "lat": -41.88132,
     "lon": -72.43178
@@ -379,7 +379,7 @@
     "alertas_30d": 1,
     "max_pixeles_calientes": 78,
     "ultima_fecha_analizada": "2026-06-11",
-    "total_observaciones": 29,
+    "total_observaciones": 30,
     "zona": "Austral",
     "lat": -42.38094,
     "lon": -72.58103
@@ -390,7 +390,7 @@
     "alertas_30d": 2,
     "max_pixeles_calientes": 112,
     "ultima_fecha_analizada": "2026-06-11",
-    "total_observaciones": 34,
+    "total_observaciones": 35,
     "zona": "Austral",
     "lat": -42.83733,
     "lon": -72.43927
@@ -423,7 +423,7 @@
     "alertas_30d": 1,
     "max_pixeles_calientes": 5,
     "ultima_fecha_analizada": "2026-06-11",
-    "total_observaciones": 26,
+    "total_observaciones": 27,
     "zona": "Austral",
     "lat": -44.07612,
     "lon": -72.85073
