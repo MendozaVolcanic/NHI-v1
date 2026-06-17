@@ -1,5 +1,40 @@
 [
   {
+    "pixeles_validos": 160000,
+    "pixeles_calientes": 2,
+    "fraccion_caliente": 1.3e-05,
+    "max_nhiswir": 0.053613,
+    "max_nhiswnir": 0.050604,
+    "swir2_total": 0.4476,
+    "thresh_swir": 0.052728,
+    "thresh_swnir": 0.155934,
+    "bg_median_swir": 0.013709,
+    "bg_std_swir": 0.013006,
+    "alerta": true,
+    "fecha": "2026-06-16",
+    "satelite": "Sentinel-2B",
+    "cloud_cover": 15.182047,
+    "sensor": "Sentinel-2",
+    "hotspot_image": "2026-06-16_s2_hotspot.png"
+  },
+  {
+    "pixeles_validos": 159283,
+    "pixeles_calientes": 0,
+    "fraccion_caliente": 0.0,
+    "max_nhiswir": 0.0,
+    "max_nhiswnir": 0.0,
+    "swir2_total": 0.0,
+    "thresh_swir": 0.098418,
+    "thresh_swnir": 0.185424,
+    "bg_median_swir": -0.015748,
+    "bg_std_swir": 0.038055,
+    "alerta": false,
+    "fecha": "2026-06-13",
+    "satelite": "Sentinel-2A",
+    "cloud_cover": 35.53296,
+    "sensor": "Sentinel-2"
+  },
+  {
     "pixeles_validos": 111434,
     "pixeles_calientes": 0,
     "fraccion_caliente": 0.0,
@@ -15,6 +50,23 @@
     "satelite": "landsat-9",
     "cloud_cover": 73.34,
     "sensor": "Landsat"
+  },
+  {
+    "pixeles_validos": 159995,
+    "pixeles_calientes": 0,
+    "fraccion_caliente": 0.0,
+    "max_nhiswir": 0.0,
+    "max_nhiswnir": 0.0,
+    "swir2_total": 0.0,
+    "thresh_swir": 0.05254,
+    "thresh_swnir": 0.034281,
+    "bg_median_swir": -0.016031,
+    "bg_std_swir": 0.022857,
+    "alerta": false,
+    "fecha": "2026-06-11",
+    "satelite": "Sentinel-2C",
+    "cloud_cover": 74.521923,
+    "sensor": "Sentinel-2"
   },
   {
     "pixeles_validos": 159958,
@@ -33,6 +85,23 @@
     "cloud_cover": 2.388843,
     "sensor": "Sentinel-2",
     "hotspot_image": "2026-06-08_s2_hotspot.png"
+  },
+  {
+    "pixeles_validos": 160000,
+    "pixeles_calientes": 0,
+    "fraccion_caliente": 0.0,
+    "max_nhiswir": 0.0,
+    "max_nhiswnir": 0.0,
+    "swir2_total": 0.0,
+    "thresh_swir": 0.070533,
+    "thresh_swnir": -0.255662,
+    "bg_median_swir": 0.041037,
+    "bg_std_swir": 0.009832,
+    "alerta": false,
+    "fecha": "2026-06-03",
+    "satelite": "landsat-8",
+    "cloud_cover": 78.08,
+    "sensor": "Landsat"
   },
   {
     "pixeles_validos": 160000,
