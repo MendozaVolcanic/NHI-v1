@@ -176,8 +176,8 @@
     "lon": -71.1701
   },
   "Nevados de Chillan": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 3,
     "max_pixeles_calientes": 158,
     "ultima_fecha_analizada": "2026-06-23",
@@ -330,8 +330,8 @@
     "lon": -72.15114
   },
   "Osorno": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 2,
     "max_pixeles_calientes": 10,
     "ultima_fecha_analizada": "2026-06-21",
@@ -443,9 +443,9 @@
     "nivel": "verde",
     "alertas_7d": 0,
     "alertas_30d": 0,
-    "max_pixeles_calientes": 17,
-    "ultima_fecha_analizada": "2026-06-13",
-    "total_observaciones": 12,
+    "max_pixeles_calientes": 0,
+    "ultima_fecha_analizada": null,
+    "total_observaciones": 0,
     "zona": "Austral",
     "lat": -45.07068,
     "lon": -72.96318
@@ -465,9 +465,9 @@
     "nivel": "verde",
     "alertas_7d": 0,
     "alertas_30d": 0,
-    "max_pixeles_calientes": 14,
-    "ultima_fecha_analizada": "2026-06-13",
-    "total_observaciones": 14,
+    "max_pixeles_calientes": 0,
+    "ultima_fecha_analizada": null,
+    "total_observaciones": 0,
     "zona": "Austral",
     "lat": -45.90915,
     "lon": -72.96508
