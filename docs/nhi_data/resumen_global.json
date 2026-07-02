@@ -11,8 +11,8 @@
     "lon": -69.50584
   },
   "Parinacota": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 6,
     "max_pixeles_calientes": 614,
     "ultima_fecha_analizada": "2026-06-24",
@@ -22,8 +22,8 @@
     "lon": -69.14534
   },
   "Guallatiri": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 5,
     "max_pixeles_calientes": 12,
     "ultima_fecha_analizada": "2026-06-24",
@@ -57,7 +57,7 @@
   "Ollague": {
     "nivel": "amarillo",
     "alertas_7d": 0,
-    "alertas_30d": 7,
+    "alertas_30d": 6,
     "max_pixeles_calientes": 9,
     "ultima_fecha_analizada": "2026-06-21",
     "total_observaciones": 41,
@@ -79,7 +79,7 @@
   "Lascar": {
     "nivel": "rojo",
     "alertas_7d": 1,
-    "alertas_30d": 2,
+    "alertas_30d": 1,
     "max_pixeles_calientes": 134,
     "ultima_fecha_analizada": "2026-06-27",
     "total_observaciones": 42,
@@ -266,7 +266,7 @@
   "Quetrupillan": {
     "nivel": "amarillo",
     "alertas_7d": 0,
-    "alertas_30d": 2,
+    "alertas_30d": 1,
     "max_pixeles_calientes": 3,
     "ultima_fecha_analizada": "2026-06-27",
     "total_observaciones": 54,
@@ -319,9 +319,9 @@
     "lon": -72.14826
   },
   "Antillanca - Casablanca": {
-    "nivel": "amarillo",
+    "nivel": "verde",
     "alertas_7d": 0,
-    "alertas_30d": 1,
+    "alertas_30d": 0,
     "max_pixeles_calientes": 90,
     "ultima_fecha_analizada": "2026-06-20",
     "total_observaciones": 42,
@@ -354,7 +354,7 @@
   "Yate": {
     "nivel": "amarillo",
     "alertas_7d": 0,
-    "alertas_30d": 2,
+    "alertas_30d": 1,
     "max_pixeles_calientes": 10,
     "ultima_fecha_analizada": "2026-06-27",
     "total_observaciones": 36,
