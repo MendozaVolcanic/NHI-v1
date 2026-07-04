@@ -1,5 +1,22 @@
 [
   {
+    "pixeles_validos": 160000,
+    "pixeles_calientes": 0,
+    "fraccion_caliente": 0.0,
+    "max_nhiswir": 0.0,
+    "max_nhiswnir": 0.0,
+    "swir2_total": 0.0,
+    "thresh_swir": 0.144039,
+    "thresh_swnir": 0.177542,
+    "bg_median_swir": -0.035007,
+    "bg_std_swir": 0.059682,
+    "alerta": false,
+    "fecha": "2026-07-03",
+    "satelite": "Sentinel-2A",
+    "cloud_cover": 0.096799,
+    "sensor": "Sentinel-2"
+  },
+  {
     "pixeles_validos": 18094,
     "pixeles_calientes": 0,
     "fraccion_caliente": 0.0,
