@@ -17,6 +17,23 @@
     "sensor": "Sentinel-2"
   },
   {
+    "pixeles_validos": 159996,
+    "pixeles_calientes": 0,
+    "fraccion_caliente": 0.0,
+    "max_nhiswir": 0.0,
+    "max_nhiswnir": 0.0,
+    "swir2_total": 0.0,
+    "thresh_swir": 0.086647,
+    "thresh_swnir": 0.083023,
+    "bg_median_swir": -0.021113,
+    "bg_std_swir": 0.03592,
+    "alerta": false,
+    "fecha": "2026-07-01",
+    "satelite": "Sentinel-2C",
+    "cloud_cover": 10.139625,
+    "sensor": "Sentinel-2"
+  },
+  {
     "pixeles_validos": 109740,
     "pixeles_calientes": 0,
     "fraccion_caliente": 0.0,

@@ -35,6 +35,23 @@
     "hotspot_image": "2026-06-27_ls_hotspot.png"
   },
   {
+    "pixeles_validos": 160000,
+    "pixeles_calientes": 0,
+    "fraccion_caliente": 0.0,
+    "max_nhiswir": 0.0,
+    "max_nhiswnir": 0.0,
+    "swir2_total": 0.0,
+    "thresh_swir": 0.109106,
+    "thresh_swnir": 0.298937,
+    "bg_median_swir": -0.02232,
+    "bg_std_swir": 0.043809,
+    "alerta": false,
+    "fecha": "2026-06-26",
+    "satelite": "Sentinel-2B",
+    "cloud_cover": 6.071728,
+    "sensor": "Sentinel-2"
+  },
+  {
     "pixeles_validos": 128446,
     "pixeles_calientes": 0,
     "fraccion_caliente": 0.0,
