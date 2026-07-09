@@ -34,7 +34,7 @@
   },
   "Isluga": {
     "nivel": "rojo",
-    "alertas_7d": 3,
+    "alertas_7d": 2,
     "alertas_30d": 3,
     "max_pixeles_calientes": 321,
     "ultima_fecha_analizada": "2026-07-06",
@@ -44,8 +44,8 @@
     "lon": -68.82225
   },
   "Irruputuncu": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 1,
     "max_pixeles_calientes": 310,
     "ultima_fecha_analizada": "2026-07-06",
@@ -56,7 +56,7 @@
   },
   "Ollague": {
     "nivel": "rojo",
-    "alertas_7d": 2,
+    "alertas_7d": 1,
     "alertas_30d": 7,
     "max_pixeles_calientes": 9,
     "ultima_fecha_analizada": "2026-07-06",
@@ -67,7 +67,7 @@
   },
   "San Pedro": {
     "nivel": "rojo",
-    "alertas_7d": 2,
+    "alertas_7d": 1,
     "alertas_30d": 5,
     "max_pixeles_calientes": 24,
     "ultima_fecha_analizada": "2026-07-06",
@@ -92,8 +92,8 @@
     "alertas_7d": 0,
     "alertas_30d": 2,
     "max_pixeles_calientes": 245,
-    "ultima_fecha_analizada": "2026-07-06",
-    "total_observaciones": 80,
+    "ultima_fecha_analizada": "2026-07-08",
+    "total_observaciones": 81,
     "zona": "Centro",
     "lat": -33.40849,
     "lon": -69.82181
@@ -101,18 +101,18 @@
   "San Jose": {
     "nivel": "amarillo",
     "alertas_7d": 0,
-    "alertas_30d": 3,
+    "alertas_30d": 2,
     "max_pixeles_calientes": 88,
-    "ultima_fecha_analizada": "2026-07-06",
-    "total_observaciones": 77,
+    "ultima_fecha_analizada": "2026-07-08",
+    "total_observaciones": 78,
     "zona": "Centro",
     "lat": -33.78682,
     "lon": -69.89732
   },
   "Tinguiririca": {
-    "nivel": "amarillo",
+    "nivel": "verde",
     "alertas_7d": 0,
-    "alertas_30d": 1,
+    "alertas_30d": 0,
     "max_pixeles_calientes": 167,
     "ultima_fecha_analizada": "2026-07-06",
     "total_observaciones": 70,
@@ -145,7 +145,7 @@
   "Tatara-San Pedro": {
     "nivel": "amarillo",
     "alertas_7d": 0,
-    "alertas_30d": 3,
+    "alertas_30d": 2,
     "max_pixeles_calientes": 301,
     "ultima_fecha_analizada": "2026-07-06",
     "total_observaciones": 71,
@@ -178,7 +178,7 @@
   "Nevados de Chillan": {
     "nivel": "amarillo",
     "alertas_7d": 0,
-    "alertas_30d": 3,
+    "alertas_30d": 2,
     "max_pixeles_calientes": 158,
     "ultima_fecha_analizada": "2026-07-03",
     "total_observaciones": 66,
@@ -189,7 +189,7 @@
   "Antuco": {
     "nivel": "amarillo",
     "alertas_7d": 0,
-    "alertas_30d": 2,
+    "alertas_30d": 1,
     "max_pixeles_calientes": 293,
     "ultima_fecha_analizada": "2026-07-03",
     "total_observaciones": 66,
@@ -231,9 +231,9 @@
     "lon": -71.5853
   },
   "Llaima": {
-    "nivel": "amarillo",
+    "nivel": "verde",
     "alertas_7d": 0,
-    "alertas_30d": 1,
+    "alertas_30d": 0,
     "max_pixeles_calientes": 464,
     "ultima_fecha_analizada": "2026-07-03",
     "total_observaciones": 52,
@@ -255,7 +255,7 @@
   "Villarrica": {
     "nivel": "amarillo",
     "alertas_7d": 0,
-    "alertas_30d": 2,
+    "alertas_30d": 1,
     "max_pixeles_calientes": 780,
     "ultima_fecha_analizada": "2026-07-03",
     "total_observaciones": 57,
@@ -298,8 +298,8 @@
   },
   "Carran - Los Venados": {
     "nivel": "rojo",
-    "alertas_7d": 2,
-    "alertas_30d": 5,
+    "alertas_7d": 1,
+    "alertas_30d": 4,
     "max_pixeles_calientes": 441,
     "ultima_fecha_analizada": "2026-07-03",
     "total_observaciones": 47,
@@ -455,8 +455,8 @@
     "alertas_7d": 0,
     "alertas_30d": 1,
     "max_pixeles_calientes": 9,
-    "ultima_fecha_analizada": "2026-07-03",
-    "total_observaciones": 28,
+    "ultima_fecha_analizada": "2026-07-08",
+    "total_observaciones": 29,
     "zona": "Austral",
     "lat": -45.1121,
     "lon": -73.16908
@@ -466,8 +466,8 @@
     "alertas_7d": 0,
     "alertas_30d": 0,
     "max_pixeles_calientes": 14,
-    "ultima_fecha_analizada": "2026-07-03",
-    "total_observaciones": 16,
+    "ultima_fecha_analizada": "2026-07-08",
+    "total_observaciones": 17,
     "zona": "Austral",
     "lat": -45.90915,
     "lon": -72.96508
