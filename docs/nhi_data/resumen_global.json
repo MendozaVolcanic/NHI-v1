@@ -55,8 +55,8 @@
     "lon": -68.56041
   },
   "Ollague": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 7,
     "max_pixeles_calientes": 9,
     "ultima_fecha_analizada": "2026-07-06",
@@ -297,8 +297,8 @@
     "lon": -72.00281
   },
   "Carran - Los Venados": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 4,
     "max_pixeles_calientes": 441,
     "ultima_fecha_analizada": "2026-07-03",
