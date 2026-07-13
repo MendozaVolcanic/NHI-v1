@@ -1,11 +1,11 @@
 {
   "Taapaca": {
-    "nivel": "amarillo",
-    "alertas_7d": 0,
-    "alertas_30d": 2,
+    "nivel": "rojo",
+    "alertas_7d": 1,
+    "alertas_30d": 3,
     "max_pixeles_calientes": 74,
-    "ultima_fecha_analizada": "2026-07-09",
-    "total_observaciones": 48,
+    "ultima_fecha_analizada": "2026-07-11",
+    "total_observaciones": 49,
     "zona": "Norte",
     "lat": -18.10922,
     "lon": -69.50584
@@ -398,7 +398,7 @@
   "Chaiten": {
     "nivel": "rojo",
     "alertas_7d": 1,
-    "alertas_30d": 3,
+    "alertas_30d": 2,
     "max_pixeles_calientes": 78,
     "ultima_fecha_analizada": "2026-07-11",
     "total_observaciones": 33,
@@ -451,9 +451,9 @@
     "lon": -72.96318
   },
   "Maca": {
-    "nivel": "amarillo",
+    "nivel": "verde",
     "alertas_7d": 0,
-    "alertas_30d": 1,
+    "alertas_30d": 0,
     "max_pixeles_calientes": 9,
     "ultima_fecha_analizada": "2026-07-08",
     "total_observaciones": 29,
