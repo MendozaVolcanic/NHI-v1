@@ -13,7 +13,7 @@
   "Parinacota": {
     "nivel": "rojo",
     "alertas_7d": 1,
-    "alertas_30d": 7,
+    "alertas_30d": 6,
     "max_pixeles_calientes": 614,
     "ultima_fecha_analizada": "2026-07-14",
     "total_observaciones": 48,
@@ -24,7 +24,7 @@
   "Guallatiri": {
     "nivel": "amarillo",
     "alertas_7d": 0,
-    "alertas_30d": 3,
+    "alertas_30d": 2,
     "max_pixeles_calientes": 12,
     "ultima_fecha_analizada": "2026-07-14",
     "total_observaciones": 44,
