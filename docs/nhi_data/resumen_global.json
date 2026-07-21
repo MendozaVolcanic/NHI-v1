@@ -4,19 +4,19 @@
     "alertas_7d": 0,
     "alertas_30d": 3,
     "max_pixeles_calientes": 74,
-    "ultima_fecha_analizada": "2026-07-14",
-    "total_observaciones": 50,
+    "ultima_fecha_analizada": "2026-07-19",
+    "total_observaciones": 51,
     "zona": "Norte",
     "lat": -18.10922,
     "lon": -69.50584
   },
   "Parinacota": {
     "nivel": "rojo",
-    "alertas_7d": 1,
-    "alertas_30d": 6,
+    "alertas_7d": 2,
+    "alertas_30d": 7,
     "max_pixeles_calientes": 614,
-    "ultima_fecha_analizada": "2026-07-14",
-    "total_observaciones": 48,
+    "ultima_fecha_analizada": "2026-07-19",
+    "total_observaciones": 49,
     "zona": "Norte",
     "lat": -18.17126,
     "lon": -69.14534
@@ -26,8 +26,8 @@
     "alertas_7d": 0,
     "alertas_30d": 2,
     "max_pixeles_calientes": 12,
-    "ultima_fecha_analizada": "2026-07-14",
-    "total_observaciones": 44,
+    "ultima_fecha_analizada": "2026-07-19",
+    "total_observaciones": 45,
     "zona": "Norte",
     "lat": -18.42781,
     "lon": -69.085
@@ -37,8 +37,8 @@
     "alertas_7d": 0,
     "alertas_30d": 3,
     "max_pixeles_calientes": 321,
-    "ultima_fecha_analizada": "2026-07-16",
-    "total_observaciones": 68,
+    "ultima_fecha_analizada": "2026-07-19",
+    "total_observaciones": 69,
     "zona": "Norte",
     "lat": -19.16737,
     "lon": -68.82225
@@ -56,7 +56,7 @@
   },
   "Ollague": {
     "nivel": "rojo",
-    "alertas_7d": 2,
+    "alertas_7d": 1,
     "alertas_30d": 7,
     "max_pixeles_calientes": 9,
     "ultima_fecha_analizada": "2026-07-16",
@@ -67,7 +67,7 @@
   },
   "San Pedro": {
     "nivel": "rojo",
-    "alertas_7d": 2,
+    "alertas_7d": 1,
     "alertas_30d": 7,
     "max_pixeles_calientes": 24,
     "ultima_fecha_analizada": "2026-07-16",
@@ -178,7 +178,7 @@
   "Nevados de Chillan": {
     "nivel": "amarillo",
     "alertas_7d": 0,
-    "alertas_30d": 2,
+    "alertas_30d": 1,
     "max_pixeles_calientes": 158,
     "ultima_fecha_analizada": "2026-07-11",
     "total_observaciones": 67,
@@ -330,9 +330,9 @@
     "lon": -72.15114
   },
   "Osorno": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
-    "alertas_30d": 2,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
+    "alertas_30d": 1,
     "max_pixeles_calientes": 484,
     "ultima_fecha_analizada": "2026-07-18",
     "total_observaciones": 51,
@@ -352,8 +352,8 @@
     "lon": -72.60399
   },
   "Yate": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 1,
     "max_pixeles_calientes": 10,
     "ultima_fecha_analizada": "2026-07-18",
@@ -363,8 +363,8 @@
     "lon": -72.38678
   },
   "Hornopiren": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 2,
     "max_pixeles_calientes": 709,
     "ultima_fecha_analizada": "2026-07-18",
