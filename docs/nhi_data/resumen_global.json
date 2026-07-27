@@ -12,8 +12,8 @@
   },
   "Parinacota": {
     "nivel": "rojo",
-    "alertas_7d": 2,
-    "alertas_30d": 7,
+    "alertas_7d": 1,
+    "alertas_30d": 6,
     "max_pixeles_calientes": 614,
     "ultima_fecha_analizada": "2026-07-24",
     "total_observaciones": 50,
@@ -68,7 +68,7 @@
   "San Pedro": {
     "nivel": "rojo",
     "alertas_7d": 1,
-    "alertas_30d": 7,
+    "alertas_30d": 6,
     "max_pixeles_calientes": 347,
     "ultima_fecha_analizada": "2026-07-23",
     "total_observaciones": 51,
