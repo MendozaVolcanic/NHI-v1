@@ -99,12 +99,12 @@
     "lon": -69.82181
   },
   "San Jose": {
-    "nivel": "verde",
+    "nivel": "amarillo",
     "alertas_7d": 0,
-    "alertas_30d": 0,
+    "alertas_30d": 1,
     "max_pixeles_calientes": 88,
     "ultima_fecha_analizada": "2026-08-07",
-    "total_observaciones": 83,
+    "total_observaciones": 84,
     "zona": "Centro",
     "lat": -33.78682,
     "lon": -69.89732
@@ -115,7 +115,7 @@
     "alertas_30d": 0,
     "max_pixeles_calientes": 167,
     "ultima_fecha_analizada": "2026-08-10",
-    "total_observaciones": 75,
+    "total_observaciones": 76,
     "zona": "Centro",
     "lat": -34.80794,
     "lon": -70.34917

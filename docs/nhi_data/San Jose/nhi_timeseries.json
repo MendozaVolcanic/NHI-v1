@@ -17,6 +17,24 @@
     "sensor": "Sentinel-2"
   },
   {
+    "pixeles_validos": 118047,
+    "pixeles_calientes": 5,
+    "fraccion_caliente": 4.2e-05,
+    "max_nhiswir": 0.205171,
+    "max_nhiswnir": 0.293609,
+    "swir2_total": 0.3919,
+    "thresh_swir": 0.153111,
+    "thresh_swnir": 0.126376,
+    "bg_median_swir": -0.033235,
+    "bg_std_swir": 0.062115,
+    "alerta": true,
+    "fecha": "2026-07-30",
+    "satelite": "landsat-8",
+    "cloud_cover": 64.73,
+    "sensor": "Landsat",
+    "hotspot_image": "2026-07-30_ls_hotspot.png"
+  },
+  {
     "pixeles_validos": 160000,
     "pixeles_calientes": 0,
     "fraccion_caliente": 0.0,
