@@ -1,11 +1,11 @@
 {
   "Taapaca": {
-    "nivel": "amarillo",
-    "alertas_7d": 0,
-    "alertas_30d": 1,
+    "nivel": "rojo",
+    "alertas_7d": 2,
+    "alertas_30d": 3,
     "max_pixeles_calientes": 74,
-    "ultima_fecha_analizada": "2026-08-08",
-    "total_observaciones": 56,
+    "ultima_fecha_analizada": "2026-08-13",
+    "total_observaciones": 58,
     "zona": "Norte",
     "lat": -18.10922,
     "lon": -69.50584
@@ -13,10 +13,10 @@
   "Parinacota": {
     "nivel": "rojo",
     "alertas_7d": 1,
-    "alertas_30d": 9,
+    "alertas_30d": 8,
     "max_pixeles_calientes": 614,
-    "ultima_fecha_analizada": "2026-08-08",
-    "total_observaciones": 56,
+    "ultima_fecha_analizada": "2026-08-13",
+    "total_observaciones": 57,
     "zona": "Norte",
     "lat": -18.17126,
     "lon": -69.14534
@@ -26,8 +26,8 @@
     "alertas_7d": 0,
     "alertas_30d": 0,
     "max_pixeles_calientes": 12,
-    "ultima_fecha_analizada": "2026-08-08",
-    "total_observaciones": 52,
+    "ultima_fecha_analizada": "2026-08-13",
+    "total_observaciones": 53,
     "zona": "Norte",
     "lat": -18.42781,
     "lon": -69.085
@@ -37,8 +37,8 @@
     "alertas_7d": 0,
     "alertas_30d": 0,
     "max_pixeles_calientes": 321,
-    "ultima_fecha_analizada": "2026-08-12",
-    "total_observaciones": 81,
+    "ultima_fecha_analizada": "2026-08-13",
+    "total_observaciones": 82,
     "zona": "Norte",
     "lat": -19.16737,
     "lon": -68.82225
@@ -55,8 +55,8 @@
     "lon": -68.56041
   },
   "Ollague": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 5,
     "max_pixeles_calientes": 43,
     "ultima_fecha_analizada": "2026-08-06",
@@ -66,8 +66,8 @@
     "lon": -68.17941
   },
   "San Pedro": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 5,
     "max_pixeles_calientes": 347,
     "ultima_fecha_analizada": "2026-08-06",
@@ -77,8 +77,8 @@
     "lon": -68.40706
   },
   "Lascar": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 3,
     "max_pixeles_calientes": 134,
     "ultima_fecha_analizada": "2026-08-06",
@@ -363,8 +363,8 @@
     "lon": -72.38678
   },
   "Hornopiren": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 1,
     "max_pixeles_calientes": 709,
     "ultima_fecha_analizada": "2026-08-12",
