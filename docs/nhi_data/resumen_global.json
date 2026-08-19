@@ -4,8 +4,8 @@
     "alertas_7d": 2,
     "alertas_30d": 3,
     "max_pixeles_calientes": 74,
-    "ultima_fecha_analizada": "2026-08-13",
-    "total_observaciones": 58,
+    "ultima_fecha_analizada": "2026-08-18",
+    "total_observaciones": 59,
     "zona": "Norte",
     "lat": -18.10922,
     "lon": -69.50584
@@ -13,10 +13,10 @@
   "Parinacota": {
     "nivel": "amarillo",
     "alertas_7d": 0,
-    "alertas_30d": 8,
+    "alertas_30d": 7,
     "max_pixeles_calientes": 614,
-    "ultima_fecha_analizada": "2026-08-13",
-    "total_observaciones": 57,
+    "ultima_fecha_analizada": "2026-08-18",
+    "total_observaciones": 58,
     "zona": "Norte",
     "lat": -18.17126,
     "lon": -69.14534
@@ -26,8 +26,8 @@
     "alertas_7d": 0,
     "alertas_30d": 0,
     "max_pixeles_calientes": 12,
-    "ultima_fecha_analizada": "2026-08-13",
-    "total_observaciones": 53,
+    "ultima_fecha_analizada": "2026-08-18",
+    "total_observaciones": 54,
     "zona": "Norte",
     "lat": -18.42781,
     "lon": -69.085
@@ -37,8 +37,8 @@
     "alertas_7d": 0,
     "alertas_30d": 0,
     "max_pixeles_calientes": 321,
-    "ultima_fecha_analizada": "2026-08-15",
-    "total_observaciones": 83,
+    "ultima_fecha_analizada": "2026-08-18",
+    "total_observaciones": 84,
     "zona": "Norte",
     "lat": -19.16737,
     "lon": -68.82225
