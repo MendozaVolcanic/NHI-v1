@@ -154,9 +154,9 @@
     "lon": -70.84533
   },
   "Laguna del Maule": {
-    "nivel": "amarillo",
+    "nivel": "verde",
     "alertas_7d": 0,
-    "alertas_30d": 1,
+    "alertas_30d": 0,
     "max_pixeles_calientes": 107,
     "ultima_fecha_analizada": "2026-08-20",
     "total_observaciones": 87,
@@ -165,8 +165,8 @@
     "lon": -70.49828
   },
   "Nevado de Longavi": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 1,
     "max_pixeles_calientes": 30,
     "ultima_fecha_analizada": "2026-08-20",
@@ -209,8 +209,8 @@
     "lon": -71.16836
   },
   "Callaqui": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 1,
     "max_pixeles_calientes": 562,
     "ultima_fecha_analizada": "2026-08-20",
@@ -220,8 +220,8 @@
     "lon": -71.46113
   },
   "Lonquimay": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 1,
     "max_pixeles_calientes": 337,
     "ultima_fecha_analizada": "2026-08-19",
@@ -242,8 +242,8 @@
     "lon": -71.73447
   },
   "Sollipulli": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 1,
     "max_pixeles_calientes": 1,
     "ultima_fecha_analizada": "2026-08-19",
@@ -443,9 +443,9 @@
     "nivel": "verde",
     "alertas_7d": 0,
     "alertas_30d": 0,
-    "max_pixeles_calientes": 17,
-    "ultima_fecha_analizada": "2026-08-07",
-    "total_observaciones": 16,
+    "max_pixeles_calientes": 0,
+    "ultima_fecha_analizada": null,
+    "total_observaciones": 0,
     "zona": "Austral",
     "lat": -45.07068,
     "lon": -72.96318
