@@ -1,5 +1,26 @@
 [
   {
+    "pixeles_validos": 17663,
+    "pixeles_calientes": 8,
+    "pixeles_cond_a": 7,
+    "pixeles_cond_b": 2,
+    "pixeles_extreme": 0,
+    "max_nhiswir": 0.499436,
+    "max_nhiswnir": 0.468612,
+    "max_b2200_radiance": 31.5379,
+    "sum_b1600_radiance": 75.8733,
+    "sum_b2200_radiance": 104.2294,
+    "alerta": true,
+    "hotspot_image": "2026-08-22_s2_hotspot.png",
+    "fecha": "2026-08-22",
+    "sensor": "Sentinel-2",
+    "fuente": "S2 L1C TOA radiance (Element84) — algoritmo NHI Tool exacto",
+    "cloud_cover": 1.43869004702372,
+    "sun_elevation": 31.086381318446,
+    "pixel_area_m2": 400.0,
+    "pixel_size_m": 20.0
+  },
+  {
     "pixeles_validos": 17665,
     "pixeles_calientes": 9,
     "pixeles_cond_a": 9,
