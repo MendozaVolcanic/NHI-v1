@@ -68,7 +68,7 @@
   "San Pedro": {
     "nivel": "amarillo",
     "alertas_7d": 0,
-    "alertas_30d": 3,
+    "alertas_30d": 2,
     "max_pixeles_calientes": 347,
     "ultima_fecha_analizada": "2026-08-20",
     "total_observaciones": 59,
