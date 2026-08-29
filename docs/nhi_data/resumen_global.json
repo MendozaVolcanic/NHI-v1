@@ -4,8 +4,8 @@
     "alertas_7d": 1,
     "alertas_30d": 3,
     "max_pixeles_calientes": 74,
-    "ultima_fecha_analizada": "2026-08-23",
-    "total_observaciones": 61,
+    "ultima_fecha_analizada": "2026-08-28",
+    "total_observaciones": 62,
     "zona": "Norte",
     "lat": -18.10922,
     "lon": -69.50584
@@ -15,8 +15,8 @@
     "alertas_7d": 1,
     "alertas_30d": 5,
     "max_pixeles_calientes": 614,
-    "ultima_fecha_analizada": "2026-08-23",
-    "total_observaciones": 60,
+    "ultima_fecha_analizada": "2026-08-28",
+    "total_observaciones": 61,
     "zona": "Norte",
     "lat": -18.17126,
     "lon": -69.14534
@@ -37,8 +37,8 @@
     "alertas_7d": 0,
     "alertas_30d": 0,
     "max_pixeles_calientes": 321,
-    "ultima_fecha_analizada": "2026-08-21",
-    "total_observaciones": 86,
+    "ultima_fecha_analizada": "2026-08-28",
+    "total_observaciones": 87,
     "zona": "Norte",
     "lat": -19.16737,
     "lon": -68.82225
@@ -68,7 +68,7 @@
   "San Pedro": {
     "nivel": "amarillo",
     "alertas_7d": 0,
-    "alertas_30d": 2,
+    "alertas_30d": 1,
     "max_pixeles_calientes": 347,
     "ultima_fecha_analizada": "2026-08-20",
     "total_observaciones": 59,
