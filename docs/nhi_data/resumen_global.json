@@ -99,9 +99,9 @@
     "lon": -69.82181
   },
   "San Jose": {
-    "nivel": "amarillo",
+    "nivel": "verde",
     "alertas_7d": 0,
-    "alertas_30d": 1,
+    "alertas_30d": 0,
     "max_pixeles_calientes": 88,
     "ultima_fecha_analizada": "2026-08-27",
     "total_observaciones": 93,
@@ -231,8 +231,8 @@
     "lon": -71.5853
   },
   "Llaima": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 1,
     "max_pixeles_calientes": 464,
     "ultima_fecha_analizada": "2026-08-27",
@@ -253,8 +253,8 @@
     "lon": -71.51557
   },
   "Villarrica": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 2,
     "max_pixeles_calientes": 780,
     "ultima_fecha_analizada": "2026-08-23",
@@ -297,8 +297,8 @@
     "lon": -72.00281
   },
   "Carran - Los Venados": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 4,
     "max_pixeles_calientes": 504,
     "ultima_fecha_analizada": "2026-08-23",
