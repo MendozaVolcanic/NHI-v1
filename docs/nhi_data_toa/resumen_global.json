@@ -276,8 +276,8 @@
     "lon": -71.51557
   },
   "Villarrica": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 2,
     "max_area_m2": 3600.0,
     "ultima_fecha": "2026-08-22",
