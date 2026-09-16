@@ -319,8 +319,8 @@
     "lon": -72.14826
   },
   "Antillanca - Casablanca": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 2,
     "max_pixeles_calientes": 90,
     "ultima_fecha_analizada": "2026-09-14",
@@ -440,8 +440,8 @@
     "lon": -73.07507
   },
   "Cay": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 1,
     "max_pixeles_calientes": 17,
     "ultima_fecha_analizada": "2026-09-11",
@@ -467,7 +467,7 @@
     "alertas_30d": 0,
     "max_pixeles_calientes": 14,
     "ultima_fecha_analizada": "2026-09-11",
-    "total_observaciones": 28,
+    "total_observaciones": 29,
     "zona": "Austral",
     "lat": -45.90915,
     "lon": -72.96508
