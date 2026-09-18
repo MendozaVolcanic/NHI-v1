@@ -1,11 +1,11 @@
 {
   "Taapaca": {
     "nivel": "rojo",
-    "alertas_7d": 1,
-    "alertas_30d": 3,
+    "alertas_7d": 2,
+    "alertas_30d": 4,
     "max_pixeles_calientes": 74,
-    "ultima_fecha_analizada": "2026-09-13",
-    "total_observaciones": 67,
+    "ultima_fecha_analizada": "2026-09-17",
+    "total_observaciones": 68,
     "zona": "Norte",
     "lat": -18.10922,
     "lon": -69.50584
@@ -15,8 +15,8 @@
     "alertas_7d": 0,
     "alertas_30d": 4,
     "max_pixeles_calientes": 614,
-    "ultima_fecha_analizada": "2026-09-12",
-    "total_observaciones": 66,
+    "ultima_fecha_analizada": "2026-09-17",
+    "total_observaciones": 67,
     "zona": "Norte",
     "lat": -18.17126,
     "lon": -69.14534
@@ -26,8 +26,8 @@
     "alertas_7d": 0,
     "alertas_30d": 2,
     "max_pixeles_calientes": 12,
-    "ultima_fecha_analizada": "2026-09-12",
-    "total_observaciones": 61,
+    "ultima_fecha_analizada": "2026-09-17",
+    "total_observaciones": 62,
     "zona": "Norte",
     "lat": -18.42781,
     "lon": -69.085
