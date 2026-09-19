@@ -255,7 +255,7 @@
   "Villarrica": {
     "nivel": "rojo",
     "alertas_7d": 1,
-    "alertas_30d": 3,
+    "alertas_30d": 2,
     "max_pixeles_calientes": 780,
     "ultima_fecha_analizada": "2026-09-16",
     "total_observaciones": 77,
@@ -298,8 +298,8 @@
   },
   "Carran - Los Venados": {
     "nivel": "rojo",
-    "alertas_7d": 2,
-    "alertas_30d": 5,
+    "alertas_7d": 1,
+    "alertas_30d": 4,
     "max_pixeles_calientes": 504,
     "ultima_fecha_analizada": "2026-09-16",
     "total_observaciones": 64,
@@ -466,8 +466,8 @@
     "alertas_7d": 0,
     "alertas_30d": 0,
     "max_pixeles_calientes": 14,
-    "ultima_fecha_analizada": "2026-09-11",
-    "total_observaciones": 29,
+    "ultima_fecha_analizada": "2026-09-17",
+    "total_observaciones": 30,
     "zona": "Austral",
     "lat": -45.90915,
     "lon": -72.96508
