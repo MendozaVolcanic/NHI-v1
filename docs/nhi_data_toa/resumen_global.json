@@ -278,7 +278,7 @@
   "Villarrica": {
     "nivel": "rojo",
     "alertas_7d": 1,
-    "alertas_30d": 3,
+    "alertas_30d": 2,
     "max_area_m2": 3600.0,
     "ultima_fecha": "2026-09-16",
     "total_observaciones": 148,
