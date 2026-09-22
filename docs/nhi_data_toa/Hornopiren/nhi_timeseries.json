@@ -14,8 +14,8 @@
     "fecha": "2026-09-21",
     "sensor": "Sentinel-2",
     "fuente": "S2 L1C TOA radiance (Element84) — algoritmo NHI Tool exacto",
-    "cloud_cover": 61.1566783122816,
-    "sun_elevation": 40.0255620405161,
+    "cloud_cover": 79.3655434544258,
+    "sun_elevation": 41.1925834248915,
     "pixel_area_m2": 400.0,
     "pixel_size_m": 20.0
   },
