@@ -2,21 +2,21 @@
   "Taapaca": {
     "nivel": "rojo",
     "alertas_7d": 1,
-    "alertas_30d": 4,
+    "alertas_30d": 3,
     "max_pixeles_calientes": 74,
-    "ultima_fecha_analizada": "2026-09-17",
-    "total_observaciones": 68,
+    "ultima_fecha_analizada": "2026-09-22",
+    "total_observaciones": 69,
     "zona": "Norte",
     "lat": -18.10922,
     "lon": -69.50584
   },
   "Parinacota": {
-    "nivel": "amarillo",
-    "alertas_7d": 0,
-    "alertas_30d": 3,
+    "nivel": "rojo",
+    "alertas_7d": 1,
+    "alertas_30d": 4,
     "max_pixeles_calientes": 614,
-    "ultima_fecha_analizada": "2026-09-17",
-    "total_observaciones": 67,
+    "ultima_fecha_analizada": "2026-09-22",
+    "total_observaciones": 68,
     "zona": "Norte",
     "lat": -18.17126,
     "lon": -69.14534
@@ -24,10 +24,10 @@
   "Guallatiri": {
     "nivel": "amarillo",
     "alertas_7d": 0,
-    "alertas_30d": 2,
+    "alertas_30d": 1,
     "max_pixeles_calientes": 12,
-    "ultima_fecha_analizada": "2026-09-17",
-    "total_observaciones": 62,
+    "ultima_fecha_analizada": "2026-09-22",
+    "total_observaciones": 63,
     "zona": "Norte",
     "lat": -18.42781,
     "lon": -69.085
@@ -66,8 +66,8 @@
     "lon": -68.17941
   },
   "San Pedro": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 4,
     "max_pixeles_calientes": 347,
     "ultima_fecha_analizada": "2026-09-21",
@@ -165,8 +165,8 @@
     "lon": -70.49828
   },
   "Nevado de Longavi": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 1,
     "max_pixeles_calientes": 30,
     "ultima_fecha_analizada": "2026-09-21",
@@ -286,8 +286,8 @@
     "lon": -71.47923
   },
   "Mocho-Choshuenco": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 1,
     "max_pixeles_calientes": 125,
     "ultima_fecha_analizada": "2026-09-21",
@@ -308,9 +308,9 @@
     "lon": -72.10509
   },
   "Puyehue - Cordon Caulle": {
-    "nivel": "amarillo",
+    "nivel": "verde",
     "alertas_7d": 0,
-    "alertas_30d": 1,
+    "alertas_30d": 0,
     "max_pixeles_calientes": 210,
     "ultima_fecha_analizada": "2026-09-21",
     "total_observaciones": 71,
@@ -321,7 +321,7 @@
   "Antillanca - Casablanca": {
     "nivel": "amarillo",
     "alertas_7d": 0,
-    "alertas_30d": 2,
+    "alertas_30d": 1,
     "max_pixeles_calientes": 90,
     "ultima_fecha_analizada": "2026-09-15",
     "total_observaciones": 64,
@@ -341,9 +341,9 @@
     "lon": -72.49271
   },
   "Calbuco": {
-    "nivel": "amarillo",
+    "nivel": "verde",
     "alertas_7d": 0,
-    "alertas_30d": 1,
+    "alertas_30d": 0,
     "max_pixeles_calientes": 31,
     "ultima_fecha_analizada": "2026-09-21",
     "total_observaciones": 69,
@@ -363,9 +363,9 @@
     "lon": -72.38678
   },
   "Hornopiren": {
-    "nivel": "amarillo",
+    "nivel": "verde",
     "alertas_7d": 0,
-    "alertas_30d": 1,
+    "alertas_30d": 0,
     "max_pixeles_calientes": 709,
     "ultima_fecha_analizada": "2026-09-21",
     "total_observaciones": 61,
@@ -374,9 +374,9 @@
     "lon": -72.43178
   },
   "Huequi": {
-    "nivel": "amarillo",
+    "nivel": "verde",
     "alertas_7d": 0,
-    "alertas_30d": 1,
+    "alertas_30d": 0,
     "max_pixeles_calientes": 78,
     "ultima_fecha_analizada": "2026-09-21",
     "total_observaciones": 65,
@@ -396,9 +396,9 @@
     "lon": -72.43927
   },
   "Chaiten": {
-    "nivel": "amarillo",
+    "nivel": "verde",
     "alertas_7d": 0,
-    "alertas_30d": 1,
+    "alertas_30d": 0,
     "max_pixeles_calientes": 78,
     "ultima_fecha_analizada": "2026-09-21",
     "total_observaciones": 54,
@@ -407,8 +407,8 @@
     "lon": -72.65155
   },
   "Corcovado": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 1,
     "max_pixeles_calientes": 4,
     "ultima_fecha_analizada": "2026-09-21",
