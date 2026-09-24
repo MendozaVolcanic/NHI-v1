@@ -37,8 +37,8 @@
     "alertas_7d": 0,
     "alertas_30d": 0,
     "max_pixeles_calientes": 321,
-    "ultima_fecha_analizada": "2026-09-21",
-    "total_observaciones": 98,
+    "ultima_fecha_analizada": "2026-09-22",
+    "total_observaciones": 99,
     "zona": "Norte",
     "lat": -19.16737,
     "lon": -68.82225
@@ -48,8 +48,8 @@
     "alertas_7d": 0,
     "alertas_30d": 0,
     "max_pixeles_calientes": 310,
-    "ultima_fecha_analizada": "2026-09-21",
-    "total_observaciones": 62,
+    "ultima_fecha_analizada": "2026-09-22",
+    "total_observaciones": 63,
     "zona": "Norte",
     "lat": -20.73329,
     "lon": -68.56041
@@ -176,8 +176,8 @@
     "lon": -71.1701
   },
   "Nevados de Chillan": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 2,
     "max_pixeles_calientes": 158,
     "ultima_fecha_analizada": "2026-09-21",
@@ -187,8 +187,8 @@
     "lon": -71.35231
   },
   "Antuco": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 2,
     "max_pixeles_calientes": 293,
     "ultima_fecha_analizada": "2026-09-21",
