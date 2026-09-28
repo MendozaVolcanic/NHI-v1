@@ -13,7 +13,7 @@
   "Parinacota": {
     "nivel": "rojo",
     "alertas_7d": 1,
-    "alertas_30d": 4,
+    "alertas_30d": 3,
     "max_pixeles_calientes": 614,
     "ultima_fecha_analizada": "2026-09-22",
     "total_observaciones": 69,
@@ -38,7 +38,7 @@
     "alertas_30d": 0,
     "max_pixeles_calientes": 321,
     "ultima_fecha_analizada": "2026-09-24",
-    "total_observaciones": 100,
+    "total_observaciones": 101,
     "zona": "Norte",
     "lat": -19.16737,
     "lon": -68.82225
@@ -324,18 +324,18 @@
     "alertas_30d": 1,
     "max_pixeles_calientes": 90,
     "ultima_fecha_analizada": "2026-09-24",
-    "total_observaciones": 65,
+    "total_observaciones": 66,
     "zona": "Sur",
     "lat": -40.76716,
     "lon": -72.15114
   },
   "Osorno": {
-    "nivel": "verde",
+    "nivel": "amarillo",
     "alertas_7d": 0,
-    "alertas_30d": 0,
+    "alertas_30d": 1,
     "max_pixeles_calientes": 484,
     "ultima_fecha_analizada": "2026-09-24",
-    "total_observaciones": 71,
+    "total_observaciones": 72,
     "zona": "Austral",
     "lat": -41.10453,
     "lon": -72.49271
@@ -346,7 +346,7 @@
     "alertas_30d": 0,
     "max_pixeles_calientes": 31,
     "ultima_fecha_analizada": "2026-09-24",
-    "total_observaciones": 70,
+    "total_observaciones": 71,
     "zona": "Austral",
     "lat": -41.33035,
     "lon": -72.60399
@@ -357,7 +357,7 @@
     "alertas_30d": 0,
     "max_pixeles_calientes": 10,
     "ultima_fecha_analizada": "2026-09-24",
-    "total_observaciones": 62,
+    "total_observaciones": 63,
     "zona": "Austral",
     "lat": -41.7775,
     "lon": -72.38678
@@ -368,7 +368,7 @@
     "alertas_30d": 0,
     "max_pixeles_calientes": 709,
     "ultima_fecha_analizada": "2026-09-24",
-    "total_observaciones": 62,
+    "total_observaciones": 63,
     "zona": "Austral",
     "lat": -41.88132,
     "lon": -72.43178
@@ -379,7 +379,7 @@
     "alertas_30d": 0,
     "max_pixeles_calientes": 78,
     "ultima_fecha_analizada": "2026-09-24",
-    "total_observaciones": 66,
+    "total_observaciones": 67,
     "zona": "Austral",
     "lat": -42.38094,
     "lon": -72.58103
@@ -423,7 +423,7 @@
     "alertas_30d": 0,
     "max_pixeles_calientes": 5,
     "ultima_fecha_analizada": "2026-09-21",
-    "total_observaciones": 56,
+    "total_observaciones": 57,
     "zona": "Austral",
     "lat": -44.07612,
     "lon": -72.85073
@@ -433,19 +433,19 @@
     "alertas_7d": 0,
     "alertas_30d": 0,
     "max_pixeles_calientes": 13,
-    "ultima_fecha_analizada": "2026-09-15",
-    "total_observaciones": 44,
+    "ultima_fecha_analizada": "2026-09-16",
+    "total_observaciones": 45,
     "zona": "Austral",
     "lat": -44.69272,
     "lon": -73.07507
   },
   "Cay": {
-    "nivel": "verde",
+    "nivel": "amarillo",
     "alertas_7d": 0,
-    "alertas_30d": 0,
-    "max_pixeles_calientes": 0,
-    "ultima_fecha_analizada": null,
-    "total_observaciones": 0,
+    "alertas_30d": 2,
+    "max_pixeles_calientes": 17,
+    "ultima_fecha_analizada": "2026-09-16",
+    "total_observaciones": 22,
     "zona": "Austral",
     "lat": -45.07068,
     "lon": -72.96318
@@ -456,7 +456,7 @@
     "alertas_30d": 0,
     "max_pixeles_calientes": 9,
     "ultima_fecha_analizada": "2026-09-26",
-    "total_observaciones": 45,
+    "total_observaciones": 46,
     "zona": "Austral",
     "lat": -45.1121,
     "lon": -73.16908
