@@ -154,9 +154,9 @@
     "lon": -70.84533
   },
   "Laguna del Maule": {
-    "nivel": "amarillo",
+    "nivel": "verde",
     "alertas_7d": 0,
-    "alertas_30d": 1,
+    "alertas_30d": 0,
     "max_pixeles_calientes": 121,
     "ultima_fecha_analizada": "2026-09-29",
     "total_observaciones": 105,
@@ -440,12 +440,12 @@
     "lon": -73.07507
   },
   "Cay": {
-    "nivel": "amarillo",
+    "nivel": "verde",
     "alertas_7d": 0,
-    "alertas_30d": 2,
-    "max_pixeles_calientes": 17,
-    "ultima_fecha_analizada": "2026-09-16",
-    "total_observaciones": 22,
+    "alertas_30d": 0,
+    "max_pixeles_calientes": 0,
+    "ultima_fecha_analizada": null,
+    "total_observaciones": 0,
     "zona": "Austral",
     "lat": -45.07068,
     "lon": -72.96318
