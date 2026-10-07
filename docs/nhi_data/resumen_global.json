@@ -1,7 +1,7 @@
 {
   "Taapaca": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 4,
     "max_pixeles_calientes": 109,
     "ultima_fecha_analizada": "2026-10-02",
@@ -299,7 +299,7 @@
   "Carran - Los Venados": {
     "nivel": "amarillo",
     "alertas_7d": 0,
-    "alertas_30d": 3,
+    "alertas_30d": 2,
     "max_pixeles_calientes": 504,
     "ultima_fecha_analizada": "2026-09-29",
     "total_observaciones": 67,
