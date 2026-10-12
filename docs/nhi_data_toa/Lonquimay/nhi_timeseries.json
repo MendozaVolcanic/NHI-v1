@@ -1,6 +1,6 @@
 [
   {
-    "pixeles_validos": 70682,
+    "pixeles_validos": 70693,
     "pixeles_calientes": 0,
     "pixeles_cond_a": 0,
     "pixeles_cond_b": 0,
@@ -14,8 +14,8 @@
     "fecha": "2026-10-11",
     "sensor": "Sentinel-2",
     "fuente": "S2 L1C TOA radiance (Element84) — algoritmo NHI Tool exacto",
-    "cloud_cover": 66.0062448973094,
-    "sun_elevation": 49.9123696329241,
+    "cloud_cover": 75.9692436322375,
+    "sun_elevation": 51.449910205485,
     "pixel_area_m2": 400.0,
     "pixel_size_m": 20.0
   },
