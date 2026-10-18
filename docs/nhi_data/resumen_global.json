@@ -2,21 +2,21 @@
   "Taapaca": {
     "nivel": "amarillo",
     "alertas_7d": 0,
-    "alertas_30d": 2,
+    "alertas_30d": 1,
     "max_pixeles_calientes": 109,
-    "ultima_fecha_analizada": "2026-10-12",
-    "total_observaciones": 74,
+    "ultima_fecha_analizada": "2026-10-17",
+    "total_observaciones": 75,
     "zona": "Norte",
     "lat": -18.10922,
     "lon": -69.50584
   },
   "Parinacota": {
     "nivel": "rojo",
-    "alertas_7d": 1,
-    "alertas_30d": 5,
+    "alertas_7d": 2,
+    "alertas_30d": 6,
     "max_pixeles_calientes": 614,
-    "ultima_fecha_analizada": "2026-10-12",
-    "total_observaciones": 75,
+    "ultima_fecha_analizada": "2026-10-17",
+    "total_observaciones": 76,
     "zona": "Norte",
     "lat": -18.17126,
     "lon": -69.14534
@@ -26,8 +26,8 @@
     "alertas_7d": 0,
     "alertas_30d": 0,
     "max_pixeles_calientes": 12,
-    "ultima_fecha_analizada": "2026-10-12",
-    "total_observaciones": 70,
+    "ultima_fecha_analizada": "2026-10-17",
+    "total_observaciones": 71,
     "zona": "Norte",
     "lat": -18.42781,
     "lon": -69.085
@@ -37,8 +37,8 @@
     "alertas_7d": 0,
     "alertas_30d": 0,
     "max_pixeles_calientes": 321,
-    "ultima_fecha_analizada": "2026-10-14",
-    "total_observaciones": 110,
+    "ultima_fecha_analizada": "2026-10-17",
+    "total_observaciones": 111,
     "zona": "Norte",
     "lat": -19.16737,
     "lon": -68.82225
@@ -232,7 +232,7 @@
   },
   "Llaima": {
     "nivel": "rojo",
-    "alertas_7d": 2,
+    "alertas_7d": 1,
     "alertas_30d": 3,
     "max_pixeles_calientes": 669,
     "ultima_fecha_analizada": "2026-10-16",
@@ -440,8 +440,8 @@
     "lon": -73.07507
   },
   "Cay": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 1,
     "max_pixeles_calientes": 17,
     "ultima_fecha_analizada": "2026-10-16",
@@ -462,8 +462,8 @@
     "lon": -73.16908
   },
   "Hudson": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 1,
     "max_pixeles_calientes": 95,
     "ultima_fecha_analizada": "2026-10-16",
