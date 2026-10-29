@@ -319,9 +319,9 @@
     "lon": -72.14826
   },
   "Antillanca - Casablanca": {
-    "nivel": "amarillo",
+    "nivel": "verde",
     "alertas_7d": 0,
-    "alertas_30d": 1,
+    "alertas_30d": 0,
     "max_pixeles_calientes": 90,
     "ultima_fecha_analizada": "2026-10-26",
     "total_observaciones": 76,
