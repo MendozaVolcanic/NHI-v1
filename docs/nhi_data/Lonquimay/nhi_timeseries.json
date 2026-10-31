@@ -34,6 +34,23 @@
     "sensor": "Landsat"
   },
   {
+    "pixeles_validos": 25116,
+    "pixeles_calientes": 0,
+    "fraccion_caliente": 0.0,
+    "max_nhiswir": 0.0,
+    "max_nhiswnir": 0.0,
+    "swir2_total": 0.0,
+    "thresh_swir": 0.177056,
+    "thresh_swnir": 0.662693,
+    "bg_median_swir": -0.085701,
+    "bg_std_swir": 0.087586,
+    "alerta": false,
+    "fecha": "2026-10-25",
+    "satelite": "landsat-8",
+    "cloud_cover": 7.15,
+    "sensor": "Landsat"
+  },
+  {
     "pixeles_validos": 160000,
     "pixeles_calientes": 0,
     "fraccion_caliente": 0.0,
