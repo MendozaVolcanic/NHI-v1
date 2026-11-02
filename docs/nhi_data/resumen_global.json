@@ -13,7 +13,7 @@
   "Parinacota": {
     "nivel": "amarillo",
     "alertas_7d": 0,
-    "alertas_30d": 6,
+    "alertas_30d": 5,
     "max_pixeles_calientes": 614,
     "ultima_fecha_analizada": "2026-10-31",
     "total_observaciones": 82,
@@ -233,7 +233,7 @@
   "Llaima": {
     "nivel": "rojo",
     "alertas_7d": 1,
-    "alertas_30d": 7,
+    "alertas_30d": 6,
     "max_pixeles_calientes": 754,
     "ultima_fecha_analizada": "2026-10-31",
     "total_observaciones": 90,
@@ -264,8 +264,8 @@
     "lon": -71.93939
   },
   "Quetrupillan": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 1,
     "max_pixeles_calientes": 76,
     "ultima_fecha_analizada": "2026-10-31",
@@ -286,8 +286,8 @@
     "lon": -71.47923
   },
   "Mocho-Choshuenco": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 1,
     "max_pixeles_calientes": 125,
     "ultima_fecha_analizada": "2026-10-29",
@@ -319,8 +319,8 @@
     "lon": -72.14826
   },
   "Antillanca - Casablanca": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 1,
     "max_pixeles_calientes": 90,
     "ultima_fecha_analizada": "2026-10-26",
@@ -330,9 +330,9 @@
     "lon": -72.15114
   },
   "Osorno": {
-    "nivel": "amarillo",
+    "nivel": "verde",
     "alertas_7d": 0,
-    "alertas_30d": 1,
+    "alertas_30d": 0,
     "max_pixeles_calientes": 484,
     "ultima_fecha_analizada": "2026-10-31",
     "total_observaciones": 88,
