@@ -4,19 +4,19 @@
     "alertas_7d": 0,
     "alertas_30d": 1,
     "max_pixeles_calientes": 109,
-    "ultima_fecha_analizada": "2026-10-31",
-    "total_observaciones": 79,
+    "ultima_fecha_analizada": "2026-11-01",
+    "total_observaciones": 80,
     "zona": "Norte",
     "lat": -18.10922,
     "lon": -69.50584
   },
   "Parinacota": {
-    "nivel": "amarillo",
-    "alertas_7d": 0,
-    "alertas_30d": 5,
+    "nivel": "rojo",
+    "alertas_7d": 1,
+    "alertas_30d": 6,
     "max_pixeles_calientes": 614,
-    "ultima_fecha_analizada": "2026-10-31",
-    "total_observaciones": 82,
+    "ultima_fecha_analizada": "2026-11-01",
+    "total_observaciones": 83,
     "zona": "Norte",
     "lat": -18.17126,
     "lon": -69.14534
@@ -26,8 +26,8 @@
     "alertas_7d": 0,
     "alertas_30d": 0,
     "max_pixeles_calientes": 12,
-    "ultima_fecha_analizada": "2026-10-27",
-    "total_observaciones": 75,
+    "ultima_fecha_analizada": "2026-11-01",
+    "total_observaciones": 76,
     "zona": "Norte",
     "lat": -18.42781,
     "lon": -69.085
@@ -37,8 +37,8 @@
     "alertas_7d": 0,
     "alertas_30d": 0,
     "max_pixeles_calientes": 321,
-    "ultima_fecha_analizada": "2026-10-31",
-    "total_observaciones": 118,
+    "ultima_fecha_analizada": "2026-11-01",
+    "total_observaciones": 119,
     "zona": "Norte",
     "lat": -19.16737,
     "lon": -68.82225
@@ -231,8 +231,8 @@
     "lon": -71.5853
   },
   "Llaima": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 6,
     "max_pixeles_calientes": 754,
     "ultima_fecha_analizada": "2026-10-31",
@@ -363,8 +363,8 @@
     "lon": -72.38678
   },
   "Hornopiren": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 2,
     "max_pixeles_calientes": 709,
     "ultima_fecha_analizada": "2026-10-31",
@@ -396,8 +396,8 @@
     "lon": -72.43927
   },
   "Chaiten": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 1,
     "max_pixeles_calientes": 119,
     "ultima_fecha_analizada": "2026-10-31",
@@ -429,8 +429,8 @@
     "lon": -72.85073
   },
   "Mentolat": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 1,
     "max_pixeles_calientes": 13,
     "ultima_fecha_analizada": "2026-10-26",
@@ -451,8 +451,8 @@
     "lon": -72.96318
   },
   "Maca": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 1,
     "max_pixeles_calientes": 11,
     "ultima_fecha_analizada": "2026-10-26",
@@ -462,12 +462,12 @@
     "lon": -73.16908
   },
   "Hudson": {
-    "nivel": "amarillo",
+    "nivel": "verde",
     "alertas_7d": 0,
-    "alertas_30d": 1,
-    "max_pixeles_calientes": 95,
-    "ultima_fecha_analizada": "2026-10-19",
-    "total_observaciones": 40,
+    "alertas_30d": 0,
+    "max_pixeles_calientes": 0,
+    "ultima_fecha_analizada": null,
+    "total_observaciones": 0,
     "zona": "Austral",
     "lat": -45.90915,
     "lon": -72.96508
