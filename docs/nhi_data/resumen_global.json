@@ -67,7 +67,7 @@
   },
   "San Pedro": {
     "nivel": "rojo",
-    "alertas_7d": 2,
+    "alertas_7d": 1,
     "alertas_30d": 3,
     "max_pixeles_calientes": 347,
     "ultima_fecha_analizada": "2026-11-08",
@@ -77,8 +77,8 @@
     "lon": -68.40706
   },
   "Lascar": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 1,
     "max_pixeles_calientes": 134,
     "ultima_fecha_analizada": "2026-11-08",
@@ -176,8 +176,8 @@
     "lon": -71.1701
   },
   "Nevados de Chillan": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 3,
     "max_pixeles_calientes": 158,
     "ultima_fecha_analizada": "2026-11-08",
@@ -188,7 +188,7 @@
   },
   "Antuco": {
     "nivel": "rojo",
-    "alertas_7d": 3,
+    "alertas_7d": 2,
     "alertas_30d": 4,
     "max_pixeles_calientes": 293,
     "ultima_fecha_analizada": "2026-11-08",
@@ -231,9 +231,9 @@
     "lon": -71.5853
   },
   "Llaima": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
-    "alertas_30d": 7,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
+    "alertas_30d": 6,
     "max_pixeles_calientes": 754,
     "ultima_fecha_analizada": "2026-11-08",
     "total_observaciones": 93,
@@ -440,9 +440,9 @@
     "lon": -73.07507
   },
   "Cay": {
-    "nivel": "amarillo",
+    "nivel": "verde",
     "alertas_7d": 0,
-    "alertas_30d": 1,
+    "alertas_30d": 0,
     "max_pixeles_calientes": 17,
     "ultima_fecha_analizada": "2026-11-07",
     "total_observaciones": 29,
@@ -464,10 +464,10 @@
   "Hudson": {
     "nivel": "rojo",
     "alertas_7d": 1,
-    "alertas_30d": 2,
+    "alertas_30d": 1,
     "max_pixeles_calientes": 95,
     "ultima_fecha_analizada": "2026-11-07",
-    "total_observaciones": 42,
+    "total_observaciones": 43,
     "zona": "Austral",
     "lat": -45.90915,
     "lon": -72.96508
