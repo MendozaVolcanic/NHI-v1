@@ -1,5 +1,23 @@
 [
   {
+    "pixeles_validos": 160000,
+    "pixeles_calientes": 341,
+    "fraccion_caliente": 0.002131,
+    "max_nhiswir": 0.006432,
+    "max_nhiswnir": 0.091684,
+    "swir2_total": 34.6829,
+    "thresh_swir": -0.102458,
+    "thresh_swnir": -0.096465,
+    "bg_median_swir": -0.179029,
+    "bg_std_swir": 0.025524,
+    "alerta": true,
+    "fecha": "2026-11-10",
+    "satelite": "Sentinel-2B",
+    "cloud_cover": 14.922059,
+    "sensor": "Sentinel-2",
+    "hotspot_image": "2026-11-10_s2_hotspot.png"
+  },
+  {
     "pixeles_validos": 159903,
     "pixeles_calientes": 4,
     "fraccion_caliente": 2.5e-05,
