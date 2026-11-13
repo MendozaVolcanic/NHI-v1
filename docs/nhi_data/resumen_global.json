@@ -133,7 +133,7 @@
   },
   "Descabezado Grande": {
     "nivel": "rojo",
-    "alertas_7d": 3,
+    "alertas_7d": 2,
     "alertas_30d": 3,
     "max_pixeles_calientes": 206,
     "ultima_fecha_analizada": "2026-11-10",
