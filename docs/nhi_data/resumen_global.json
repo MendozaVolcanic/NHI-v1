@@ -110,8 +110,8 @@
     "lon": -69.89732
   },
   "Tinguiririca": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 1,
     "max_pixeles_calientes": 167,
     "ultima_fecha_analizada": "2026-11-13",
@@ -133,7 +133,7 @@
   },
   "Descabezado Grande": {
     "nivel": "rojo",
-    "alertas_7d": 2,
+    "alertas_7d": 1,
     "alertas_30d": 3,
     "max_pixeles_calientes": 206,
     "ultima_fecha_analizada": "2026-11-13",
@@ -188,7 +188,7 @@
   },
   "Antuco": {
     "nivel": "rojo",
-    "alertas_7d": 2,
+    "alertas_7d": 1,
     "alertas_30d": 5,
     "max_pixeles_calientes": 293,
     "ultima_fecha_analizada": "2026-11-13",
@@ -298,7 +298,7 @@
   },
   "Carran - Los Venados": {
     "nivel": "rojo",
-    "alertas_7d": 4,
+    "alertas_7d": 3,
     "alertas_30d": 6,
     "max_pixeles_calientes": 504,
     "ultima_fecha_analizada": "2026-11-13",
@@ -462,8 +462,8 @@
     "lon": -73.16908
   },
   "Hudson": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 1,
     "max_pixeles_calientes": 95,
     "ultima_fecha_analizada": "2026-11-07",
