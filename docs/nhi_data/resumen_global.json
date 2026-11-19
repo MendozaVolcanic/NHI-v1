@@ -1,7 +1,7 @@
 {
   "Taapaca": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 3,
     "max_pixeles_calientes": 109,
     "ultima_fecha_analizada": "2026-11-16",
@@ -12,7 +12,7 @@
   },
   "Parinacota": {
     "nivel": "rojo",
-    "alertas_7d": 2,
+    "alertas_7d": 1,
     "alertas_30d": 5,
     "max_pixeles_calientes": 614,
     "ultima_fecha_analizada": "2026-11-16",
@@ -154,8 +154,8 @@
     "lon": -70.84533
   },
   "Laguna del Maule": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 2,
     "max_pixeles_calientes": 121,
     "ultima_fecha_analizada": "2026-11-15",
@@ -209,8 +209,8 @@
     "lon": -71.16836
   },
   "Callaqui": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 1,
     "max_pixeles_calientes": 562,
     "ultima_fecha_analizada": "2026-11-15",
@@ -254,7 +254,7 @@
   },
   "Villarrica": {
     "nivel": "rojo",
-    "alertas_7d": 2,
+    "alertas_7d": 1,
     "alertas_30d": 2,
     "max_pixeles_calientes": 780,
     "ultima_fecha_analizada": "2026-11-13",
@@ -375,7 +375,7 @@
   },
   "Huequi": {
     "nivel": "rojo",
-    "alertas_7d": 2,
+    "alertas_7d": 1,
     "alertas_30d": 4,
     "max_pixeles_calientes": 114,
     "ultima_fecha_analizada": "2026-11-13",
@@ -407,8 +407,8 @@
     "lon": -72.65155
   },
   "Corcovado": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 1,
     "max_pixeles_calientes": 4,
     "ultima_fecha_analizada": "2026-11-13",
@@ -418,8 +418,8 @@
     "lon": -72.78979
   },
   "Melimoyu": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 1,
     "max_pixeles_calientes": 22,
     "ultima_fecha_analizada": "2026-11-15",
@@ -440,8 +440,8 @@
     "lon": -73.07507
   },
   "Cay": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 2,
     "max_pixeles_calientes": 17,
     "ultima_fecha_analizada": "2026-11-15",
@@ -451,8 +451,8 @@
     "lon": -72.96318
   },
   "Maca": {
-    "nivel": "rojo",
-    "alertas_7d": 1,
+    "nivel": "amarillo",
+    "alertas_7d": 0,
     "alertas_30d": 2,
     "max_pixeles_calientes": 20,
     "ultima_fecha_analizada": "2026-11-15",
