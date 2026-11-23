@@ -151,8 +151,11 @@ VOLCANES = {
         "lat": -36.20001, "lon": -71.17010, "buffer_km": 5.0,
         "zona": "Centro", "activo": True
     },
+    # Corregido 2026-11-23: el centro anterior (-37.41096, -71.35231) estaba a 61 km de Chillan, a 1,5 km de
+    # Antuco, asi que la serie de "Nevados de Chillan" medía Antuco. Centro nuevo: crater Nicanor, el mismo de
+    # volcanoes.yaml de VRP Chile (GVP 357070). La serie vieja quedo en archivo/ (ver README de esa carpeta).
     "Nevados de Chillan": {
-        "lat": -37.41096, "lon": -71.35231, "buffer_km": 3.3,
+        "lat": -36.86300, "lon": -71.37700, "buffer_km": 3.3,
         "zona": "Centro", "activo": True
     },
 
